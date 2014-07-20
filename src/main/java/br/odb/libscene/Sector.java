@@ -18,13 +18,8 @@ import br.odb.utils.math.Vec3;
  */
 public class Sector {
 
-	public void setDoorAt(int face) {
-		try {
-			this.setDoorAt(face, this.getLink(face));
-		} catch (InvalidSlotException ex) {
-			Logger.getLogger(Sector.class.getName())
-					.log(Level.SEVERE, null, ex);
-		}
+	public void setDoorAt(Direction face) {		
+		this.setDoorAt(face, this.getLink(face));		
 	}
 	
 	public static Sector getConvexHull( int snapLevel, Mesh mesh ) {
@@ -322,20 +317,19 @@ public class Sector {
 			this.mesh = new Mesh(another.getMesh());
 		}
 
-		for (int c = 0; c < 6; ++c) {
+		for ( Direction c : Direction.values()) {
+			
 
-			color[c] = new Color(another.color[c]);
+			color[c.ordinal()] = new Color(another.color[c.ordinal()]);
 
 			if (another.getDoor(c) != null) {
 				setDoorAt(c, another.getDoor(c).getSector());
 			}
 
-			try {
-				this.link[c] = another.getLink(c);
-			} catch (InvalidSlotException impossible) {
-			}
 
-			decalName[c] = another.decalName[c];
+			this.link[c.ordinal()] = another.getLink(c);
+
+			decalName[c.ordinal()] = another.decalName[c.ordinal()];
 
 		}
 
@@ -495,13 +489,9 @@ public class Sector {
 		return sString;
 	}
 
-	public int getLink(int i) throws InvalidSlotException {
+	public int getLink(Direction c) {
 
-		if (i < 0 || i > 5) {
-			throw new InvalidSlotException();
-		}
-
-		return link[i];
+		return link[c.ordinal()];
 	}
 
 	/**
@@ -512,8 +502,8 @@ public class Sector {
 	 * @param s
 	 *            Sector to link
 	 */
-	public void setLink(int f, int s) {
-		link[f] = s;
+	public void setLink(Direction f, int s) {
+		link[f.ordinal()] = s;
 	}
 
 	public boolean isDegenerate() {
@@ -638,17 +628,17 @@ public class Sector {
 		this.color[i] = newColor;
 
 		if (!fakeShading || i == 4) {
-			color[i].setR(color[i].getR());
-			color[i].setG(color[i].getG());
-			color[i].setB(color[i].getB());
+			color[i].r=(color[i].r);
+			color[i].g=(color[i].g);
+			color[i].b=(color[i].b);
 		} else if (i == 5) {
-			color[i].setR((int) (color[i].getR() * 0.25f));
-			color[i].setG((int) (color[i].getG() * 0.25f));
-			color[i].setB((int) (color[i].getB() * 0.25f));
+			color[i].r=((int) (color[i].r * 0.25f));
+			color[i].g=((int) (color[i].g * 0.25f));
+			color[i].b=((int) (color[i].b * 0.25f));
 		} else {
-			color[i].setR((int) (color[i].getR() * 0.75f * ((0.15f) + (i / 4.0f))));
-			color[i].setG((int) (color[i].getG() * 0.75f * ((0.15f) + (i / 4.0f))));
-			color[i].setB((int) (color[i].getB() * 0.75f * ((0.15f) + (i / 4.0f))));
+			color[i].r=((int) (color[i].r * 0.75f * ((0.15f) + (i / 4.0f))));
+			color[i].g=((int) (color[i].g * 0.75f * ((0.15f) + (i / 4.0f))));
+			color[i].b=((int) (color[i].b * 0.75f * ((0.15f) + (i / 4.0f))));
 		}
 
 	}
@@ -810,12 +800,12 @@ public class Sector {
 	}
 
 	public void setLinks(int l0, int l1, int l2, int l3, int l4, int l5) {
-		setLink(0, l0);
-		setLink(1, l1);
-		setLink(2, l2);
-		setLink(3, l3);
-		setLink(4, l4);
-		setLink(5, l5);
+		setLink(Direction.N, l0);
+		setLink(Direction.E, l1);
+		setLink(Direction.S, l2);
+		setLink(Direction.W, l3);
+		setLink(Direction.FLOOR, l4);
+		setLink(Direction.CEILING, l5);
 	}
 
 	public Color getColor(int d) {
@@ -983,9 +973,9 @@ public class Sector {
 				: doors[slot].isOpen();
 	}
 
-	public Door getDoor(int d) {
+	public Door getDoor(Direction c) {
 
-		return doors[d];
+		return doors[c.ordinal()];
 	}
 
 	public void removeDoorAt(int slot) {
@@ -995,8 +985,8 @@ public class Sector {
 	public void onSectorEnteredBy(Actor3D actor) {
 	}
 
-	public void setDoorAt(int slot, int sector) {
-		doors[slot] = new Door(sector);
+	public void setDoorAt(Direction slot, int sector) {
+		doors[slot.ordinal()] = new Door(sector);
 	}
 
 	public void onSectorLeftBy(Actor3D actor) {
@@ -1111,15 +1101,11 @@ public class Sector {
 	// }
 	public int getVisibleFacesCount() {
 		int opaqueFaces = 0;
-
-		for (int c = 0; c < 6; ++c) {
-			try {
-				if (getLink(c) == Constants.NO_LINK) {
-					++opaqueFaces;
-				}
-			} catch (InvalidSlotException e) {
-				// TODO Verify the relevance of this Exception handling.
-				e.printStackTrace();
+		
+		for ( Direction c : Direction.values() ) {
+			
+			if (getLink(c) == Constants.NO_LINK) {
+				++opaqueFaces;
 			}
 		}
 

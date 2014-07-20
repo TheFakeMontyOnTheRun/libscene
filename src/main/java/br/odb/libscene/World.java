@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.odb.gameworld.Direction;
 import br.odb.gameworld.exceptions.InvalidSlotException;
 import br.odb.libstrip.MeshFactory;
 import br.odb.utils.Color;
@@ -270,7 +271,8 @@ public class World implements Iterable<Sector> {
 				}
 				result = cache;
 
-				makeDoorAt(sector, Integer.parseInt(result[1]),
+				makeDoorAt(sector,
+						Direction.values()[Integer.parseInt(result[1])],
 						Integer.parseInt(result[2]), null);
 				break;
 			case 't':
@@ -328,7 +330,7 @@ public class World implements Iterable<Sector> {
 		sector.setDecalAt(face, decalName);
 	}
 
-	public void makeDoorAt(Sector origin, int face, int sectorId,
+	public void makeDoorAt(Sector origin, Direction face, int sectorId,
 			String extraData) {
 		origin.setDoorAt(face, sectorId);
 	}
@@ -375,14 +377,9 @@ public class World implements Iterable<Sector> {
 			for (int c = 0; c < getTotalSectors(); ++c) {
 
 				another = getSector(c);
+				for (Direction d : Direction.values()) {
 
-				for (int d = 0; d < 6; ++d) {
-
-					try {
-						link = another.getLink(d);
-					} catch (InvalidSlotException e) {
-						continue;
-					}
+					link = another.getLink(d);
 
 					if (link > sector.getId()) {
 						another.setLink(d, link - 1);
@@ -420,31 +417,25 @@ public class World implements Iterable<Sector> {
 				return false;
 			}
 
-			for (int d = 0; d < 6; ++d) {
-				try {
-					if (s.getLink(d) >= getTotalSectors() || s.getLink(d) < 0) {
-						System.out
-								.println("link para setor n������������������o existente: s["
-										+ c
-										+ "].link["
-										+ d
-										+ "]="
-										+ s.getLink(d)
-										+ " ( total = "
-										+ getTotalSectors() + ")");
-						return false;
-					}
-					if (s.getLink(d) == c) {
-						System.out.println("setor linkando para si mesmo: s["
-								+ c + "].link[" + d + "]=" + s.getLink(d));
-						return false;
-					}
-				} catch (InvalidSlotException e) {
+			for (Direction d : Direction.values()) {
+
+				if (s.getLink(d) >= getTotalSectors() || s.getLink(d) < 0) {
 					System.out
-							.println("setor causou exce������������������������������������o ao pedir link: s["
-									+ c + "]");
+							.println("link para setor n������������������o existente: s["
+									+ c
+									+ "].link["
+									+ d
+									+ "]="
+									+ s.getLink(d)
+									+ " ( total = " + getTotalSectors() + ")");
 					return false;
 				}
+				if (s.getLink(d) == c) {
+					System.out.println("setor linkando para si mesmo: s[" + c
+							+ "].link[" + d + "]=" + s.getLink(d));
+					return false;
+				}
+
 			}
 		}
 
@@ -564,22 +555,18 @@ public class World implements Iterable<Sector> {
 
 		for (int c = 0; c < getTotalSectors(); ++c) {
 			getSector(c).setId(getSector(c).getId() + num);
-			for (int d = 0; d < 6; ++d) {
-				try {
-					if (getSector(c).getLink(d) != 0) {
-						getSector(c).setLink(d, getSector(c).getLink(d) + num);
-					}
-					// não
-					// deveria existir, mas...
-					if (getSector(c).getDoor(d) != null) {
-						getSector(c).getDoor(d).setSector(
-								getSector(c).getDoor(d).getSector() + num);
-					}
+			for (Direction d : Direction.values()) {
 
-				} catch (InvalidSlotException e) {
-					// TODO Properly  report error, somehow.
-					e.printStackTrace();
+				if (getSector(c).getLink(d) != 0) {
+					getSector(c).setLink(d, getSector(c).getLink(d) + num);
 				}
+				// não
+				// deveria existir, mas...
+				if (getSector(c).getDoor(d) != null) {
+					getSector(c).getDoor(d).setSector(
+							getSector(c).getDoor(d).getSector() + num);
+				}
+
 			}
 		}
 
@@ -664,14 +651,11 @@ public class World implements Iterable<Sector> {
 
 	public void reassignConnectionsWith(int id, int newId) {
 		for (Sector s : this) {
-			for (int c = 0; c < 6; ++c) {
-				try {
-					if (s.getLink(c) == id) {
-						s.setLink(c, newId);
-					}
-				} catch (InvalidSlotException ex) {
-					Logger.getLogger(World.class.getName()).log(Level.SEVERE,
-							null, ex);
+
+			for (Direction c : Direction.values()) {
+
+				if (s.getLink(c) == id) {
+					s.setLink(c, newId);
 				}
 			}
 		}
