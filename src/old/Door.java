@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.odb.libscene;
+package br.odb.libscene.old;
 
 import br.odb.libstrip.Mesh;
 

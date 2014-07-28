@@ -1,5 +1,7 @@
-package br.odb.libscene;
+package br.odb.libscene.old;
 
+import br.odb.libscene.SceneObject3D;
+import br.odb.libscene.SpaceRegion;
 import br.odb.utils.Utils;
 import br.odb.utils.math.Vec2;
 import br.odb.utils.math.Vec3;
@@ -10,21 +12,14 @@ import br.odb.utils.math.Vec3;
  */
 public class Actor3D extends SceneObject3D {
 
-	private int kind;
+	public int kind;
 	private Vec3 previousPosition;
 	private Vec3 acceleration;
-	public int currentSector;
-	public int candelas;
+	public SpaceRegion currentRegion;
 	private float angle;
-	public float speed = 1.5f;
-	private int id;
-	private Actor3D generated;
-	private Actor3D owner;
-	private boolean alive = true;
-
-	public Actor3D getOwner() {
-		return owner;
-	}
+	private float speed = 1.5f;
+	public int id;
+	public boolean alive = true;
 
 	public void haltAcceleration() {
 		acceleration.set(0, 0, 0);
@@ -40,37 +35,29 @@ public class Actor3D extends SceneObject3D {
 
 	@Override
 	public String toString() {
-		return "a " + getCurrentSector() + " "
-				+ getEmissiveLightningIntensity() + " " + kind;
-	}
-
-	public int getCurrentSector() {
-		return currentSector;
+		return "a " + currentRegion + " "
+				+ emissiveLightningIntensity + " " + kind;
 	}
 
 	public Actor3D() {
 		super();
 		acceleration = new Vec3();
 		previousPosition = new Vec3();
-		generated = null;
 	}
 
 	public Actor3D(Actor3D actor) {
 		super(actor);
 
-		owner = actor;
-		generated = null;
 		kind = actor.kind;
 		previousPosition = new Vec3();
 		acceleration = new Vec3();
-		currentSector = actor.currentSector;
-		candelas = actor.candelas;
+		currentRegion = actor.currentRegion;
 		angle = actor.angle;
 		id = actor.id;
 	}
 
 	public void tick() {
-		getPosition().addTo(acceleration);
+		origin.addTo(acceleration);
 		acceleration.scale(0.8f);
 	}
 
@@ -110,10 +97,10 @@ public class Actor3D extends SceneObject3D {
 		}
 			break;
 		case MOVE_DOWN:
-			move(0, -1, 0);
+			move( new Vec3( 0, -1, 0 ) );
 			break;
 		case MOVE_UP:
-			move(0, 1, 0);
+			move( new Vec3( 0, 1, 0) );
 			break;
 		case TURN_L:
 			angle -= Utils.transformTableIncrements;
@@ -124,9 +111,6 @@ public class Actor3D extends SceneObject3D {
 			angle += Utils.transformTableIncrements;
 			acceleration.scale(0.0f);
 			break;
-		case FIRE:
-			fire();
-			break;
 		case NOP:
 			break;
 		case UNDO:
@@ -135,22 +119,6 @@ public class Actor3D extends SceneObject3D {
 			break;
 
 		}
-	}
-
-	public void setGenerated(Actor3D generated) {
-		this.generated = generated;
-	}
-
-	public void fire() {
-		setGenerated(generateCopy());
-	}
-
-	public Actor3D generateCopy() {
-		return new Actor3D(this);
-	}
-
-	public void scale(Vec3 scale) {
-
 	}
 
 	public float getAngleXZ() {
@@ -165,67 +133,15 @@ public class Actor3D extends SceneObject3D {
 		this.angle += angle;
 	}
 
-	public void move(float x, float y, float z) {
-		Vec3 p = getPosition();
-
-		p.addTo(x, y, z);
-	}
-
 	public void accel(float x, float y, float z) {
 		acceleration.addTo(x, y, z);
 	}
 
 	public void checkpointPosition() {
-		previousPosition.copy(getPosition());
-	}
-
-	@Override
-	public void move(Vec3 translate) {
-
-		setPosition(getPosition().add(translate));
-	}
-
-	/**
-	 * 
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public int getId() {
-		return id;
+		previousPosition.copy( origin );
 	}
 
 	public void undo() {
-		getPosition().copy(previousPosition);
-	}
-
-	public void setCurrentSector(int sector) {
-		currentSector = sector;
-
-	}
-
-	@Override
-	public void setEmissiveLightningIntensity(int light) {
-		candelas = light;
-
-	}
-
-	public Actor3D checkGenerated() {
-		Actor3D toBeReturned = generated;
-		generated = null;
-		return toBeReturned;
-	}
-
-	public void destroy() {
-
-		previousPosition = null;
-		generated = null;
-		owner = null;
+		origin.set(previousPosition);
 	}
 }

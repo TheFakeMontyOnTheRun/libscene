@@ -1,4 +1,4 @@
-package br.odb.libscene;
+package br.odb.libscene.old;
 
 public abstract class Constants {
 

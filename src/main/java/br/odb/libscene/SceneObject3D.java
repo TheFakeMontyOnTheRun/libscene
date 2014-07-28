@@ -6,11 +6,11 @@ import br.odb.libstrip.Mesh;
 import br.odb.utils.math.Vec3;
 
 public class SceneObject3D {
-	private ArrayList<Mesh> meshes;
-	private Vec3 origin;
-	private Vec3 dimensions;
-	private long emissiveLightningIntensity;
-	private boolean visible;
+	public ArrayList<Mesh> meshes = new ArrayList< Mesh >();
+	public final Vec3 origin = new Vec3();
+	public final Vec3 dimensions = new Vec3();
+	public long emissiveLightningIntensity = 0;
+	public boolean visible = true;
 
 	/*
 	 * (non-Javadoc)
@@ -61,94 +61,23 @@ public class SceneObject3D {
 		return true;
 	}
 
-	/**
-	 * @return the visible
-	 */
-	public boolean isVisible() {
-		return visible;
-	}
-
-	/**
-	 * @param visible
-	 *            the visible to set
-	 */
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
 	public SceneObject3D() {
 		visible = true;
-		meshes = new ArrayList<Mesh>();
-		origin = new Vec3();
-		dimensions = new Vec3();
 	}
 
 	public SceneObject3D(SceneObject3D sceneObject) {
-
-		meshes = new ArrayList<Mesh>();
 
 		for (Mesh m : sceneObject.meshes) {
 			meshes.add(m);
 		}
 
-		visible = sceneObject.isVisible();
-		origin = new Vec3(sceneObject.origin);
-		dimensions = new Vec3(sceneObject.dimensions);
+		origin.set( sceneObject.origin );
+		dimensions.set( sceneObject.dimensions );
+		visible = sceneObject.visible;
 		emissiveLightningIntensity = sceneObject.emissiveLightningIntensity;
-	}
-
-	public int getEmissiveLightningIntensity() {
-		return (int) emissiveLightningIntensity;
-	}
-
-	public void setEmissiveLightningIntensity(int candelas) {
-		emissiveLightningIntensity = candelas;
-	}
-
-	public void addCandelas(int candelas) {
-
-		if (candelas >= 255) {
-			emissiveLightningIntensity = 255;
-			return;
-		}
-
-		if (candelas < 0) {
-			return;
-		}
-
-		if ((emissiveLightningIntensity + candelas) > 255)
-			emissiveLightningIntensity = 255;
-		else
-			emissiveLightningIntensity += candelas;
-	}
-
-	public void moveTo(Vec3 place) {
-		Vec3 diff = place.sub(origin);
-		move(diff);
-		origin.copy(place);
 	}
 
 	public void move(Vec3 delta) {
 		origin.set(origin.add(delta));
-	}
-
-	public void setPosition(Vec3 v) {
-		this.origin.set(v);
-	}
-
-	public ArrayList<Mesh> getMeshes() {
-		return meshes;
-	}
-
-	public void update() {
-
-	}
-
-	public void addMesh(Mesh mesh) {
-		meshes.add(mesh);
-	}
-
-	public Vec3 getPosition() {
-		return origin;
 	}
 }
