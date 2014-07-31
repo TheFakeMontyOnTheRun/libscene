@@ -1,18 +1,17 @@
 package br.odb.libscene.builder;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import br.odb.libscene.GroupSector;
 import br.odb.libscene.SpaceRegion;
 
-public class GroupSectorBuilder {
+public class GroupSectorBuilder extends SpaceRegionBuilder {
 	
-	public static GroupSector build( String[] token ) {
+	public SpaceRegion build( InputStream is ) throws NumberFormatException, IOException {
 		
-		SpaceRegion region = SpaceRegionBuilder.build( token );
-
-		GroupSector toReturn = new GroupSector(); 
-		
-		toReturn.p0.set( region.p0 );
-		toReturn.p1.set( region.p1 );
+		SpaceRegion region = super.build( is );
+		GroupSector toReturn = new GroupSector( region );
 		
 		return toReturn;
 	}
