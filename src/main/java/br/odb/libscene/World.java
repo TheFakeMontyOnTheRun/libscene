@@ -1,5 +1,14 @@
 package br.odb.libscene;
 
 public class World extends Scene {
-	public final GroupSector masterSector = new GroupSector();
+	
+	public World(GroupSector built) {
+		masterSector = built;
+	}
+	
+	public World() {
+		masterSector = new GroupSector();
+	}
+
+	public final GroupSector masterSector;
 }

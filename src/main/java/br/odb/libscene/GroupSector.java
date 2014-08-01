@@ -16,6 +16,6 @@ public class GroupSector extends SpaceRegion {
 	
 	
 	public final HashMap< Direction, String > materials = new HashMap< Direction, String >();
-	public final ArrayList< Sector > sons = new ArrayList< Sector >();
+	public final ArrayList< SpaceRegion > sons = new ArrayList< SpaceRegion >();
 	String id;
 }
