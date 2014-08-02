@@ -3,23 +3,35 @@ package br.odb.libscene.builder;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.stream.XMLInputFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import br.odb.libscene.GroupSector;
 import br.odb.libscene.World;
 
 public class WorldLoader {
-	
-	public static World build( InputStream is ) throws IOException, XMLStreamException {
-		
+
+	public static World build(InputStream is) throws IOException,
+			XMLStreamException, SAXException, ParserConfigurationException {
+
 		World world;
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(is);
-		
-		world = new World( (GroupSector) new GroupSectorBuilder().build( streamReader ) );
-		
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(is);
+		doc.getDocumentElement().normalize();
+
+		NodeList nodeLst;
+		nodeLst = doc.getElementsByTagName("world");
+
+		world = new World(
+				(GroupSector) new GroupSectorBuilder().build(nodeLst.item( 0 ) ) );
+
 		return world;
 	}
 }

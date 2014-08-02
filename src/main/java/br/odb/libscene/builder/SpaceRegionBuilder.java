@@ -1,36 +1,39 @@
 package br.odb.libscene.builder;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import br.odb.libscene.SpaceRegion;
+import br.odb.utils.math.Vec3;
 
 public class SpaceRegionBuilder implements SpatialDivisionBuilder {
-	
 
-	public SpaceRegion build( XMLStreamReader streamReader ) throws NumberFormatException, IOException, XMLStreamException {
-		
-		
+	public SpaceRegion build( Node node ) {
+
 		SpaceRegion region = new SpaceRegion();
-		
-		HashMap< String, SpatialDivisionBuilder > builders = new HashMap< String, SpatialDivisionBuilder >();
-		builders.put( "size", new Vec3Builder() );
-		builders.put( "position", new Vec3Builder() );		
-		SpatialDivisionBuilder builder;
-		
-		while (streamReader.hasNext()) {
-            if (streamReader.isStartElement()) {
-            	
-            	builder = builders.get(  streamReader.getLocalName() );
-            	
 
-            }
-            streamReader.next();
-        }		
-		
+		Vec3Builder builder = new Vec3Builder();
+
+		NodeList nodeLst;
+		nodeLst = node.getChildNodes();
+
+		for (int s = 0; s < nodeLst.getLength(); s++) {
+
+			Node fstNode = nodeLst.item(s);
+			
+			if (fstNode != null) {
+
+				if (fstNode.getNodeType() == Node.ELEMENT_NODE ) {
+
+					
+					if (fstNode.getNodeName().equalsIgnoreCase("size")) {
+						region.p1.set( builder.build( fstNode ) );
+					} else if (fstNode.getNodeName().equalsIgnoreCase("position")) {
+						region.p0.set( builder.build( fstNode ) );
+					}
+				}
+			}
+		}
 		return region;
 	}
 }

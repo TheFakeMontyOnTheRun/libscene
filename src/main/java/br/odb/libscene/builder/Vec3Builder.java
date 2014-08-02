@@ -1,18 +1,37 @@
 package br.odb.libscene.builder;
 
-import java.io.IOException;
+import org.w3c.dom.Node;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import br.odb.utils.math.Vec3;
 
-import br.odb.libscene.SpaceRegion;
+public class Vec3Builder {
 
-public class Vec3Builder implements SpatialDivisionBuilder {
+	public Vec3 build(Node node) {
+		String text = node.getTextContent();
+		
+		text = text.trim();
+		
+		
+		for ( String s : new String[] { "\n", "\t", "\r" } ) {
+			text = text.replace( s, " " );
+		}
+		
+		String textBefore = null;
+		
+		while ( !text.equals( textBefore ) ) {
+			textBefore = new String( text );
+			text = text.replace( "  ", " " );
+		}
 
-	@Override
-	public SpaceRegion build(XMLStreamReader streamReader)
-			throws NumberFormatException, IOException, XMLStreamException {
-		return null;
+		String[] tokens = text.split( " " );
+		
+		Vec3 toReturn = new Vec3();
+		
+		toReturn.x = Float.parseFloat( tokens[ 0 ] );
+		toReturn.y = Float.parseFloat( tokens[ 1 ] );
+		toReturn.z = Float.parseFloat( tokens[ 2 ] );
+		
+		return toReturn;
 	}
 
 }

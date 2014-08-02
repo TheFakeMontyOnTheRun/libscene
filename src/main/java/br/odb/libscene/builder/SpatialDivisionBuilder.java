@@ -3,10 +3,7 @@
  */
 package br.odb.libscene.builder;
 
-import java.io.IOException;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import org.w3c.dom.Node;
 
 import br.odb.libscene.SpaceRegion;
 
@@ -16,6 +13,6 @@ import br.odb.libscene.SpaceRegion;
  */
 public interface SpatialDivisionBuilder {
 
-	SpaceRegion build(XMLStreamReader streamReader)  throws NumberFormatException, IOException, XMLStreamException;
+	SpaceRegion build( Node node );
 
 }
