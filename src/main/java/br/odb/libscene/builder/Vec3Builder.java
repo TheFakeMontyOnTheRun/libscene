@@ -5,6 +5,14 @@ import org.w3c.dom.Node;
 import br.odb.utils.math.Vec3;
 
 public class Vec3Builder {
+	
+	public static String toXML( Vec3 vec) {
+		String toReturn = "";
+		toReturn += vec.x + "\n";
+		toReturn += vec.y + "\n";
+		toReturn += vec.z + "\n";;
+		return toReturn;
+	}
 
 	public Vec3 build(Node node) {
 		String text = node.getTextContent();

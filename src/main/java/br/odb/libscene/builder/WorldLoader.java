@@ -16,6 +16,19 @@ import br.odb.libscene.GroupSector;
 import br.odb.libscene.World;
 
 public class WorldLoader {
+	
+	public static String toXML( World world ) {
+		
+		String toReturn = "";
+		
+		toReturn += "<world>\n";
+		
+		toReturn += GroupSectorBuilder.toXML( world.masterSector );
+
+		toReturn += "\n</world>";
+		
+		return toReturn;
+	}
 
 	public static World build(InputStream is) throws IOException,
 			XMLStreamException, SAXException, ParserConfigurationException {

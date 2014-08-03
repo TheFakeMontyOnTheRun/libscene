@@ -45,4 +45,12 @@ public class SectorBuilder extends SpaceRegionBuilder {
 		
 		return sector;
 	}
+
+	public static String toXML( Sector s) {
+		String toReturn = "";
+		
+		toReturn += SpaceRegionBuilder.toXML( ( SpaceRegion )s );
+		
+		return toReturn;
+	}
 }
