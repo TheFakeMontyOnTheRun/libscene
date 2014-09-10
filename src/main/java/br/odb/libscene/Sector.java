@@ -11,7 +11,7 @@ public class Sector extends SpaceRegion {
 	}
 	
 	public Sector(SpaceRegion region ) {
-		super( region, region.id );
+		super( region );
 	}
 
 	public final HashMap< Direction, Sector > connection = new HashMap< Direction, Sector >();

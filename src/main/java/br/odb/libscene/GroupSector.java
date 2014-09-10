@@ -12,7 +12,7 @@ public class GroupSector extends SpaceRegion {
 	}
 	
 	public GroupSector(SpaceRegion region ) {
-		super( region, region.id );
+		super( region );
 	}
 	
 	public void addChild( SpaceRegion region ) {
