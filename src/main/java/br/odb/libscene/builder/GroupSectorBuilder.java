@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 
 import br.odb.libscene.GroupSector;
 import br.odb.libscene.SpaceRegion;
-import br.odb.libscene.World;
+import br.odb.libscene.builder.SpaceRegionBuilder;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
@@ -59,7 +59,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 					if ( builders.containsKey( fstNode.getNodeName() ) ) {
 						
 						builder = builders.get(fstNode.getNodeName());
-						masterSector.sons.add(builder.build(fstNode));
+						masterSector.addChild(builder.build(fstNode));
 					}
 				}
 			}

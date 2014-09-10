@@ -19,6 +19,10 @@ public class Vec3Builder {
 		
 		text = text.trim();
 		
+		return build( text );
+	}
+		
+	public Vec3 build( String text ) {
 		
 		for ( String s : new String[] { "\n", "\t", "\r" } ) {
 			text = text.replace( s, " " );

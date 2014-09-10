@@ -4,17 +4,19 @@ import br.odb.utils.math.Vec3;
 
 public class SpaceRegion {
 	
-	public SpaceRegion() {
-		
+	public SpaceRegion( String id ) {
+		this.id = id;
 	}
 
-	public SpaceRegion(SpaceRegion region) {
-		p0.set( region.p0 );
-		p1.set( region.p1 );
+	public SpaceRegion(SpaceRegion region, String id ) {
+		this.id = id;
+		position.set( region.position );
+		size.set( region.size );
 		description = region.description;
 	}
 	
-	public final Vec3 p0 = new Vec3();
-	public final Vec3 p1 = new Vec3();
+	public final String id;
+	public final Vec3 position = new Vec3();
+	public final Vec3 size = new Vec3();
 	public String description;
 }

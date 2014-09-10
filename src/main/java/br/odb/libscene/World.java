@@ -7,7 +7,7 @@ public class World extends Scene {
 	}
 	
 	public World() {
-		masterSector = new GroupSector();
+		masterSector = new GroupSector( "id" );
 	}
 
 	public final GroupSector masterSector;

@@ -7,11 +7,38 @@ import br.odb.utils.Direction;
 
 public class GroupSector extends SpaceRegion {
 	
-	public GroupSector() {
+	public GroupSector( String id ) {
+		super( id );
 	}
 	
-	public GroupSector(SpaceRegion region) {
-		super( region );
+	public GroupSector(SpaceRegion region ) {
+		super( region, region.id );
+	}
+	
+	public void addChild( SpaceRegion region ) {
+		sons.add( region );
+	}
+	
+	public SpaceRegion getChild( String id ) {
+		
+		SpaceRegion descendant;
+		
+		for ( SpaceRegion child : sons ) {
+			
+			if ( child.id.equals( id ) ) {
+				return child;
+			}
+			
+			if ( child instanceof GroupSector ) {
+				descendant = (( GroupSector) child ).getChild(id);
+				
+				if ( descendant != null ) {
+					return descendant;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	
