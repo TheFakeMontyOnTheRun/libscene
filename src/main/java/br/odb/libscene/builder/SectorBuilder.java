@@ -1,12 +1,6 @@
 package br.odb.libscene.builder;
 
-import java.io.IOException;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
