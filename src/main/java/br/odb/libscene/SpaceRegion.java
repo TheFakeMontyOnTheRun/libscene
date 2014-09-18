@@ -35,7 +35,10 @@ public class SpaceRegion extends SceneNode {
 			
 			for ( Direction d : Direction.values() ) {
 				sector.colorForDirection.put( d, mesh.material.mainColor );
+				System.out.println("d: " + d + " m: " + mesh.material.mainColor );
 			}			
+		} else {
+			System.out.println( "Sector has no material for it's mesh" );
 		}
 
 
