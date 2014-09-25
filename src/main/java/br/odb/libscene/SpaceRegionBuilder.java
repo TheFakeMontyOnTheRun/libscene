@@ -1,9 +1,8 @@
-package br.odb.libscene.builder;
+package br.odb.libscene;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import br.odb.libscene.SpaceRegion;
 import br.odb.utils.math.Vec3;
 
 public class SpaceRegionBuilder implements SpatialDivisionBuilder {

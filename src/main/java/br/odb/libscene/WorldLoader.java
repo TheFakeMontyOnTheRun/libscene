@@ -1,4 +1,4 @@
-package br.odb.libscene.builder;
+package br.odb.libscene;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,9 +11,6 @@ import javax.xml.stream.XMLStreamException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import br.odb.libscene.GroupSector;
-import br.odb.libscene.World;
 
 public class WorldLoader {
 	

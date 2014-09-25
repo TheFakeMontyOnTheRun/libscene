@@ -13,6 +13,7 @@ public class SpaceRegion extends SceneNode {
 	public final HashMap<Direction,Color> colorForDirection = new HashMap<Direction,Color>(); 
 	public final Vec3 size = new Vec3();
 	public String description;
+	public SpaceRegion parent;
 
 	public SpaceRegion( String id ) {
 		super( id );

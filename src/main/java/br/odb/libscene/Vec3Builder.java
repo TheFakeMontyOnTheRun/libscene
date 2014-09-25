@@ -1,4 +1,4 @@
-package br.odb.libscene.builder;
+package br.odb.libscene;
 
 import org.w3c.dom.Node;
 

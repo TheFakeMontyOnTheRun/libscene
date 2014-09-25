@@ -1,9 +1,6 @@
-package br.odb.libscene.builder;
+package br.odb.libscene;
 
 import org.w3c.dom.Node;
-
-import br.odb.libscene.Sector;
-import br.odb.libscene.SpaceRegion;
 
 
 public class SectorBuilder extends SpaceRegionBuilder {

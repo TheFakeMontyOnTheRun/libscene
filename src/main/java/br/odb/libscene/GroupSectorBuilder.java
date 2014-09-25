@@ -1,13 +1,11 @@
-package br.odb.libscene.builder;
+package br.odb.libscene;
 
 import java.util.HashMap;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import br.odb.libscene.GroupSector;
-import br.odb.libscene.SpaceRegion;
-import br.odb.libscene.builder.SpaceRegionBuilder;
+import br.odb.libscene.SpaceRegionBuilder;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
@@ -21,6 +19,12 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			
 			if ( s instanceof GroupSector ) {
 				toReturn += "\n<group>";
+				
+				toReturn += "\n<mesh>";
+				toReturn += ( (GroupSector) s ).mesh;
+				toReturn += "\n</mesh>";
+				
+				
 				toReturn += GroupSectorBuilder.toXML( (GroupSector) s );
 				toReturn += "\n</group>";
 			} else {

@@ -2,6 +2,7 @@ package br.odb.libscene;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import br.odb.libstrip.Mesh;
 import br.odb.utils.Direction;
@@ -18,8 +19,19 @@ public class GroupSector extends SpaceRegion {
 		mesh = new Mesh( id );
 	}
 	
+	public void removeChild( SpaceRegion child ) {
+		sons.remove( child );
+		child.parent = null;
+	}
+	
 	public void addChild( SpaceRegion region ) {
+		
+		if ( region.parent instanceof GroupSector ) {
+			( ( GroupSector) region.parent ).sons.remove( region );
+		}
+		
 		sons.add( region );
+		region.parent = this;
 	}
 	
 	public SpaceRegion getChild( String id ) {
@@ -44,7 +56,11 @@ public class GroupSector extends SpaceRegion {
 		return null;
 	}
 	
+	public List< SpaceRegion > getSons() {
+		return sons;
+	}
+	
 	public final Mesh mesh;
 	public final HashMap< Direction, String > materials = new HashMap< Direction, String >();
-	public final ArrayList< SpaceRegion > sons = new ArrayList< SpaceRegion >();
+	protected final ArrayList< SpaceRegion > sons = new ArrayList< SpaceRegion >();
 }
