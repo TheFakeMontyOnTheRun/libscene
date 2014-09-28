@@ -11,7 +11,7 @@ import br.odb.utils.math.Vec3;
 public class SpaceRegion extends SceneNode {
 
 	public final HashMap<Direction,Color> colorForDirection = new HashMap<Direction,Color>(); 
-	public final Vec3 size = new Vec3();
+	public final Vec3 size = new Vec3( 1.0f, 1.0f, 1.0f );
 	public String description;
 	public SpaceRegion parent;
 	
@@ -114,28 +114,6 @@ public class SpaceRegion extends SceneNode {
 		return sector;
 	}
 
-//	public boolean pick(Vec3 vec) {
-//		float x = vec.x;
-//		float y = vec.y;
-//		float z = vec.z;
-//
-//		boolean inside = false;
-//
-//		inside = Float.isNaN(x)
-//				|| ((getX0() <= x || Utils.eqFloat(getX0(), x)) && x <= getX1() || Utils
-//						.eqFloat(getX1(), x));
-//
-//		inside = inside
-//				&& (Float.isNaN(y) || ((getY0() <= y || Utils.eqFloat(getY0(),
-//						y)) && y <= getY1() || Utils.eqFloat(getY1(), y)));
-//
-//		inside = inside
-//				&& (Float.isNaN(z) || ((getZ0() <= z || Utils.eqFloat(getZ0(),
-//						z)) && z <= getZ1() || Utils.eqFloat(getZ1(), z)));
-//
-//		return inside;
-//	}
-	
 
 	public boolean isDegenerate() {		
 		return ( size.x <= 0.0f ) || ( size.y <= 0.0f ) || ( size.z <= 0.0f );
@@ -151,21 +129,11 @@ public class SpaceRegion extends SceneNode {
 	}
 
 	
-//	public boolean contains(Vec3 vec) {
-//		float x = vec.x;
-//		float y = vec.y;
-//		float z = vec.z;
-//
-//		boolean inside = false;
-//
-//		inside = ((getX0() <= x || Utils.eqFloat(getX0(), x)) && x <= getX1() || Utils
-//				.eqFloat(getX1(), x))
-//				&& ((getY0() <= y || Utils.eqFloat(getY0(), y)) && y <= getY1() || Utils
-//						.eqFloat(getY1(), y))
-//				&& ((getZ0() <= z || Utils.eqFloat(getZ0(), z)) && z <= getZ1() || Utils
-//						.eqFloat(getZ1(), z));
-//
-//		return inside && !blockedByDoor(vec);
-//	}
+	public boolean contains( Vec3 v ) {
+
+		return ( ( position.x <= v.x ) && ( v.x <= ( position.x + size.x ) ) )
+				&& ( ( position.y <= v.y ) && ( v.y <= ( position.y + size.y ) ) )
+				&& ( ( position.z <= v.z ) && ( v.z <= ( position.z + size.z ) ) );
+	}
 	
 }

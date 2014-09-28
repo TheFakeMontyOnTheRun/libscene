@@ -47,23 +47,53 @@ public class GroupSector extends SpaceRegion {
 		region.parent = this;
 	}
 	
-	public SpaceRegion getChild( String id ) {
+	public SpaceRegion pick( Vec3 v ) {
+		
+		SpaceRegion contained;
+		
+		if ( contains( v ) ) {
+			
+			for ( SpaceRegion sr : sons ) {
+				
+				if ( sr.contains(v) && sr instanceof GroupSector ) {
+					
+					contained = ((GroupSector)sr).pick( v );		
+					
+					if ( contained != null ) {
+						
+						return contained;
+					}
+				}
+			}	 			
+			
+			return this;
+		}
+		
+		return null;
+	}
+	
+	
+	public SpaceRegion getChild( String query ) {
 		
 		SpaceRegion descendant;
 		
 		for ( SpaceRegion child : sons ) {
 			
-			if ( child.id.equals( id ) ) {
+			if ( child.id.equals( query ) ) {
 				return child;
 			}
 			
 			if ( child instanceof GroupSector ) {
-				descendant = (( GroupSector) child ).getChild(id);
+				descendant = (( GroupSector) child ).getChild( query );
 				
 				if ( descendant != null ) {
 					return descendant;
 				}
 			}
+		}
+		
+		if ( id.equals( query  ) ) {
+			return this;
 		}
 		
 		return null;
