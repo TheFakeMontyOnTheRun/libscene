@@ -14,6 +14,16 @@ public class SpaceRegion extends SceneNode {
 	public final Vec3 size = new Vec3();
 	public String description;
 	public SpaceRegion parent;
+	
+	Vec3 getAbsolutePosition(SpaceRegion child) {
+		
+		if ( parent != null ) {
+			return parent.getAbsolutePosition( this ).add( child.position );
+		} else {
+			return child.position;
+		}
+	}
+
 
 	public SpaceRegion( String id ) {
 		super( id );

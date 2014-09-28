@@ -14,7 +14,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		String toReturn = "";
 		toReturn += SpaceRegionBuilder.toXML( ( SpaceRegion )gs );
 		
-		for ( SpaceRegion s : gs.sons ) {
+		for ( SpaceRegion s : gs.getSons() ) {
 			
 			
 			if ( s instanceof GroupSector ) {
