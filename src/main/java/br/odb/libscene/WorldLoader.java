@@ -6,7 +6,6 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -28,7 +27,7 @@ public class WorldLoader {
 	}
 
 	public static World build(InputStream is) throws IOException,
-			XMLStreamException, SAXException, ParserConfigurationException {
+			SAXException, ParserConfigurationException {
 
 		World world;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
