@@ -83,10 +83,6 @@ public class SpaceRegion extends SceneNode {
 			if ( p.z < sector.position.z ) {
 				sector.position.z = p.z;
 			}			
-		}
-
-		
-		for ( Vec3 p : mesh.points ) {
 
 			if ( p.x > ( sector.size.x + sector.position.x ) ) {
 				sector.size.x = ( p.x - sector.position.x );

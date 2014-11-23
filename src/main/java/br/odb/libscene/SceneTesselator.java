@@ -3,6 +3,7 @@ package br.odb.libscene;
 import br.odb.libstrip.GeneralPolygon;
 import br.odb.libstrip.GeneralQuad;
 import br.odb.libstrip.GeneralTriangle;
+import br.odb.libstrip.IndexedSetFace;
 import br.odb.utils.Color;
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
@@ -17,76 +18,12 @@ public class SceneTesselator {
 	}
 
 	private static void generateMeshForSector(GroupSector sector) {
-//		GeneralQuad quad;
 		sector.mesh.clear();
-		
-//		if ( sector.colorForDirection.get( Direction.CEILING ) != null ) {
-//			quad = new GeneralQuad();
-//			quad.vertex[ 0 ].set( sector.position );
-//			quad.vertex[ 2 ].set( sector.position.add( sector.size ) );
-//			quad.color.set( sector.colorForDirection.get( Direction.CEILING ) );
-//			sector.mesh.addFace( quad );
-//		}
 
-//		if ( sector.colorForDirection.get( Direction.FLOOR ) != null ) {
-//			quad = new GeneralQuad();
-//			quad.vertex[ 0 ].set( sector.position );
-//			quad.vertex[ 2 ].set( sector.position.add( sector.size ) );
-//			quad.color.set( sector.colorForDirection.get( Direction.FLOOR ) );
-//			quad.color.set( new Color( 255, 0, 0 ) );
-//			sector.mesh.addFace( quad );
-//		}
-		Vec3 v0;
-		Vec3 v1;
-		Vec3 v2;
-		GeneralPolygon	trig;
-		
-		v0 = new Vec3();
-		v1 = new Vec3();
-		v2 = new Vec3();
-		
-		v0.set( sector.position );
-		v2.set( sector.position.add( sector.size ) );
-		v2.y = v0.y;
-		v1.set( v2.x, v0.y, v0.z );
-		
-		trig = new GeneralPolygon();
-		trig.addVertex( v0 );
-		trig.addVertex( v1 );
-		trig.addVertex( v2 );
-		
-		if ( sector.colorForDirection.get( Direction.FLOOR ) != null ) {
-			trig.color.set( sector.colorForDirection.get( Direction.FLOOR ) );
-		} else {
+		for ( Direction d : Direction.values() ) {
 			
-			trig.color.set( new Color( 255, 0, 0 ) );
+			generateQuadFor( d, sector );
 		}
-		
-		sector.mesh.addFace( trig );		
-		
-		
-		v0 = new Vec3();
-		v1 = new Vec3();
-		v2 = new Vec3();
-		
-		v0.set( sector.position );
-		v2.set( sector.position.add( sector.size ) );
-		v2.y = v0.y;
-		v1.set( v0.x, v0.y, v2.z );
-		
-		trig = new GeneralPolygon();
-		trig.addVertex( v0 );
-		trig.addVertex( v1 );
-		trig.addVertex( v2 );
-		
-		if ( sector.colorForDirection.get( Direction.FLOOR ) != null ) {
-			trig.color.set( sector.colorForDirection.get( Direction.FLOOR ) );
-		} else {
-			
-			trig.color.set( new Color( 255, 0, 0 ) );
-		}
-		
-		sector.mesh.addFace( trig );
 		
 		for ( SpaceRegion sr : sector.getSons() ) {
 			if ( sr instanceof GroupSector ) {
@@ -94,5 +31,106 @@ public class SceneTesselator {
 			}
 		}
 		
+	}
+
+	private static void generateQuadFor(Direction d,
+			GroupSector sector) {
+		
+		GeneralPolygon trig;
+		
+		switch ( d ) {
+		case FLOOR:
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z  + sector.size.z ) );
+
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z  + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z + sector.size.z ) );
+
+			break;
+		case CEILING:
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z  + sector.size.z ) );
+
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z  + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );
+			break;
+		case W:
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z + sector.size.z ) );
+			
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );
+			
+			break;
+		case E:
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z + sector.size.z ) );
+			
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );
+			break;
+		case N:
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z ) );
+
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z ) );
+			break;
+		case S:
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y, sector.position.z + sector.size.z ) );
+
+			trig = new GeneralPolygon();
+			sector.mesh.addFace( trig );
+			trig.color.set( ( sector.colorForDirection.get( d ) != null ) ? sector.colorForDirection.get( d ) : new Color( 255, 0, 0 ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y, sector.position.z + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );
+			trig.addVertex( new Vec3( sector.position.x + sector.size.x, sector.position.y + sector.size.y, sector.position.z + sector.size.z ) );			
+			break;
+		}
 	}
 }
