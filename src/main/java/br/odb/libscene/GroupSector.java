@@ -17,6 +17,13 @@ public class GroupSector extends SpaceRegion {
 	
 	public GroupSector(SpaceRegion region ) {
 		super( region );
+		
+		for ( Direction d : Direction.values() ) {
+			if ( region.colorForDirection.get( d ) != null ) {
+				colorForDirection.put( d, region.colorForDirection.get( d ) );
+			}
+		}
+		
 		mesh = new Mesh( id );
 	}
 	

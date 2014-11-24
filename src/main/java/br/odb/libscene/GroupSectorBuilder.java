@@ -6,6 +6,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import br.odb.libscene.SpaceRegionBuilder;
+import br.odb.utils.Color;
+import br.odb.utils.Direction;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
@@ -36,6 +38,10 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		
 		return toReturn;
 	}
+
+
+	private String direction;
+	private String colour;
 	
 	
 	public SpaceRegion build(Node node) {
@@ -47,7 +53,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		builders.put("group", new GroupSectorBuilder());
 		builders.put("sector", new SectorBuilder());
 		SpatialDivisionBuilder builder;
-		
+
 		
 		NodeList nodeLst;
 		nodeLst = node.getChildNodes();
@@ -71,4 +77,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 		return masterSector;
 	}
+
+
+	
 }

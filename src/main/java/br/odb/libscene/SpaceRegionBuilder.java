@@ -50,6 +50,33 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 		return toReturn;
 	}
 
+	private void readMaterial( SpaceRegion region, Node node) {
+		NodeList nodeLst;
+		nodeLst = node.getChildNodes();
+		
+		String direction = "";
+		String colour = "";
+		
+		for (int s = 0; s < nodeLst.getLength(); s++) {
+
+			Node fstNode = nodeLst.item(s);
+			
+			if (fstNode != null) {
+
+				if (fstNode.getNodeType() == Node.ELEMENT_NODE ) {
+					
+					if ( "direction".equalsIgnoreCase( fstNode.getNodeName() ) ) {
+						direction = fstNode.getTextContent().trim();
+					} else if ( "color".equalsIgnoreCase( fstNode.getNodeName() ) ) {
+						colour = fstNode.getTextContent().trim();
+					}
+				}
+			}
+		}
+		
+		region.colorForDirection.put( Direction.getDirectionForSimpleName( direction ), Color.getColorFromHTMLColor( colour ) );
+	}
+	
 	public SpaceRegion build(Node node) {
 
 		String description = "";
@@ -81,12 +108,28 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 							"description")) {
 						description = fstNode.getTextContent().trim();
 					}
-
 				}
 			}
 		}
 
 		SpaceRegion region = new SpaceRegion(id);
+		
+		
+		for (int s = 0; s < nodeLst.getLength(); s++) {
+
+			Node fstNode = nodeLst.item(s);
+
+			if (fstNode != null) {
+
+				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					if ( "material".equalsIgnoreCase( fstNode.getNodeName() ) ) {
+						readMaterial( region, fstNode );
+					}
+				}
+			}
+		}
+		
 		region.position.set(p0);
 		region.size.set(p1);
 		region.description = description;
