@@ -70,33 +70,49 @@ public class SpaceRegion extends SceneNode {
 		sector.size.y = (center.y);
 		sector.size.z = (center.z);
 		
+		float x0 = center.x;
+		float y0 = center.y;
+		float z0 = center.z;
+		float x1 = center.x;
+		float y1 = center.y;
+		float z1 = center.z;
+		
+		
 		for ( Vec3 p : mesh.points ) {
 
-			if ( p.x < sector.position.x ) {
-				sector.position.x = p.x;
+			if ( p.x < x0 ) {
+				x0 = p.x;
 			}
 
-			if ( p.y < sector.position.y ) {
-				sector.position.z = p.y;
+			if ( p.y < y0 ) {
+				y0 = p.y;
 			}
 
-			if ( p.z < sector.position.z ) {
-				sector.position.z = p.z;
+			if ( p.z < z0 ) {
+				z0 = p.z;
 			}			
 
-			if ( p.x > ( sector.size.x + sector.position.x ) ) {
-				sector.size.x = ( p.x - sector.position.x );
+			if ( p.x > x1 ) {
+				x1 = p.x;
 			}
 
-			if ( p.y > ( sector.size.y + sector.position.y ) ) {
-				sector.size.y = ( p.y - sector.position.y );
+			if ( p.y > y1 ) {
+				y1 = p.y;
 			}
 			
-			if ( p.z > ( sector.size.z + sector.position.z ) ) {
-				sector.size.z = ( p.z - sector.position.z );
-			}
-			
-		}		
+			if ( p.z > z1 ) {
+				z1 = p.z;
+			}			
+		}	
+		
+		
+		sector.position.x = x0;
+		sector.position.y = y0;
+		sector.position.z = z0;
+		
+		sector.size.x = x1 - x0;
+		sector.size.y = y1 - y0;
+		sector.size.z = z1 - z0;
 		
 		if ( snapLevel > 0) {
 			sector.position.x = Math.round( sector.position.x );

@@ -36,17 +36,20 @@ public class SceneTesselator {
 
 		GeneralPolygon trig;
 
+		if ( sector.colorForDirection.get(d) == null ) {
+			return;
+		}
+		
 		switch (d) {
 		case FLOOR:
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
 			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -56,13 +59,11 @@ public class SceneTesselator {
 
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -74,13 +75,11 @@ public class SceneTesselator {
 		case CEILING:
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y
 					+ sector.size.y, sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -91,12 +90,10 @@ public class SceneTesselator {
 
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y
 					+ sector.size.y, sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -108,13 +105,11 @@ public class SceneTesselator {
 		case W:
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y
@@ -124,13 +119,11 @@ public class SceneTesselator {
 
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y
@@ -142,13 +135,11 @@ public class SceneTesselator {
 		case E:
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
 					sector.position.y, sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -159,13 +150,11 @@ public class SceneTesselator {
 
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
 					sector.position.y, sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -177,13 +166,11 @@ public class SceneTesselator {
 		case N:
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -193,13 +180,11 @@ public class SceneTesselator {
 
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z));
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y
@@ -210,13 +195,11 @@ public class SceneTesselator {
 		case S:
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-	
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z + sector.size.z));
 			trig.addVertex(new Vec3(sector.position.x + sector.size.x,
@@ -227,13 +210,11 @@ public class SceneTesselator {
 
 			trig = new GeneralPolygon();
 			sector.mesh.addFace(trig);
-			trig.color
-					.set((sector.colorForDirection.get(d) != null) ? sector.colorForDirection
-							.get(d) : new Color(255, 0, 0));
-			trig.color.r -= d.ordinal() * 20;
-			trig.color.g -= d.ordinal() * 20;
-			trig.color.b -= d.ordinal() * 20;
-			
+			trig.color.set(sector.colorForDirection.get(d));
+			trig.color.r /= ( d.ordinal() + 1 );
+			trig.color.g /= ( d.ordinal() + 1 );
+			trig.color.b /= ( d.ordinal() + 1 );
+
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y,
 					sector.position.z + sector.size.z));
 			trig.addVertex(new Vec3(sector.position.x, sector.position.y
