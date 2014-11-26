@@ -38,7 +38,7 @@ public class SpaceRegion extends SceneNode {
 	
 
 
-	public static GroupSector getConvexHull( int snapLevel, Mesh mesh ) {
+	public static SpaceRegion getConvexHull( int snapLevel, Mesh mesh ) {
 
 		GroupSector sector = new GroupSector( mesh.name );
 
@@ -139,7 +139,64 @@ public class SpaceRegion extends SceneNode {
 
 		return position.equals( sector.position ) && size.equals( sector.size );
 	}
+	
+	public boolean contains( SpaceRegion another ) {
+		if ( another == null ) {
+			return false;
+		}
+		
+		if ( this == another || this.equals( another ) ) {
+			return true;
+		}
+		
+		Vec3 p0 = position;
+		Vec3 p1 = position.add( size );
+		Vec3 anotherP0 = another.position;
+		Vec3 anotherP1 = another.position.add( size );
 
+		
+		if ( contains( anotherP0.x, anotherP1.y, anotherP0.z ) ) {
+			return true;
+		}
+		
+		if (contains( anotherP1.x, anotherP0.y, anotherP0.z ) ) {
+			return true;
+		}
+		
+		if ( contains( anotherP1.x, anotherP1.y, anotherP0.z ) ) {
+			return true;
+		}
+		
+		if ( contains( anotherP0.x, anotherP0.y, anotherP0.z ) ) { 
+			return true;
+		}
+		
+		if ( contains( anotherP0.x, anotherP1.y, anotherP1.z ) ) {
+			return true;
+		}
+		
+		if (contains( anotherP1.x, anotherP0.y, anotherP1.z ) ) {
+			return true;
+		}
+		
+		if ( contains( anotherP1.x, anotherP1.y, anotherP1.z ) ) {
+			return true;
+		}
+		
+		if ( contains( anotherP0.x, anotherP0.y, anotherP1.z ) ) { 
+			return true;
+		}
+		
+		if ( anotherP0.x >= p0.x && anotherP1.x <= p1.x && anotherP0.y <= p0.y && anotherP1.y >= p1.y  && ( ( p0.z <= anotherP0.z && anotherP0.z <= p1.z ) || ( p0.z <= anotherP1.z && anotherP1.z <= p1.z )  ) ) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	public boolean contains( float x, float y, float z ) {
+		return contains( new Vec3( x, y, z ) );
+	}
 	
 	public boolean contains( Vec3 v ) {
 
