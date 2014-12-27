@@ -40,7 +40,7 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 		}
 
 		toReturn += "<position>\n";
-		toReturn += Vec3Builder.toXML(region.position);
+		toReturn += Vec3Builder.toXML(region.localPosition);
 		toReturn += "</position>\n";
 
 		toReturn += "<size>\n";
@@ -130,7 +130,7 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 			}
 		}
 		
-		region.position.set(p0);
+		region.localPosition.set(p0);
 		region.size.set(p1);
 		region.description = description;
 		return region;

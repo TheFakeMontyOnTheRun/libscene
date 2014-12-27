@@ -1,9 +1,10 @@
 package br.odb.libscene;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import br.odb.libstrip.Material;
 import br.odb.libstrip.Mesh;
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
@@ -28,7 +29,7 @@ public class GroupSector extends SpaceRegion {
 	}
 	
 	public void removeChild( SpaceRegion child ) {
-		child.position.set( getAbsolutePosition( child ) );
+		child.localPosition.set( getAbsolutePosition( child ) );
 		sons.remove( child );
 		child.parent = null;
 	}
@@ -42,15 +43,7 @@ public class GroupSector extends SpaceRegion {
 		
 		sons.add( region );
 		
-		Vec3 absolute = new Vec3();
-		
-		if ( parent != null ) {
-			absolute.set( parent.getAbsolutePosition( this ) );
-		}
-		
-		absolute.set( absolute.sub( region.position ) );
-		
-		region.position.set( absolute );
+		region.localPosition.set( region.localPosition.sub( localPosition ) );
 		region.parent = this;
 	}
 	
@@ -106,11 +99,11 @@ public class GroupSector extends SpaceRegion {
 		return null;
 	}
 	
-	public List< SpaceRegion > getSons() {
+	public Set< SpaceRegion > getSons() {
 		return sons;
 	}
 	
 	public final Mesh mesh;
-	public final HashMap< Direction, String > materials = new HashMap< Direction, String >();
-	private final ArrayList< SpaceRegion > sons = new ArrayList< SpaceRegion >();
+	public final HashMap< Direction, Material > materials = new HashMap< Direction, Material >();
+	private final Set< SpaceRegion > sons = new HashSet< SpaceRegion >();
 }
