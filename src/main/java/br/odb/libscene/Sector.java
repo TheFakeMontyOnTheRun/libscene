@@ -13,6 +13,10 @@ public class Sector extends SpaceRegion {
 	public Sector(SpaceRegion region ) {
 		super( region );
 	}
+	
+	public Sector(SpaceRegion region, String newId ) {
+		super( region, newId );
+	}
 
 	public final HashMap< Direction, Sector > connection = new HashMap< Direction, Sector >();
 }

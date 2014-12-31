@@ -10,44 +10,47 @@ import br.odb.utils.math.Vec3;
 public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 
 	public static String toXML(SpaceRegion region) {
-		String toReturn = "";
+		StringBuilder sb = new StringBuilder();
+		
 		Color c;
-		toReturn += "<id>\n";
-		toReturn += region.id;
-		toReturn += "</id>\n";
+		sb.append( "<id>\n" );
+		sb.append(  region.id );
+		sb.append(  "</id>\n" );
 
-		if (region.description != null) {
-			toReturn += "<description>\n";
-			toReturn += region.description;
-			toReturn += "</description>\n";
+		if (region.description != null && region.description.trim().length() > 0 ) {
+			sb.append(  "<description>\n" );
+			sb.append(  region.description );
+			sb.append(  "</description>\n" );
 		}
 
 		for (Direction d : region.colorForDirection.keySet()) {
 
 			c = region.colorForDirection.get(d);
+			
+			if ( c != null ) {
+				sb.append(  "<material>\n" );
 
-			toReturn += "<material>\n";
+				sb.append(  "<direction>\n" );
+				sb.append(  d.simpleName );
+				sb.append(  "</direction>\n" );
 
-			toReturn += "<direction>\n";
-			toReturn += d.simpleName;
-			toReturn += "</direction>\n";
+				sb.append(  "<color>\n" );
+				sb.append(  c.getHTMLColor() );
+				sb.append(  "</color>\n" );
 
-			toReturn += "<color>\n";
-			toReturn += c.getHTMLColor();
-			toReturn += "</color>\n";
-
-			toReturn += "</material>\n";
+				sb.append(  "</material>\n" );				
+			}
 		}
 
-		toReturn += "<position>\n";
-		toReturn += Vec3Builder.toXML(region.localPosition);
-		toReturn += "</position>\n";
+		sb.append(  "<position>\n" );
+		sb.append(  Vec3Builder.toXML(region.localPosition) );
+		sb.append(  "</position>\n" );
 
-		toReturn += "<size>\n";
-		toReturn += Vec3Builder.toXML(region.size);
-		toReturn += "</size>\n";
+		sb.append(  "<size>\n" );
+		sb.append(  Vec3Builder.toXML(region.size) );
+		sb.append(  "</size>\n" );
 
-		return toReturn;
+		return sb.toString();
 	}
 
 	private void readMaterial( SpaceRegion region, Node node) {

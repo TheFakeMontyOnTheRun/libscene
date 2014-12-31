@@ -7,11 +7,13 @@ import br.odb.utils.math.Vec3;
 public class Vec3Builder {
 	
 	public static String toXML( Vec3 vec) {
-		String toReturn = "";
-		toReturn += vec.x + "\n";
-		toReturn += vec.y + "\n";
-		toReturn += vec.z + "\n";;
-		return toReturn;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append( vec.x + "\n" );
+		sb.append( vec.y + "\n" );
+		sb.append( vec.z + "\n" );
+		
+		return sb.toString();
 	}
 
 	public Vec3 build(Node node) {

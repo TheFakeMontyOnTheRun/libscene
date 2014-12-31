@@ -14,4 +14,9 @@ public class SceneNode {
 	public SceneNode( String id ) {
 		this.id = id;
 	}
+
+	public SceneNode(SpaceRegion other, String newId) {
+		this( newId );
+		this.localPosition.set( other.localPosition );
+	}
 }

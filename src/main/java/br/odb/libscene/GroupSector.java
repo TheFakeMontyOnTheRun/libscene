@@ -106,4 +106,5 @@ public class GroupSector extends SpaceRegion {
 	public final Mesh mesh;
 	public final HashMap< Direction, Material > materials = new HashMap< Direction, Material >();
 	private final Set< SpaceRegion > sons = new HashSet< SpaceRegion >();
+	
 }

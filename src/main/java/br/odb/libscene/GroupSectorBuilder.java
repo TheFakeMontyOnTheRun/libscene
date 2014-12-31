@@ -5,45 +5,42 @@ import java.util.HashMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import br.odb.libscene.SpaceRegionBuilder;
-import br.odb.utils.Color;
-import br.odb.utils.Direction;
+import sun.rmi.runtime.Log;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
-	public static String toXML( GroupSector gs ) {
+	public static String toXML(GroupSector gs) {
+		StringBuilder sb = new StringBuilder();
 		
-		String toReturn = "";
-		toReturn += SpaceRegionBuilder.toXML( ( SpaceRegion )gs );
-		
-		for ( SpaceRegion s : gs.getSons() ) {
-			
-			
-			if ( s instanceof GroupSector ) {
-				toReturn += "\n<group>";
-				
-				toReturn += "\n<mesh>";
-				toReturn += ( (GroupSector) s ).mesh;
-				toReturn += "\n</mesh>";
-				
-				
-				toReturn += GroupSectorBuilder.toXML( (GroupSector) s );
-				toReturn += "\n</group>";
-			} else {
-				toReturn += "\n<sector>";
-				toReturn += SectorBuilder.toXML( s );
-				toReturn += "\n</sector>";
+		sb.append( SpaceRegionBuilder.toXML((SpaceRegion) gs) );
+
+		for (SpaceRegion s : gs.getSons()) {
+
+			if (s instanceof GroupSector) {
+				sb.append( "\n<group>" );
+
+				if (((GroupSector) s).mesh.faces.size() > 0) {
+
+					sb.append( "\n<mesh>" );
+					sb.append( ((GroupSector) s).mesh );
+					sb.append( "\n</mesh>" );
+				}
+
+				sb.append( GroupSectorBuilder.toXML((GroupSector) s) );
+				sb.append( "\n</group>" );
+			} else if (s instanceof Sector) {
+				sb.append( "\n<sector>" );
+				sb.append( SectorBuilder.toXML( (Sector) s) );
+				sb.append( "\n</sector>" );
 			}
 		}
-		
-		return toReturn;
-	}
 
+		return sb.toString();
+	}
 
 	private String direction;
 	private String colour;
-	
-	
+
 	public SpaceRegion build(Node node) {
 
 		SpaceRegion region = super.build(node);
@@ -54,20 +51,21 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		builders.put("sector", new SectorBuilder());
 		SpatialDivisionBuilder builder;
 
-		
 		NodeList nodeLst;
+		System.out.println( "Demo3D id: " + masterSector.id );
+		
 		nodeLst = node.getChildNodes();
 
 		for (int s = 0; s < nodeLst.getLength(); s++) {
 
 			Node fstNode = nodeLst.item(s);
-			
+
 			if (fstNode != null) {
 
-				if (fstNode.getNodeType() == Node.ELEMENT_NODE ) {
+				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					if ( builders.containsKey( fstNode.getNodeName() ) ) {
-						
+					if (builders.containsKey(fstNode.getNodeName())) {
+
 						builder = builders.get(fstNode.getNodeName());
 						masterSector.addChild(builder.build(fstNode));
 					}
@@ -78,6 +76,4 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		return masterSector;
 	}
 
-
-	
 }
