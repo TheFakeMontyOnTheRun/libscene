@@ -115,7 +115,6 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 			}
 		}
 		
-		System.out.println( "building Space Region with id = " + id );
 		SpaceRegion region = new SpaceRegion(id);
 		
 		

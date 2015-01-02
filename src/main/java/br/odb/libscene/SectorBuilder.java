@@ -40,7 +40,6 @@ public class SectorBuilder extends SpaceRegionBuilder {
 //		nodeLst = node.getChildNodes();
 //
 		String direction = "";
-//		String colour = "";
 
 //		for (int s = 0; s < nodeLst.getLength(); s++) {
 //
@@ -61,7 +60,7 @@ public class SectorBuilder extends SpaceRegionBuilder {
 //			}
 //		}
 		
-		System.out.println( "connecting " + direction + " for " + sector.id );
+//		System.out.println( "connecting " + direction + " for " + sector.id );
 
 		sector.connection.put( Direction.getDirectionForSimpleName( direction ), sector );
 		// region.colorForDirection.put( Direction.getDirectionForSimpleName(

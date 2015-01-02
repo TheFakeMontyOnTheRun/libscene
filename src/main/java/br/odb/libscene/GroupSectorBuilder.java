@@ -52,7 +52,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		SpatialDivisionBuilder builder;
 
 		NodeList nodeLst;
-		System.out.println( "Demo3D id: " + masterSector.id );
 		
 		nodeLst = node.getChildNodes();
 
