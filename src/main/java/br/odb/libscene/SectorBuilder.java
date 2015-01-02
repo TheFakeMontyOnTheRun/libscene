@@ -25,7 +25,7 @@ public class SectorBuilder extends SpaceRegionBuilder {
 			if (fstNode != null) {
 
 				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
-					if ("material".equalsIgnoreCase(fstNode.getNodeName())) {
+					if ("connection".equalsIgnoreCase(fstNode.getNodeName())) {
 						readLink(sector, fstNode);
 					}
 				}
@@ -36,31 +36,34 @@ public class SectorBuilder extends SpaceRegionBuilder {
 	}
 
 	private void readLink(Sector sector, Node node) {
-		NodeList nodeLst;
-		nodeLst = node.getChildNodes();
-
+//		NodeList nodeLst;
+//		nodeLst = node.getChildNodes();
+//
 		String direction = "";
-		String colour = "";
+//		String colour = "";
 
-		for (int s = 0; s < nodeLst.getLength(); s++) {
-
-			Node fstNode = nodeLst.item(s);
-
-			if (fstNode != null) {
-
-				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
+//		for (int s = 0; s < nodeLst.getLength(); s++) {
+//
+//			Node fstNode = nodeLst.item(s);
+//
+//			if (fstNode != null) {
+//
+//				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
 					// if ( "direction".equalsIgnoreCase( fstNode.getNodeName()
 					// ) ) {
-					// direction = fstNode.getTextContent().trim();
+					 direction = node.getTextContent().trim();
 					// } else if ( "sector".equalsIgnoreCase(
 					// fstNode.getNodeName() ) ) {
 					// colour = fstNode.getTextContent().trim();
 					// }
-				}
-			}
-		}
+//				}
+//			}
+//		}
+		
+		System.out.println( "connecting " + direction + " for " + sector.id );
 
+		sector.connection.put( Direction.getDirectionForSimpleName( direction ), sector );
 		// region.colorForDirection.put( Direction.getDirectionForSimpleName(
 		// direction ), Color.getColorFromHTMLColor( colour ) );
 
