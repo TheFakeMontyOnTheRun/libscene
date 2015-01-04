@@ -22,6 +22,21 @@ public class SpaceRegion extends SceneNode {
 		}
 	}
 
+	public Vec3 getLocalCenter() {
+		
+		Vec3 toReturn = localPosition.add( size );
+		toReturn.scale( 0.5f );
+		
+		return toReturn;		
+	}
+	
+	public Vec3 getAbsoluteCenter() {
+		
+		Vec3 halfSize = new Vec3( size );
+		halfSize.scale( 0.5f );
+		return getAbsolutePosition().add( halfSize );		
+	}
+	
 	Vec3 getAbsolutePosition(SpaceRegion child) {
 
 		if (parent != null) {
@@ -140,6 +155,14 @@ public class SpaceRegion extends SceneNode {
 		return (size.x <= 0.0f) || (size.y <= 0.0f) || (size.z <= 0.0f);
 	}
 
+	public boolean coincidant(SpaceRegion another) {
+		
+		Vec3 pos = getAbsolutePosition();
+		Vec3 otherPos = another.getAbsolutePosition();
+		
+		return pos.equals( otherPos ) && size.equals( another.size );
+	}
+	
 	public boolean intersects(SpaceRegion another) {
 
 		if (another == null) {
