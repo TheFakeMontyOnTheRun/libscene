@@ -4,6 +4,7 @@ import br.odb.libstrip.GeneralPolygon;
 import br.odb.libstrip.IndexedSetFace;
 import br.odb.utils.Color;
 import br.odb.utils.Direction;
+import br.odb.utils.Utils;
 import br.odb.utils.math.Vec3;
 
 public class SceneTesselator {
@@ -22,28 +23,92 @@ public class SceneTesselator {
 		return world;
 	}
 
+	static int foreignLinksInDirection(Direction d, GroupSector gs) {
+		int links = 0;
+		Sector son;
+
+		for (SpaceRegion sr : gs.getSons()) {
+			if (sr instanceof Sector) {
+				son = (Sector) sr;
+
+				if (son.connection.containsKey(d)) {
+
+					switch (d) {
+					case FLOOR:
+						if (Utils.eqFloat(son.localPosition.y, 0.0f)) {
+							++links;
+						}
+						break;
+					case CEILING:
+						if (Utils.eqFloat(son.localPosition.y, gs.size.y
+								- son.size.y)) {
+							++links;
+						}
+						break;
+					case W:
+						if (Utils.eqFloat(son.localPosition.x, 0.0f)) {
+							++links;
+						}
+						break;
+					case E:
+						if (Utils.eqFloat(son.localPosition.x, gs.size.x
+								- son.size.x)) {
+							++links;
+						}
+						break;
+					case N:
+						if (Utils.eqFloat(son.localPosition.z, 0.0f)) {
+							++links;
+						}
+						break;
+					case S:
+						if (Utils.eqFloat(son.localPosition.z, gs.size.z
+								- son.size.z)) {
+							++links;
+						}
+
+						break;
+					}
+				}
+			}
+		}
+
+		return links;
+	}
+
 	private static void generateSubSectorMeshForSector(GroupSector sector) {
 		sector.mesh.clear();
 		IndexedSetFace[] isfs;
 
-		for (SpaceRegion s : sector.getSons()) {
+		for (Direction d : Direction.values()) {
+			for (SpaceRegion s : sector.getSons()) {
 
-			if (s instanceof GroupSector) {
-				generateSubSectorMeshForSector((GroupSector) s);
-			} else {
-				
-				for (Direction d : Direction.values()) {
+				if (s instanceof GroupSector ) {
+					
+					if ( foreignLinksInDirection( d, (GroupSector)s ) == 0 ) {
+						isfs = generateQuadFor(d, s);
 
-					 if (!((Sector) s).connection.containsKey(d)) {
+						if (isfs != null) {
+							for (IndexedSetFace isf : isfs) {
+						//		isf.getColor().set( 255, 255, 0);
+								sector.mesh.addFace(isf);
+							}
+						}
+					} else {					
+						generateSubSectorMeshForSector((GroupSector) s);
+					}
+				} else {
+
+					if (!((Sector) s).connection.containsKey(d)) {
 
 						isfs = generateQuadFor(d, s);
-	
+
 						if (isfs != null) {
 							for (IndexedSetFace isf : isfs) {
 								sector.mesh.addFace(isf);
 							}
 						}
-					 }
+					}
 				}
 			}
 		}
