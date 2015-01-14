@@ -5,8 +5,6 @@ import java.util.HashMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import sun.rmi.runtime.Log;
-
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 	public static String toXML(GroupSector gs) {
@@ -38,21 +36,24 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		return sb.toString();
 	}
 
-	private String direction;
-	private String colour;
-
+	
+	final static HashMap<String, SpatialDivisionBuilder> builders = new HashMap<String, SpatialDivisionBuilder>();
+	
+	static {
+		builders.put("group", new GroupSectorBuilder());
+		builders.put("sector", new SectorBuilder());
+	}
+	
 	public SpaceRegion build(Node node) {
 
 		SpaceRegion region = super.build(node);
 		GroupSector masterSector = new GroupSector(region);
 
-		HashMap<String, SpatialDivisionBuilder> builders = new HashMap<String, SpatialDivisionBuilder>();
-		builders.put("group", new GroupSectorBuilder());
-		builders.put("sector", new SectorBuilder());
+		
 		SpatialDivisionBuilder builder;
 
 		NodeList nodeLst;
-		
+
 		nodeLst = node.getChildNodes();
 
 		for (int s = 0; s < nodeLst.getLength(); s++) {
@@ -63,9 +64,9 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					if (builders.containsKey(fstNode.getNodeName())) {
-
-						builder = builders.get(fstNode.getNodeName());
+					builder = builders.get(fstNode.getNodeName()); 
+					
+					if ( builder != null ) {
 						masterSector.addChild(builder.build(fstNode));
 					}
 				}

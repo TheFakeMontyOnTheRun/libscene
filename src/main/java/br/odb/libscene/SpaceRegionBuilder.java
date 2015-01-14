@@ -91,27 +91,32 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 
 		NodeList nodeLst;
 		nodeLst = node.getChildNodes();
-
+		String nodeName;
+		
 		for (int s = 0; s < nodeLst.getLength(); s++) {
 
 			Node fstNode = nodeLst.item(s);
-
+			
 			if (fstNode != null) {
 
+				nodeName = fstNode.getNodeName();
+				
 				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					if (fstNode.getNodeName().equalsIgnoreCase("size")) {
+					if ( nodeName.equalsIgnoreCase("size")) {
 						p1.set(builder.build(fstNode));
-					} else if (fstNode.getNodeName().equalsIgnoreCase("id")) {
+					} else if ( nodeName.equalsIgnoreCase("id")) {
 						id = fstNode.getTextContent().trim();
-					} else if (fstNode.getNodeName().equalsIgnoreCase(
+					} else if ( nodeName.equalsIgnoreCase(
 							"position")) {
 						p0.set(builder.build(fstNode));
-					} else if (fstNode.getNodeName().equalsIgnoreCase(
+					} else if ( nodeName.equalsIgnoreCase(
 							"description")) {
 						description = fstNode.getTextContent().trim();
 					}
 				}
+			} else {
+				nodeName = null;
 			}
 		}
 		

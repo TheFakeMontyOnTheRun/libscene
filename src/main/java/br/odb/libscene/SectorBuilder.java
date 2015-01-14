@@ -3,7 +3,6 @@ package br.odb.libscene;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import br.odb.utils.Color;
 import br.odb.utils.Direction;
 
 public class SectorBuilder extends SpaceRegionBuilder {
