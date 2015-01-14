@@ -1,0 +1,25 @@
+package br.odb.libscene.tests;
+
+
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import br.odb.libscene.GroupSector;
+import br.odb.libscene.SpaceRegion;
+import br.odb.libscene.Sector;
+import br.odb.libscene.SceneTesselator;
+import br.odb.utils.math.Vec3;
+
+public class TesselatorTests {
+	
+	@Test 
+	public final void testExtractPolysFromHierarchy() {
+		GroupSector sr1 = new GroupSector( "test1" );
+		Sector s1 = new Sector( sr1 );
+		sr1.addChild( s1 );
+		SceneTesselator.generateSubSectorMeshForSector( sr1 );
+		Assert.assertEquals( sr1.mesh.faces.size(), 8 );
+	}
+}
+

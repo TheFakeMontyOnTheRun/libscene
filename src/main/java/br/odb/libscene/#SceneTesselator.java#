@@ -77,10 +77,10 @@ public class SceneTesselator {
 	}
 
     public static void generateSubSectorMeshForSector(GroupSector sector) {
+
 	sector.mesh.clear();
 	IndexedSetFace[] isfs;
 
-	
 	for (Direction d : Direction.values()) {
 	    
 	    if ( foreignLinksInDirection( d, sector ) == 0 ) {
