@@ -120,7 +120,7 @@ public class TesselatorTest {
 		}
 
 		SceneTesselator.generateSubSectorMeshForSector( sr1 );
-		Assert.assertEquals( 6 * TRIANGLES_PER_WALL, sr1.mesh.faces.size() );
+		Assert.assertEquals( 8 * TRIANGLES_PER_WALL, sr1.mesh.faces.size() );
 	}
 
 }
