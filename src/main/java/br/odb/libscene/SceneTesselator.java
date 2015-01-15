@@ -11,7 +11,13 @@ public class SceneTesselator {
 
 	public static World generateSubSectorQuadsForWorld(World world) {
 
-		generateSubSectorMeshForSector(world.masterSector);
+		generateSubSectorMeshForSector( world.masterSector );
+
+		for (SpaceRegion sr : world.masterSector.getSons()) {
+			if (sr instanceof GroupSector) {
+				generateSubSectorMeshForSector((GroupSector) sr);
+			}
+		}
 
 		return world;
 	}
@@ -76,74 +82,71 @@ public class SceneTesselator {
 		return links;
 	}
 
-    public static void generateSubSectorMeshForSector(GroupSector sector) {
-	sector.mesh.clear();
-	IndexedSetFace[] isfs;
+	public static void generateSubSectorMeshForSector(GroupSector sector) {
+		sector.mesh.clear();
+		IndexedSetFace[] isfs;
 
-	
-	for (Direction d : Direction.values()) {
-	    
-	    if ( foreignLinksInDirection( d, sector ) == 0 ) {
-		
-		isfs = generateQuadFor(d, ( SpaceRegion )sector );
-		
-		if (isfs != null) {
-		    for (IndexedSetFace isf : isfs) {
-			//		isf.getColor().set( 255, 255, 0);
-			sector.mesh.addFace(isf);
-		    }
-		}
-		
-	    } else {
+		for (Direction d : Direction.values()) {
 
+			if (foreignLinksInDirection(d, sector) == 0) {
 
-		for (SpaceRegion s : sector.getSons()) {
-		
-		    if (s instanceof GroupSector ) {
-			generateSubSectorMeshForSector((GroupSector) s);
-		    } else {
-			if (!((Sector) s).connection.containsKey(d)) {
-			
-			    isfs = generateQuadFor(d, s);
-			
-			    if (isfs != null) {
-				for (IndexedSetFace isf : isfs) {
-				    sector.mesh.addFace(isf);
+				isfs = generateQuadFor(d, (SpaceRegion) sector);
+
+				if (isfs != null) {
+					for (IndexedSetFace isf : isfs) {
+						sector.mesh.addFace(isf);
+					}
 				}
-			    }
-			}
-		    }
-		}
-	    }
-	}
-    }
 
-    private static void generateMeshForSector(GroupSector sector) {
-	sector.mesh.clear();
-	
-	for (Direction d : Direction.values()) {
-	    generateQuadFor(d, sector);
-	}
-	
-	for (SpaceRegion sr : sector.getSons()) {
-	    if (sr instanceof GroupSector) {
-		generateMeshForSector((GroupSector) sr);
-	    }
-	}
-	
-    }
-    
-    static Color getColorForFace(Direction d, SpaceRegion sr) {
-		if (sr.colorForDirection.containsKey(d)) {
-		    return sr.colorForDirection.get(d);
-		} else {
-		    if (sr.parent != null) {
-			return getColorForFace(d, sr.parent);
-		    } else {
-			return new Color(0, 0, 0);
-		    }
+			} else {
+
+				for (SpaceRegion s : sector.getSons()) {
+
+					if (s instanceof GroupSector) {
+						generateSubSectorMeshForSector((GroupSector) s);
+					} else {
+						if (!((Sector) s).connection.containsKey(d)) {
+
+							isfs = generateQuadFor(d, s);
+
+							if (isfs != null) {
+								for (IndexedSetFace isf : isfs) {
+									sector.mesh.addFace(isf);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-    }
+	}
+
+	private static void generateMeshForSector(GroupSector sector) {
+		sector.mesh.clear();
+
+		for (Direction d : Direction.values()) {
+			generateQuadFor(d, sector);
+		}
+
+		for (SpaceRegion sr : sector.getSons()) {
+			if (sr instanceof GroupSector) {
+				generateMeshForSector((GroupSector) sr);
+			}
+		}
+
+	}
+
+	static Color getColorForFace(Direction d, SpaceRegion sr) {
+		if (sr.colorForDirection.containsKey(d)) {
+			return sr.colorForDirection.get(d);
+		} else {
+			if (sr.parent != null) {
+				return getColorForFace(d, sr.parent);
+			} else {
+				return new Color(0, 0, 0);
+			}
+		}
+	}
 
 	private static GeneralPolygon[] generateQuadFor(Direction d,
 			SpaceRegion sector) {
