@@ -37,44 +37,8 @@ public class SceneTesselator {
 			if (sr instanceof Sector) {
 				son = (Sector) sr;
 
-				if (son.connection.containsKey(d)) {
-
-					switch (d) {
-					case FLOOR:
-						if (Utils.eqFloat(son.localPosition.y, 0.0f)) {
-							++links;
-						}
-						break;
-					case CEILING:
-						if (Utils.eqFloat(son.localPosition.y, gs.size.y
-								- son.size.y)) {
-							++links;
-						}
-						break;
-					case W:
-						if (Utils.eqFloat(son.localPosition.x, 0.0f)) {
-							++links;
-						}
-						break;
-					case E:
-						if (Utils.eqFloat(son.localPosition.x, gs.size.x
-								- son.size.x)) {
-							++links;
-						}
-						break;
-					case N:
-						if (Utils.eqFloat(son.localPosition.z, 0.0f)) {
-							++links;
-						}
-						break;
-					case S:
-						if (Utils.eqFloat(son.localPosition.z, gs.size.z
-								- son.size.z)) {
-							++links;
-						}
-
-						break;
-					}
+				if (son.connection.containsKey(d) && son.isParentEdgeAt( d ) ) {
+					++links;
 				}
 			}
 		}
