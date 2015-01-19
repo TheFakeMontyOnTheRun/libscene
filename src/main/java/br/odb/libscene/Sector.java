@@ -7,19 +7,31 @@ import br.odb.utils.Utils;
 
 public class Sector extends SpaceRegion {
 
+	public final HashMap<Direction, Sector> connection = new HashMap<Direction, Sector>();
+	
 	public Sector(String id) {
 		super(id);
 	}
 
 	public Sector(SpaceRegion region) {
 		super(region);
+
+		if ( region instanceof Sector ) {
+			copyLinksFrom((Sector) region);
+		}
 	}
 
 	public Sector(SpaceRegion region, String newId) {
 		super(region, newId);
+
+		if ( region instanceof Sector ) {
+			copyLinksFrom((Sector) region);
+		}
 	}
 
-	public final HashMap<Direction, Sector> connection = new HashMap<Direction, Sector>();
+	public void copyLinksFrom(Sector region) {
+		connection.putAll(region.connection);
+	}
 
 	public boolean isParentEdge() {
 
@@ -27,8 +39,8 @@ public class Sector extends SpaceRegion {
 			return false;
 		}
 
-		for ( Direction d : Direction.values() ) {
-			if ( isParentEdgeAt( d ) ) {
+		for (Direction d : Direction.values()) {
+			if (isParentEdgeAt(d)) {
 				return true;
 			}
 		}
@@ -37,11 +49,11 @@ public class Sector extends SpaceRegion {
 	}
 
 	public boolean isParentEdgeAt(Direction d) {
-		
-		if ( parent == null ) {
+
+		if (parent == null) {
 			return false;
 		}
-		
+
 		switch (d) {
 		case FLOOR:
 			if (Utils.eqFloat(localPosition.y, 0.0f)) {
@@ -49,8 +61,7 @@ public class Sector extends SpaceRegion {
 			}
 			break;
 		case CEILING:
-			if (Utils.eqFloat(localPosition.y, parent.size.y
-					- size.y)) {
+			if (Utils.eqFloat(localPosition.y, parent.size.y - size.y)) {
 				return true;
 			}
 			break;
@@ -60,8 +71,7 @@ public class Sector extends SpaceRegion {
 			}
 			break;
 		case E:
-			if (Utils.eqFloat(localPosition.x, parent.size.x
-					- size.x)) {
+			if (Utils.eqFloat(localPosition.x, parent.size.x - size.x)) {
 				return true;
 			}
 			break;
@@ -71,14 +81,13 @@ public class Sector extends SpaceRegion {
 			}
 			break;
 		case S:
-			if (Utils.eqFloat(localPosition.z, parent.size.z
-					- size.z)) {
+			if (Utils.eqFloat(localPosition.z, parent.size.z - size.z)) {
 				return true;
 			}
 
 			break;
 		}
-		
+
 		return false;
 	}
 }

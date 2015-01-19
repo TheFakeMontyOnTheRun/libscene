@@ -15,7 +15,7 @@ public class World extends Scene {
 	public World() {
 		masterSector = new GroupSector("id");
 	}
-	
+
 	private List<SpaceRegion> getAllRegionsAsList(GroupSector group) {
 
 		ArrayList<SpaceRegion> toReturn = new ArrayList<SpaceRegion>();
@@ -32,7 +32,7 @@ public class World extends Scene {
 	}
 
 	public List<SpaceRegion> getAllRegionsAsList() {
-		return getAllRegionsAsList( masterSector );
+		return getAllRegionsAsList(masterSector);
 	}
 
 	public void checkForHardLinks() {
@@ -64,79 +64,69 @@ public class World extends Scene {
 	 */
 	private void checkLinksForSectors(Sector s1, Sector s2) {
 
+		Vec3 pos1 = s1.getAbsolutePosition();
 		Vec3 pos2 = s2.getAbsolutePosition();
 
-		int s2_x0 = Math.round(pos2.x);
-		int s2_x1 = Math.round(pos2.x + s2.size.x);
-		int s2_y0 = Math.round(pos2.y);
-		int s2_y1 = Math.round(pos2.y + s2.size.y);
-		int s2_z0 = Math.round(pos2.z);
-		int s2_z1 = Math.round(pos2.z + s2.size.z);
+		float s1_x0 = (pos1.x);
+		float s1_x1 = (pos1.x + s1.size.x);
+		float s1_y0 = (pos1.y);
+		float s1_y1 = (pos1.y + s1.size.y);
+		float s1_z0 = (pos1.z);
+		float s1_z1 = (pos1.z + s1.size.z);
 
-		Vec3 pos1 = s1.getAbsolutePosition();
+		float s2_x0 = (pos2.x);
+		float s2_x1 = (pos2.x + s2.size.x);
+		float s2_y0 = (pos2.y);
+		float s2_y1 = (pos2.y + s2.size.y);
+		float s2_z0 = (pos2.z);
+		float s2_z1 = (pos2.z + s2.size.z);
 
-		int s1_x0 = Math.round(pos1.x);
-		int s1_x1 = Math.round(pos1.x + s1.size.x);
-		int s1_y0 = Math.round(pos1.y);
-		int s1_y1 = Math.round(pos1.y + s1.size.y);
-		int s1_z0 = Math.round(pos1.z);
-		int s1_z1 = Math.round(pos1.z + s1.size.z);
-
-		if (br.odb.utils.Utils.eqFloat(s1_x0, s2_x1)
-				&& br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
+		if (	br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
 				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
 				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
+				
+			if (br.odb.utils.Utils.eqFloat(s1_x1, s2_x0)) {
+				s1.connection.put(Direction.E, s2);
+				s2.connection.put(Direction.W, s1);
+			}
 
-			s1.connection.put(Direction.W, s2);
-			s2.connection.put(Direction.E, s1);
+			if (br.odb.utils.Utils.eqFloat(s1_x0, s2_x1)) {
+				s1.connection.put(Direction.W, s2);
+				s2.connection.put(Direction.E, s1);
+			}
 		}
 
-		if (br.odb.utils.Utils.eqFloat(s1_x1, s2_x0)
-				&& br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
-				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
-				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
-				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
-			s1.connection.put(Direction.E, s2);
-			s2.connection.put(Direction.W, s1);
-		}
-
-		if (br.odb.utils.Utils.eqFloat(s1_y0, s2_y1)
-				&& br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
+		if (	br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
 				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
 				&& br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
 				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)) {
-			s1.connection.put(Direction.FLOOR, s2);
-			s2.connection.put(Direction.CEILING, s1);
 
+			if (br.odb.utils.Utils.eqFloat(s1_y1, s2_y0)) {
+				s2.connection.put(Direction.FLOOR, s1);
+				s1.connection.put(Direction.CEILING, s2);
+			}
+
+			if (br.odb.utils.Utils.eqFloat(s1_y0, s2_y1)) {
+				s2.connection.put(Direction.CEILING, s1);
+				s1.connection.put(Direction.FLOOR, s2);
+			}
 		}
 
-		if (br.odb.utils.Utils.eqFloat(s1_y1, s2_y0)
-				&& br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
-				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
-				&& br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
-				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)) {
-			s1.connection.put(Direction.CEILING, s2);
-			s2.connection.put(Direction.FLOOR, s1);
-
-		}
-
-		if (br.odb.utils.Utils.eqFloat(s1_z0, s2_z1)
-				&& br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
+		if (	br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
 				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)
 				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
-			s1.connection.put(Direction.N, s2);
-			s2.connection.put(Direction.S, s1);
-		}
 
-		if (br.odb.utils.Utils.eqFloat(s1_z1, s2_z0)
-				&& br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
-				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)
-				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
-				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
-			s1.connection.put(Direction.S, s2);
-			s2.connection.put(Direction.N, s1);
+			if (br.odb.utils.Utils.eqFloat(s1_z0, s2_z1)) {
+				s2.connection.put(Direction.S, s1);
+				s1.connection.put(Direction.N, s2);
+			}
+
+			if (br.odb.utils.Utils.eqFloat(s1_z1, s2_z0)) {
+				s1.connection.put(Direction.S, s2);
+				s2.connection.put(Direction.N, s1);
+			}
 		}
 	}
 

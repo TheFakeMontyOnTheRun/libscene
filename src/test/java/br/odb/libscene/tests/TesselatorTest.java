@@ -3,12 +3,10 @@ package br.odb.libscene.tests;
 import org.junit.Assert;
 import org.junit.Test;
 
-import br.odb.utils.Direction;
 import br.odb.libscene.GroupSector;
-import br.odb.libscene.SpaceRegion;
-import br.odb.libscene.Sector;
 import br.odb.libscene.SceneTesselator;
-import br.odb.utils.math.Vec3;
+import br.odb.libscene.Sector;
+import br.odb.utils.Direction;
 
 public class TesselatorTest {
 
