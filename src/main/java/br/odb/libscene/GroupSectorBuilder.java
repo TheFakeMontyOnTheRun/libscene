@@ -5,51 +5,104 @@ import java.util.HashMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import br.odb.libstrip.Material;
+import br.odb.utils.Color;
+import br.odb.utils.Direction;
+
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 	public static String toXML(GroupSector gs) {
+
+		Color c;
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append( SpaceRegionBuilder.toXML((SpaceRegion) gs) );
+
+		sb.append(SpaceRegionBuilder.toXML((SpaceRegion) gs));
+
+		for (Direction d : gs.materials.keySet()) {
+
+			c = gs.materials.get(d).mainColor;
+
+			if (c != null) {
+				sb.append("<material>\n");
+
+				sb.append("<direction>\n");
+				sb.append(d.simpleName);
+				sb.append("</direction>\n");
+
+				sb.append("<color>\n");
+				sb.append(c.getHTMLColor());
+				sb.append("</color>\n");
+
+				sb.append("</material>\n");
+			}
+		}
 
 		for (SpaceRegion s : gs.getSons()) {
 
 			if (s instanceof GroupSector) {
-				sb.append( "\n<group>" );
+				sb.append("\n<group>");
 
 				if (((GroupSector) s).mesh.faces.size() > 0) {
 
-					sb.append( "\n<mesh>" );
-					sb.append( ((GroupSector) s).mesh );
-					sb.append( "\n</mesh>" );
+					sb.append("\n<mesh>");
+					sb.append(((GroupSector) s).mesh);
+					sb.append("\n</mesh>");
 				}
 
-				sb.append( GroupSectorBuilder.toXML((GroupSector) s) );
-				sb.append( "\n</group>" );
+				sb.append(GroupSectorBuilder.toXML((GroupSector) s));
+				sb.append("\n</group>");
 			} else if (s instanceof Sector) {
-				sb.append( "\n<sector>" );
-				sb.append( SectorBuilder.toXML( (Sector) s) );
-				sb.append( "\n</sector>" );
+				sb.append("\n<sector>");
+				sb.append(SectorBuilder.toXML((Sector) s));
+				sb.append("\n</sector>");
 			}
 		}
 
 		return sb.toString();
 	}
 
-	
+	private void readMaterial(GroupSector region, Node node) {
+		NodeList nodeLst;
+		nodeLst = node.getChildNodes();
+
+		String direction = "";
+		String colour = "";
+
+		for (int s = 0; s < nodeLst.getLength(); s++) {
+
+			Node fstNode = nodeLst.item(s);
+
+			if (fstNode != null) {
+
+				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					if ("direction".equalsIgnoreCase(fstNode.getNodeName())) {
+						direction = fstNode.getTextContent().trim();
+					} else if ("color".equalsIgnoreCase(fstNode.getNodeName())) {
+						colour = fstNode.getTextContent().trim();
+					}
+				}
+			}
+		}
+
+		Color c = Color.getColorFromHTMLColor(colour);
+		Material material = new Material(c, null, null, null);
+		region.materials.put(Direction.getDirectionForSimpleName(direction),
+				material);
+	}
+
 	final static HashMap<String, SpatialDivisionBuilder> builders = new HashMap<String, SpatialDivisionBuilder>();
-	
+
 	static {
 		builders.put("group", new GroupSectorBuilder());
 		builders.put("sector", new SectorBuilder());
 	}
-	
+
 	public SpaceRegion build(Node node) {
 
 		SpaceRegion region = super.build(node);
 		GroupSector masterSector = new GroupSector(region);
 
-		
 		SpatialDivisionBuilder builder;
 
 		NodeList nodeLst;
@@ -64,10 +117,12 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					builder = builders.get(fstNode.getNodeName()); 
-					
-					if ( builder != null ) {
+					builder = builders.get(fstNode.getNodeName());
+
+					if (builder != null) {
 						masterSector.addChild(builder.build(fstNode));
+					} else if ("material".equalsIgnoreCase(fstNode.getNodeName())) {
+						readMaterial(masterSector, fstNode);
 					}
 				}
 			}

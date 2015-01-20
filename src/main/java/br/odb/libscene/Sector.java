@@ -1,13 +1,21 @@
 package br.odb.libscene;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import br.odb.utils.Direction;
 import br.odb.utils.Utils;
 
-public class Sector extends SpaceRegion {
+public class Sector extends SpaceRegion implements Serializable {
 
-	public final HashMap<Direction, Sector> connection = new HashMap<Direction, Sector>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9089005913720463010L;
+	public final HashMap<Direction, String> connection = new HashMap<Direction, String>();
+	
+	public Sector() {
+	}
 	
 	public Sector(String id) {
 		super(id);

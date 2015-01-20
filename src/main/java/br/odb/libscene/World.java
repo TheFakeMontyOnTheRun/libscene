@@ -1,12 +1,18 @@
 package br.odb.libscene;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
-public class World extends Scene {
+public class World extends Scene implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2015164462288643184L;
 
 	public World(GroupSector built) {
 		masterSector = built;
@@ -87,13 +93,13 @@ public class World extends Scene {
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
 				
 			if (br.odb.utils.Utils.eqFloat(s1_x1, s2_x0)) {
-				s1.connection.put(Direction.E, s2);
-				s2.connection.put(Direction.W, s1);
+				s1.connection.put(Direction.E, s2.id);
+				s2.connection.put(Direction.W, s1.id);
 			}
 
 			if (br.odb.utils.Utils.eqFloat(s1_x0, s2_x1)) {
-				s1.connection.put(Direction.W, s2);
-				s2.connection.put(Direction.E, s1);
+				s1.connection.put(Direction.W, s2.id);
+				s2.connection.put(Direction.E, s1.id);
 			}
 		}
 
@@ -103,13 +109,13 @@ public class World extends Scene {
 				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)) {
 
 			if (br.odb.utils.Utils.eqFloat(s1_y1, s2_y0)) {
-				s2.connection.put(Direction.FLOOR, s1);
-				s1.connection.put(Direction.CEILING, s2);
+				s2.connection.put(Direction.FLOOR, s1.id);
+				s1.connection.put(Direction.CEILING, s2.id);
 			}
 
 			if (br.odb.utils.Utils.eqFloat(s1_y0, s2_y1)) {
-				s2.connection.put(Direction.CEILING, s1);
-				s1.connection.put(Direction.FLOOR, s2);
+				s2.connection.put(Direction.CEILING, s1.id);
+				s1.connection.put(Direction.FLOOR, s2.id);
 			}
 		}
 
@@ -119,13 +125,13 @@ public class World extends Scene {
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
 
 			if (br.odb.utils.Utils.eqFloat(s1_z0, s2_z1)) {
-				s2.connection.put(Direction.S, s1);
-				s1.connection.put(Direction.N, s2);
+				s2.connection.put(Direction.S, s1.id);
+				s1.connection.put(Direction.N, s2.id);
 			}
 
 			if (br.odb.utils.Utils.eqFloat(s1_z1, s2_z0)) {
-				s1.connection.put(Direction.S, s2);
-				s2.connection.put(Direction.N, s1);
+				s1.connection.put(Direction.S, s2.id);
+				s2.connection.put(Direction.N, s1.id);
 			}
 		}
 	}

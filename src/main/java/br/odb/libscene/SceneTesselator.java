@@ -4,7 +4,6 @@ import br.odb.libstrip.GeneralPolygon;
 import br.odb.libstrip.IndexedSetFace;
 import br.odb.utils.Color;
 import br.odb.utils.Direction;
-import br.odb.utils.Utils;
 import br.odb.utils.math.Vec3;
 
 public class SceneTesselator {
@@ -52,17 +51,17 @@ public class SceneTesselator {
 
 		for (Direction d : Direction.values()) {
 
-			if (foreignLinksInDirection(d, sector) == 0) {
-
-				isfs = generateQuadFor(d, (SpaceRegion) sector);
-
-				if (isfs != null) {
-					for (IndexedSetFace isf : isfs) {
-						sector.mesh.addFace(isf);
-					}
-				}
-
-			} else {
+//			if (foreignLinksInDirection(d, sector) == 0) {
+//
+//				isfs = generateQuadFor(d, (SpaceRegion) sector);
+//
+//				if (isfs != null) {
+//					for (IndexedSetFace isf : isfs) {
+//						sector.mesh.addFace(isf);
+//					}
+//				}
+//
+//			} else {
 
 				for (SpaceRegion s : sector.getSons()) {
 
@@ -81,7 +80,7 @@ public class SceneTesselator {
 						}
 					}
 				}
-			}
+//			}
 		}
 	}
 
@@ -101,11 +100,11 @@ public class SceneTesselator {
 	}
 
 	static Color getColorForFace(Direction d, SpaceRegion sr) {
-		if (sr.colorForDirection.containsKey(d)) {
-			return sr.colorForDirection.get(d);
+		if ( sr instanceof GroupSector && ( (GroupSector) sr).materials.containsKey(d) ) {
+			return ( (GroupSector) sr).materials.get(d).mainColor;
 		} else {
-			if (sr.parent != null) {
-				return getColorForFace(d, sr.parent);
+			if (sr.parent instanceof GroupSector ) {
+				return getColorForFace(d, (GroupSector)sr.parent);
 			} else {
 				return new Color(0, 0, 0);
 			}
@@ -322,7 +321,7 @@ public class SceneTesselator {
 
 	private static void generateQuadFor(Direction d, GroupSector sector) {
 
-		if (sector.colorForDirection.get(d) == null) {
+		if (sector.materials.get(d) == null) {
 			return;
 		}
 

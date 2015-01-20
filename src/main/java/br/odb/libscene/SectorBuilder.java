@@ -61,7 +61,7 @@ public class SectorBuilder extends SpaceRegionBuilder {
 		
 //		System.out.println( "connecting " + direction + " for " + sector.id );
 
-		sector.connection.put( Direction.getDirectionForSimpleName( direction ), sector );
+		sector.connection.put( Direction.getDirectionForSimpleName( direction ), sector.id );
 		// region.colorForDirection.put( Direction.getDirectionForSimpleName(
 		// direction ), Color.getColorFromHTMLColor( colour ) );
 

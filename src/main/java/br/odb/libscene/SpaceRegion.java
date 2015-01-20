@@ -1,18 +1,14 @@
 package br.odb.libscene;
 
-import java.util.HashMap;
-
-import br.odb.libstrip.Mesh;
-import br.odb.utils.Color;
-import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
 public class SpaceRegion extends SceneNode {
 
-	public final HashMap<Direction, Color> colorForDirection = new HashMap<Direction, Color>();
 	public final Vec3 size = new Vec3(1.0f, 1.0f, 1.0f);
 	public String description;
-	public SpaceRegion parent;
+
+	public SpaceRegion() {
+	}
 
 	public Vec3 getAbsolutePosition() {
 		if (parent != null) {
@@ -54,6 +50,12 @@ public class SpaceRegion extends SceneNode {
 		super(id);
 	}
 
+	public SpaceRegion(String id, Vec3 size) {
+		super(id);
+		this.size.set(size);
+	}
+
+	
 	public SpaceRegion(SpaceRegion region) {
 		super(region);
 
@@ -63,92 +65,6 @@ public class SpaceRegion extends SceneNode {
 
 	public SpaceRegion(SpaceRegion region, String newId) {
 		super(region, newId);
-	}
-
-	public static SpaceRegion getConvexHull(int snapLevel, Mesh mesh) {
-
-		GroupSector sector = new GroupSector(mesh.name);
-
-		if (mesh.material != null) {
-
-			for (Direction d : Direction.values()) {
-				sector.colorForDirection.put(d, mesh.material.mainColor);
-				System.out
-						.println("d: " + d + " m: " + mesh.material.mainColor);
-			}
-		} else {
-			System.out.println("Sector has no material for it's mesh");
-		}
-
-		if (mesh.points.size() < 1) {
-
-			return sector;
-		}
-
-		// find the center point;
-		Vec3 center = mesh.getCenter();
-
-		// make the box stay at the center;
-
-		sector.localPosition.x = (center.x);
-		sector.localPosition.y = (center.y);
-		sector.localPosition.z = (center.z);
-		sector.size.x = (center.x);
-		sector.size.y = (center.y);
-		sector.size.z = (center.z);
-
-		float x0 = center.x;
-		float y0 = center.y;
-		float z0 = center.z;
-		float x1 = center.x;
-		float y1 = center.y;
-		float z1 = center.z;
-
-		for (Vec3 p : mesh.points) {
-
-			if (p.x < x0) {
-				x0 = p.x;
-			}
-
-			if (p.y < y0) {
-				y0 = p.y;
-			}
-
-			if (p.z < z0) {
-				z0 = p.z;
-			}
-
-			if (p.x > x1) {
-				x1 = p.x;
-			}
-
-			if (p.y > y1) {
-				y1 = p.y;
-			}
-
-			if (p.z > z1) {
-				z1 = p.z;
-			}
-		}
-
-		sector.localPosition.x = x0;
-		sector.localPosition.y = y0;
-		sector.localPosition.z = z0;
-
-		sector.size.x = x1 - x0;
-		sector.size.y = y1 - y0;
-		sector.size.z = z1 - z0;
-
-		if (snapLevel > 0) {
-			sector.localPosition.x = Math.round(sector.localPosition.x);
-			sector.localPosition.y = Math.round(sector.localPosition.y);
-			sector.localPosition.z = Math.round(sector.localPosition.z);
-			sector.size.x = Math.round(sector.size.x);
-			sector.size.y = Math.round(sector.size.y);
-			sector.size.z = Math.round(sector.size.z);
-		}
-
-		return sector;
 	}
 
 	public boolean isDegenerate() {
@@ -241,10 +157,7 @@ public class SpaceRegion extends SceneNode {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((colorForDirection == null) ? 0 : colorForDirection
-						.hashCode());
+
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
@@ -261,11 +174,7 @@ public class SpaceRegion extends SceneNode {
 		if (getClass() != obj.getClass())
 			return false;
 		SpaceRegion other = (SpaceRegion) obj;
-		if (colorForDirection == null) {
-			if (other.colorForDirection != null)
-				return false;
-		} else if (!colorForDirection.equals(other.colorForDirection))
-			return false;
+
 		if (description == null) {
 			if (other.description != null)
 				return false;
