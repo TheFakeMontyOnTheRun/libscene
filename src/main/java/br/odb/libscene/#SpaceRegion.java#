@@ -10,6 +10,14 @@ public class SpaceRegion extends SceneNode {
 	SpaceRegion() {
 	}
 
+	public Vec3 getAbsolutePosition() {
+		if (parent != null ) {
+		    return parent.getAbsolutePosition().add(localPosition);
+		} else {
+			return localPosition;
+		}
+	}
+
 	public Vec3 getLocalCenter() {
 		
 		Vec3 toReturn = localPosition.add( size );
@@ -25,6 +33,18 @@ public class SpaceRegion extends SceneNode {
 		return getAbsolutePosition().add( halfSize );		
 	}
 	
+	Vec3 getAbsolutePosition(SpaceRegion child) {
+
+		if (parent != null) {
+			return parent.getAbsolutePosition(this).add(child.localPosition);
+		} else {
+			return child.localPosition;
+		}
+	}
+
+	public void setPositionFromGlobal(Vec3 pos) {
+		localPosition.set(pos.sub(parent.getAbsolutePosition()));
+	}
 
 	public SpaceRegion(String id) {
 		super(id);

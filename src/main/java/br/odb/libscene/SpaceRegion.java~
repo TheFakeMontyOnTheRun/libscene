@@ -25,6 +25,9 @@ public class SpaceRegion extends SceneNode {
 		return getAbsolutePosition().add( halfSize );		
 	}
 	
+	public void setPositionFromGlobal(Vec3 pos) {
+		localPosition.set(pos.sub(parent.getAbsolutePosition()));
+	}
 
 	public SpaceRegion(String id) {
 		super(id);

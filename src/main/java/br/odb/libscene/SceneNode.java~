@@ -16,11 +16,6 @@ public class SceneNode implements Serializable {
 			return localPosition;
 		}
 	}
-
-	public void setPositionFromGlobal(Vec3 pos) {
-		localPosition.set(pos.sub(parent.getAbsolutePosition()));
-	}
-
 	
 	SceneNode() {		
 	}

@@ -14,7 +14,7 @@ public class Sector extends SpaceRegion implements Serializable {
 	private static final long serialVersionUID = 9089005913720463010L;
 	public final HashMap<Direction, String> connection = new HashMap<Direction, String>();
 	
-	public Sector() {
+	Sector() {
 	}
 	
 	public Sector(String id) {
@@ -58,6 +58,8 @@ public class Sector extends SpaceRegion implements Serializable {
 
 	public boolean isParentEdgeAt(Direction d) {
 
+	    SpaceRegion parentRegion = (SpaceRegion)parent;
+
 		if (parent == null) {
 			return false;
 		}
@@ -69,7 +71,7 @@ public class Sector extends SpaceRegion implements Serializable {
 			}
 			break;
 		case CEILING:
-			if (Utils.eqFloat(localPosition.y, parent.size.y - size.y)) {
+			if (Utils.eqFloat(localPosition.y, parentRegion.size.y - size.y)) {
 				return true;
 			}
 			break;
@@ -79,7 +81,7 @@ public class Sector extends SpaceRegion implements Serializable {
 			}
 			break;
 		case E:
-			if (Utils.eqFloat(localPosition.x, parent.size.x - size.x)) {
+			if (Utils.eqFloat(localPosition.x, parentRegion.size.x - size.x)) {
 				return true;
 			}
 			break;
@@ -89,7 +91,7 @@ public class Sector extends SpaceRegion implements Serializable {
 			}
 			break;
 		case S:
-			if (Utils.eqFloat(localPosition.z, parent.size.z - size.z)) {
+			if (Utils.eqFloat(localPosition.z, parentRegion.size.z - size.z)) {
 				return true;
 			}
 

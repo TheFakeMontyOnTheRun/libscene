@@ -17,7 +17,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	 */
 	private static final long serialVersionUID = -4269836844728197301L;
 	
-	public GroupSector() {
+	GroupSector() {
 		super();
 	}
 	
@@ -39,7 +39,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	}
 	
 	public void removeChild( SpaceRegion child ) {
-		child.localPosition.set( getAbsolutePosition( child ) );
+		child.localPosition.set( getAbsolutePosition() );
 		sons.remove( child );
 		child.parent = null;
 	}
