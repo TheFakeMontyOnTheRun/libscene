@@ -5,6 +5,8 @@ import br.odb.utils.math.Vec3;
 
 public class SceneNode implements Serializable {
 
+    private static final long serialVersionUID = -2428831262655841986L;
+
 	public String id;
 	public final Vec3 localPosition = new Vec3();
 	public SceneNode parent;
