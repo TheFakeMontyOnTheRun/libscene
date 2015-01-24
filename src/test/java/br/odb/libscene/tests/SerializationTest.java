@@ -33,7 +33,6 @@ public class SerializationTest {
 		SpaceRegion sr1 = new SpaceRegion( "sr1" );
 		SceneNode parent = new SceneNode( "parent" );
 		
-		sr1.description = "A nice place to be serialized";
 		sr1.parent = parent;
 		sr1.localPosition.set( 1.0f, 2.0f, 3.0f );
 		sr1.size.set( 4.0f, 5.0f, 6.0f );

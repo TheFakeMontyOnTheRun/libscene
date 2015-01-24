@@ -4,8 +4,13 @@ import br.odb.utils.math.Vec3;
 
 public class SpaceRegion extends SceneNode {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1591752162392334619L;
+	
 	public final Vec3 size = new Vec3(1.0f, 1.0f, 1.0f);
-	public String description;
+	
 
 	SpaceRegion() {
 	}
@@ -40,7 +45,6 @@ public class SpaceRegion extends SceneNode {
 		super(region);
 
 		size.set(region.size);
-		description = region.description;
 	}
 
 	public SpaceRegion(SpaceRegion region, String newId) {
@@ -109,11 +113,25 @@ public class SpaceRegion extends SceneNode {
 			return true;
 		}
 
+		if ( ( p0.x >= anotherP0.x && p1.x <= anotherP1.x ) && 
+			 ( p0.y <= anotherP0.y && p1.y >= anotherP1.y ) && 
+			 (
+						(anotherP0.z <= p0.z && p0.z <= anotherP1.z) || 
+						(anotherP0.z <= p1.z && p1.z <= anotherP1.z)
+					)
+				) {
+			return true;
+		}		
+		
 		if (anotherP0.x >= p0.x
 				&& anotherP1.x <= p1.x
 				&& anotherP0.y <= p0.y
 				&& anotherP1.y >= p1.y
-				&& ((p0.z <= anotherP0.z && anotherP0.z <= p1.z) || (p0.z <= anotherP1.z && anotherP1.z <= p1.z))) {
+				&& (
+						(p0.z <= anotherP0.z && anotherP0.z <= p1.z) || 
+						(p0.z <= anotherP1.z && anotherP1.z <= p1.z)
+					)
+				) {
 			return true;
 		}
 
@@ -121,10 +139,10 @@ public class SpaceRegion extends SceneNode {
 	}
 
 	public boolean contains(float x, float y, float z) {
-		return contains(new Vec3(x, y, z));
+		return isInside(new Vec3(x, y, z));
 	}
 
-	public boolean contains(Vec3 v) {
+	public boolean isInside(Vec3 v) {
 
 		Vec3 position = getAbsolutePosition();
 
@@ -136,11 +154,7 @@ public class SpaceRegion extends SceneNode {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-
-		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		int result = super.hashCode();
 		result = prime * result + ((size == null) ? 0 : size.hashCode());
 		return result;
 	}
@@ -149,31 +163,15 @@ public class SpaceRegion extends SceneNode {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		SpaceRegion other = (SpaceRegion) obj;
-
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (parent == null) {
-			if (other.parent != null)
-				return false;
-		} else if (!parent.equals(other.parent))
-			return false;
 		if (size == null) {
 			if (other.size != null)
 				return false;
 		} else if (!size.equals(other.size))
-			return false;
-		if (localPosition == null) {
-			if (other.localPosition != null)
-				return false;
-		} else if (!localPosition.equals(other.localPosition))
 			return false;
 		return true;
 	}

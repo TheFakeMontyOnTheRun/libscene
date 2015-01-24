@@ -14,12 +14,6 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 		sb.append(  region.id );
 		sb.append(  "</id>\n" );
 
-		if (region.description != null && region.description.trim().length() > 0 ) {
-			sb.append(  "<description>\n" );
-			sb.append(  region.description );
-			sb.append(  "</description>\n" );
-		}
-
 		sb.append(  "<position>\n" );
 		sb.append(  Vec3Builder.toXML(region.localPosition) );
 		sb.append(  "</position>\n" );
@@ -35,7 +29,6 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 	
 	public SpaceRegion build(Node node) {
 
-		String description = "";
 		String id = "";
 		Vec3 p0 = new Vec3();
 		Vec3 p1 = new Vec3();
@@ -63,9 +56,6 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 					} else if ( nodeName.equalsIgnoreCase(
 							"position")) {
 						p0.set(builder.build(fstNode));
-					} else if ( nodeName.equalsIgnoreCase(
-							"description")) {
-						description = fstNode.getTextContent().trim();
 					}
 				}
 			} else {
@@ -78,7 +68,6 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 		
 		region.localPosition.set(p0);
 		region.size.set(p1);
-		region.description = description;
 		return region;
 	}
 }

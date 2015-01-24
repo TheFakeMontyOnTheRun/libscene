@@ -61,11 +61,11 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		
 		SpaceRegion contained;
 		
-		if ( contains( v ) ) {
+		if ( isInside( v ) ) {
 			
 			for ( SpaceRegion sr : sons ) {
 				
-				if ( sr.contains(v) && sr instanceof GroupSector ) {
+				if ( sr.isInside(v) && sr instanceof GroupSector ) {
 					
 					contained = ((GroupSector)sr).pick( v );		
 					
@@ -193,6 +193,8 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		
 		return null;
 	}
+	
+	
 	
 	public Set< SpaceRegion > getSons() {
 		return sons;
