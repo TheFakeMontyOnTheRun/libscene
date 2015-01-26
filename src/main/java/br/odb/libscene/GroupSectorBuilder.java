@@ -18,20 +18,16 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 		sb.append(SpaceRegionBuilder.toXML((SpaceRegion) gs));
 
-		for (Direction d : gs.materials.keySet()) {
+		if ( gs.material != null ) {
 
-			c = gs.materials.get(d).mainColor;
+			c = gs.material.mainColor;
 
 			if (c != null) {
 				sb.append("<material>\n");
 
-				sb.append("<direction>\n");
-				sb.append(d.simpleName);
-				sb.append("</direction>\n");
-
 				sb.append("<color>\n");
 				sb.append(c.getHTMLColor());
-				sb.append("</color>\n");
+				sb.append("\n</color>\n");
 
 				sb.append("</material>\n");
 			}
@@ -65,7 +61,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		NodeList nodeLst;
 		nodeLst = node.getChildNodes();
 
-		String direction = "";
 		String colour = "";
 
 		for (int s = 0; s < nodeLst.getLength(); s++) {
@@ -76,9 +71,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					if ("direction".equalsIgnoreCase(fstNode.getNodeName())) {
-						direction = fstNode.getTextContent().trim();
-					} else if ("color".equalsIgnoreCase(fstNode.getNodeName())) {
+					if ("color".equalsIgnoreCase(fstNode.getNodeName())) {
 						colour = fstNode.getTextContent().trim();
 					}
 				}
@@ -87,8 +80,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 		Color c = Color.getColorFromHTMLColor(colour);
 		Material material = new Material(c, null, null, null);
-		region.materials.put(Direction.getDirectionForSimpleName(direction),
-				material);
+		region.material = material;
 	}
 
 	final static HashMap<String, SpatialDivisionBuilder> builders = new HashMap<String, SpatialDivisionBuilder>();

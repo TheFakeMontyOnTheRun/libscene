@@ -1,13 +1,11 @@
 package br.odb.libscene;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import br.odb.libstrip.Material;
 import br.odb.libstrip.Mesh;
-import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
 public class GroupSector extends SpaceRegion implements Serializable {
@@ -29,12 +27,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		super( region );
 		
 		if ( region instanceof GroupSector ) {
-			
-			for ( Direction d : Direction.values() ) {
-				if ( ((GroupSector)region).materials.get( d ) != null ) {
-					materials.put( d, ((GroupSector)region).materials.get( d ) );
-				}
-			}
+			material = ((GroupSector)region).material;
 		}
 	}
 	
@@ -87,12 +80,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		GroupSector sector = new GroupSector(mesh.name);
 
 		if (mesh.material != null) {
-
-			for (Direction d : Direction.values()) {
-				sector.materials.put(d, mesh.material );
-				System.out
-						.println("d: " + d + " m: " + mesh.material );
-			}
+			sector.material = mesh.material;
 		} else {
 			System.out.println("Sector has no material for it's mesh");
 		}
@@ -201,7 +189,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	}
 	
 	public final Mesh mesh = new Mesh( "_mesh" );
-	public final HashMap< Direction, Material > materials = new HashMap< Direction, Material >();
+	public Material material;
 	public final Set< SpaceRegion > sons = new HashSet< SpaceRegion >();
 	
 }

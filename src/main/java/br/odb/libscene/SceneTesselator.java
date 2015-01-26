@@ -99,12 +99,12 @@ public class SceneTesselator {
 
 	}
 
-	static Color getColorForFace(Direction d, SpaceRegion sr) {
-		if ( sr instanceof GroupSector && ( (GroupSector) sr).materials.containsKey(d) ) {
-			return ( (GroupSector) sr).materials.get(d).mainColor;
+	static Color getColorForFace( SpaceRegion sr) {
+		if ( sr instanceof GroupSector && ( (GroupSector) sr).material != null ) {
+			return ( (GroupSector) sr).material.mainColor;
 		} else {
 			if (sr.parent instanceof GroupSector ) {
-				return getColorForFace(d, (GroupSector)sr.parent);
+				return getColorForFace((GroupSector)sr.parent);
 			} else {
 				return new Color(0, 0, 0);
 			}
@@ -125,7 +125,7 @@ public class SceneTesselator {
 			trig.id = sector.id + "_" + d.simpleName;
 			toReturn[0] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -142,7 +142,7 @@ public class SceneTesselator {
 			trig.id = sector.id + "_" + d.simpleName;
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -161,7 +161,7 @@ public class SceneTesselator {
 			trig.id = sector.id + "_" + d.simpleName;
 			toReturn[0] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -179,7 +179,7 @@ public class SceneTesselator {
 			trig.id = sector.id + "_" + d.simpleName;
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -197,7 +197,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[0] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -211,7 +211,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -227,7 +227,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[0] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -242,7 +242,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -258,7 +258,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[0] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -272,7 +272,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -287,7 +287,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[0] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -302,7 +302,7 @@ public class SceneTesselator {
 			trig = new GeneralPolygon();
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(d, sector));
+			trig.color.set(getColorForFace( sector));
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);
@@ -321,7 +321,7 @@ public class SceneTesselator {
 
 	private static void generateQuadFor(Direction d, GroupSector sector) {
 
-		if (sector.materials.get(d) == null) {
+		if (sector.material == null) {
 			return;
 		}
 
@@ -334,6 +334,5 @@ public class SceneTesselator {
 				sector.mesh.addFace(isf);
 			}
 		}
-
 	}
 }
