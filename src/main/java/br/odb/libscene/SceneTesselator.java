@@ -36,7 +36,7 @@ public class SceneTesselator {
 			if (sr instanceof Sector) {
 				son = (Sector) sr;
 
-				if (son.connection.containsKey(d) && son.isParentEdgeAt( d ) ) {
+				if (son.links[ d.ordinal() ] != null && son.isParentEdgeAt( d ) ) {
 					++links;
 				}
 			}
@@ -51,24 +51,24 @@ public class SceneTesselator {
 
 		for (Direction d : Direction.values()) {
 
-//			if (foreignLinksInDirection(d, sector) == 0) {
-//
-//				isfs = generateQuadFor(d, (SpaceRegion) sector);
-//
-//				if (isfs != null) {
-//					for (IndexedSetFace isf : isfs) {
-//						sector.mesh.addFace(isf);
-//					}
-//				}
-//
-//			} else {
+			if (foreignLinksInDirection(d, sector) == 0) {
+
+				isfs = generateQuadFor(d, (SpaceRegion) sector);
+
+				if (isfs != null) {
+					for (IndexedSetFace isf : isfs) {
+						sector.mesh.addFace(isf);
+					}
+				}
+
+			} else {
 
 				for (SpaceRegion s : sector.getSons()) {
 
 					if (s instanceof GroupSector) {
 						generateSubSectorMeshForSector((GroupSector) s);
 					} else {
-						if (!((Sector) s).connection.containsKey(d)) {
+						if ( ( (Sector) s).links[ d.ordinal() ] == null ) {
 
 							isfs = generateQuadFor(d, s);
 
@@ -80,7 +80,7 @@ public class SceneTesselator {
 						}
 					}
 				}
-//			}
+			}
 		}
 	}
 

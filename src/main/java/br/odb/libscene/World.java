@@ -2,7 +2,9 @@ package br.odb.libscene;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
@@ -39,6 +41,62 @@ public class World extends Scene implements Serializable {
 
 	public List<SpaceRegion> getAllRegionsAsList() {
 		return getAllRegionsAsList(masterSector);
+	}
+	
+	
+	public void checkForHardLinks_new() {
+		
+		GroupSector gs;
+		Sector s;
+		
+		List<SpaceRegion> sectors = getAllRegionsAsList(masterSector);
+		Map< Sector, List< Direction > > edgeSectors = new HashMap< Sector, List< Direction > >();
+		
+		Direction[] allDirections = Direction.values();
+		
+		for (SpaceRegion sr : sectors) {
+
+			if (sr instanceof GroupSector) {
+				
+				gs = ((GroupSector) sr );
+				
+				for ( SpaceRegion son : gs.getSons() ) {
+					
+					if ( son instanceof Sector ) {
+						s = ((Sector) son );
+						
+						for ( Direction d : allDirections ) {
+							if ( !s.isParentEdgeAt( d ) ) {
+								s.links[ d.ordinal() ] = s.id;
+							} else {
+								
+								if ( !edgeSectors.containsKey( s ) ) {
+									edgeSectors.put( s, new ArrayList< Direction >() );
+								}
+								
+								edgeSectors.get( s ).add( d );
+							}
+						}
+					}
+				}				
+			}
+		}
+		
+//		for (SpaceRegion sr : sectors) {
+//
+//			if (sr instanceof GroupSector) {
+//				
+//				gs = ( (GroupSector ) sr );
+//				
+//				for ( Sector edge : edgeSectors.keySet() ) {
+//					if ( edge.parent != sr && sr.intersects( edge ) ) {
+//						for ( SpaceRegion son : ((GroupSector) sr).getSons() ) {
+//							checkLinksForSectors((Sector) son, (Sector) edge );
+//						}
+//					}
+//				}
+//			}
+//		}	
 	}
 
 	public void checkForHardLinks() {
@@ -93,13 +151,15 @@ public class World extends Scene implements Serializable {
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
 				
 			if (br.odb.utils.Utils.eqFloat(s1_x1, s2_x0)) {
-				s1.connection.put(Direction.E, s2.id);
-				s2.connection.put(Direction.W, s1.id);
+				
+				s1.links[ Direction.E.ordinal() ] = s2.id;
+				s2.links[ Direction.W.ordinal() ] = s1.id;
 			}
 
 			if (br.odb.utils.Utils.eqFloat(s1_x0, s2_x1)) {
-				s1.connection.put(Direction.W, s2.id);
-				s2.connection.put(Direction.E, s1.id);
+				
+				s1.links[ Direction.W.ordinal() ] = s2.id;
+				s2.links[ Direction.E.ordinal() ] = s1.id;
 			}
 		}
 
@@ -109,13 +169,16 @@ public class World extends Scene implements Serializable {
 				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)) {
 
 			if (br.odb.utils.Utils.eqFloat(s1_y1, s2_y0)) {
-				s2.connection.put(Direction.FLOOR, s1.id);
-				s1.connection.put(Direction.CEILING, s2.id);
+				
+				s2.links[ Direction.FLOOR.ordinal() ] = s1.id;
+				s1.links[ Direction.CEILING.ordinal() ] = s2.id;
 			}
 
 			if (br.odb.utils.Utils.eqFloat(s1_y0, s2_y1)) {
-				s2.connection.put(Direction.CEILING, s1.id);
-				s1.connection.put(Direction.FLOOR, s2.id);
+				
+				
+				s2.links[ Direction.CEILING.ordinal() ] = s1.id;
+				s1.links[ Direction.FLOOR.ordinal() ] = s2.id;
 			}
 		}
 
@@ -125,13 +188,14 @@ public class World extends Scene implements Serializable {
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
 
 			if (br.odb.utils.Utils.eqFloat(s1_z0, s2_z1)) {
-				s2.connection.put(Direction.S, s1.id);
-				s1.connection.put(Direction.N, s2.id);
+				s2.links[ Direction.S.ordinal() ] = s1.id;
+				s1.links[ Direction.N.ordinal() ] = s2.id;
 			}
 
 			if (br.odb.utils.Utils.eqFloat(s1_z1, s2_z0)) {
-				s1.connection.put(Direction.S, s2.id);
-				s2.connection.put(Direction.N, s1.id);
+				
+				s1.links[ Direction.S.ordinal() ] = s2.id;
+				s2.links[ Direction.N.ordinal() ] = s1.id;
 			}
 		}
 	}

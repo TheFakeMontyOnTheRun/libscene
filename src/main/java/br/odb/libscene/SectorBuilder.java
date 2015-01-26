@@ -35,33 +35,44 @@ public class SectorBuilder extends SpaceRegionBuilder {
 	}
 
 	private void readLink(Sector sector, Node node) {
-//		NodeList nodeLst;
-//		nodeLst = node.getChildNodes();
-//
+		// NodeList nodeLst;
+		// nodeLst = node.getChildNodes();
+		//
 		String direction = "";
 
-//		for (int s = 0; s < nodeLst.getLength(); s++) {
-//
-//			Node fstNode = nodeLst.item(s);
-//
-//			if (fstNode != null) {
-//
-//				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
+		// for (int s = 0; s < nodeLst.getLength(); s++) {
+		//
+		// Node fstNode = nodeLst.item(s);
+		//
+		// if (fstNode != null) {
+		//
+		// if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					// if ( "direction".equalsIgnoreCase( fstNode.getNodeName()
-					// ) ) {
-					 direction = node.getTextContent().trim();
-					// } else if ( "sector".equalsIgnoreCase(
-					// fstNode.getNodeName() ) ) {
-					// colour = fstNode.getTextContent().trim();
-					// }
-//				}
-//			}
-//		}
-		
-//		System.out.println( "connecting " + direction + " for " + sector.id );
+		// if ( "direction".equalsIgnoreCase( fstNode.getNodeName()
+		// ) ) {
+		direction = node.getTextContent().trim();
+		// } else if ( "sector".equalsIgnoreCase(
+		// fstNode.getNodeName() ) ) {
+		// colour = fstNode.getTextContent().trim();
+		// }
+		// }
+		// }
+		// }
 
-		sector.connection.put( Direction.getDirectionForSimpleName( direction ), sector.id );
+		// System.out.println( "connecting " + direction + " for " + sector.id
+		// );
+		Direction d;
+
+		d = Direction.getDirectionForSimpleName(direction);
+
+		if (d == null) {
+			d = Direction.getDirectionForPrettyName(direction);
+		}
+
+		if (d != null) {
+
+			sector.links[d.ordinal()] = sector.id;
+		}
 		// region.colorForDirection.put( Direction.getDirectionForSimpleName(
 		// direction ), Color.getColorFromHTMLColor( colour ) );
 
@@ -75,8 +86,12 @@ public class SectorBuilder extends SpaceRegionBuilder {
 		sb.append( SpaceRegionBuilder.toXML((SpaceRegion) s) );
 
 		// Sector s2;
-
-		for (Direction d : s.connection.keySet()) {
+		Direction[] values = Direction.values();
+		
+		int shouldBeSix = values.length;
+		
+		for ( int c = 0; c < shouldBeSix; ++c ) {
+		
 
 			
 			// s2 = s.connection.get(d);
@@ -85,7 +100,7 @@ public class SectorBuilder extends SpaceRegionBuilder {
 			sb.append( "<connection>\n" );
 
 //			sb.append( "<direction>\n" );
-			sb.append( d.simpleName );
+			sb.append( values[ c ].simpleName );
 //			sb.append( "</direction>\n" );
 
 			// toReturn += "<sector>\n";

@@ -1,7 +1,6 @@
 package br.odb.libscene;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 import br.odb.utils.Direction;
 import br.odb.utils.Utils;
@@ -12,7 +11,7 @@ public class Sector extends SpaceRegion implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 9089005913720463010L;
-	public final HashMap<Direction, String> connection = new HashMap<Direction, String>();
+	public final String[] links = new String[ 6 ];
 	
 	Sector() {
 	}
@@ -38,7 +37,9 @@ public class Sector extends SpaceRegion implements Serializable {
 	}
 
 	public void copyLinksFrom(Sector region) {
-		connection.putAll(region.connection);
+		for ( int c = 0; c < Direction.values().length; ++c ) {
+			this.links[ c ] = region.links[ c ];
+		}
 	}
 
 	public boolean isParentEdge() {
