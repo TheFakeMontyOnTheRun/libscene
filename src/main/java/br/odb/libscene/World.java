@@ -100,13 +100,21 @@ public class World extends Scene implements Serializable {
 	}
 
 	public void checkForHardLinks() {
+		
 		List<SpaceRegion> sectors = getAllRegionsAsList(masterSector);
-
+		int shouldBeSix = Direction.values().length;
+		
 		for (SpaceRegion s1 : sectors) {
 
 			if (s1 instanceof GroupSector) {
 				continue;
 			}
+			
+			for ( int c = 0; c < shouldBeSix; ++c ) {
+				((Sector)s1).links[ c ] = null;	
+			}
+				
+			
 
 			for (SpaceRegion s2 : sectors) {
 
@@ -145,7 +153,7 @@ public class World extends Scene implements Serializable {
 		float s2_z0 = (pos2.z);
 		float s2_z1 = (pos2.z + s2.size.z);
 
-		if (	br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
+		if (	   br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
 				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
 				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
@@ -163,7 +171,7 @@ public class World extends Scene implements Serializable {
 			}
 		}
 
-		if (	br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
+		if (       br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
 				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
 				&& br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
 				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)) {
@@ -182,7 +190,7 @@ public class World extends Scene implements Serializable {
 			}
 		}
 
-		if (	br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
+		if (	   br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
 				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)
 				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
 				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {

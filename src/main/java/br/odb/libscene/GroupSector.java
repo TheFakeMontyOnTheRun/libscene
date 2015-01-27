@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.odb.libstrip.Material;
 import br.odb.libstrip.Mesh;
 import br.odb.utils.math.Vec3;
 
@@ -27,8 +26,8 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		super( region );
 		
 		if ( region instanceof GroupSector ) {
-			if ( ((GroupSector)region).material != null ) {
-				material = ((GroupSector)region).material;
+			if ( ((GroupSector)region).mesh.material != null ) {
+				mesh.material = ((GroupSector)region).mesh.material;
 			}
 		}
 	}
@@ -82,7 +81,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		GroupSector sector = new GroupSector(mesh.name);
 
 		if (mesh.material != null) {
-			sector.material = mesh.material;
+			sector.mesh.material = mesh.material;
 		} else {
 			System.out.println("Sector has no material for it's mesh");
 		}
@@ -191,7 +190,6 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	}
 	
 	public final Mesh mesh = new Mesh( "_mesh" );
-	public Material material;
 	public final Set< SpaceRegion > sons = new HashSet< SpaceRegion >();
 	
 }

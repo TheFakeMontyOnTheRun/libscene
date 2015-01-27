@@ -11,13 +11,7 @@ public class SceneTesselator {
 	public static World generateSubSectorQuadsForWorld(World world) {
 
 		generateSubSectorMeshForSector( world.masterSector );
-
-		for (SpaceRegion sr : world.masterSector.getSons()) {
-			if (sr instanceof GroupSector) {
-				generateSubSectorMeshForSector((GroupSector) sr);
-			}
-		}
-
+		
 		return world;
 	}
 
@@ -49,25 +43,28 @@ public class SceneTesselator {
 		sector.mesh.clear();
 		IndexedSetFace[] isfs;
 
+		System.out.println( "generating mesh for " + sector.id );
+		
 		for (Direction d : Direction.values()) {
 
-			if (foreignLinksInDirection(d, sector) == 0) {
-
-				isfs = generateQuadFor(d, (SpaceRegion) sector);
-
-				if (isfs != null) {
-					for (IndexedSetFace isf : isfs) {
-						sector.mesh.addFace(isf);
-					}
-				}
-
-			} else {
+//			if (foreignLinksInDirection(d, sector) == 0) {
+//
+//				isfs = generateQuadFor(d, (SpaceRegion) sector);
+//
+//				if (isfs != null) {
+//					for (IndexedSetFace isf : isfs) {
+//						sector.mesh.addFace(isf);
+//					}
+//				}
+//
+//			} else {
 
 				for (SpaceRegion s : sector.getSons()) {
 
 					if (s instanceof GroupSector) {
 						generateSubSectorMeshForSector((GroupSector) s);
 					} else {
+						
 						if ( ( (Sector) s).links[ d.ordinal() ] == null ) {
 
 							isfs = generateQuadFor(d, s);
@@ -80,7 +77,7 @@ public class SceneTesselator {
 						}
 					}
 				}
-			}
+//			}
 		}
 	}
 
@@ -99,9 +96,9 @@ public class SceneTesselator {
 
 	}
 
-	static Color getColorForFace( SpaceRegion sr) {
-		if ( sr instanceof GroupSector && ( (GroupSector) sr).material != null ) {
-			return ( (GroupSector) sr).material.mainColor;
+	public static Color getColorForFace( SpaceRegion sr) {
+		if ( sr instanceof GroupSector && ( (GroupSector) sr).mesh.material != null ) {
+			return ( (GroupSector) sr).mesh.material.mainColor;
 		} else {
 			if (sr.parent instanceof GroupSector ) {
 				return getColorForFace((GroupSector)sr.parent);
@@ -322,7 +319,7 @@ public class SceneTesselator {
 
 	private static void generateQuadFor(Direction d, GroupSector sector) {
 
-		if (sector.material == null) {
+		if (sector.mesh.material == null) {
 			return;
 		}
 

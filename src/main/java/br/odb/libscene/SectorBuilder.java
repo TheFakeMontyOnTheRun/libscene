@@ -92,7 +92,9 @@ public class SectorBuilder extends SpaceRegionBuilder {
 		
 		for ( int c = 0; c < shouldBeSix; ++c ) {
 		
-
+			if ( s.links[ c ] == null ) {
+				continue;
+			}
 			
 			// s2 = s.connection.get(d);
 

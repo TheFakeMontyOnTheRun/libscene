@@ -7,7 +7,6 @@ import org.w3c.dom.NodeList;
 
 import br.odb.libstrip.Material;
 import br.odb.utils.Color;
-import br.odb.utils.Direction;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
@@ -18,9 +17,9 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 		sb.append(SpaceRegionBuilder.toXML((SpaceRegion) gs));
 
-		if ( gs.material != null ) {
+		if ( gs.mesh.material != null ) {
 
-			c = gs.material.mainColor;
+			c = gs.mesh.material.mainColor;
 
 			if (c != null) {
 				sb.append("<material>\n");
@@ -80,7 +79,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 		Color c = Color.getColorFromHTMLColor(colour);
 		Material material = new Material(c, null, null, null);
-		region.material = material;
+		region.mesh.material = material;
 		System.out.println( "region " + region.id + " got colour " + c );
 	}
 
