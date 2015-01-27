@@ -81,6 +81,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		Color c = Color.getColorFromHTMLColor(colour);
 		Material material = new Material(c, null, null, null);
 		region.material = material;
+		System.out.println( "region " + region.id + " got colour " + c );
 	}
 
 	final static HashMap<String, SpatialDivisionBuilder> builders = new HashMap<String, SpatialDivisionBuilder>();

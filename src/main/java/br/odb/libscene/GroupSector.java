@@ -27,7 +27,9 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		super( region );
 		
 		if ( region instanceof GroupSector ) {
-			material = ((GroupSector)region).material;
+			if ( ((GroupSector)region).material != null ) {
+				material = ((GroupSector)region).material;
+			}
 		}
 	}
 	
