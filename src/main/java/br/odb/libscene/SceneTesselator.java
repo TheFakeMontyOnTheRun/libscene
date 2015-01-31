@@ -60,7 +60,6 @@ public class SceneTesselator {
 						generated = true;
 					}
 				}
-
 			}
 
 			for (SpaceRegion s : sector.getSons()) {
@@ -104,10 +103,10 @@ public class SceneTesselator {
 				&& ((GroupSector) sr).mesh.material != null) {
 			return ((GroupSector) sr).mesh.material.mainColor;
 		} else {
-			if (sr.parent instanceof GroupSector) {
-				return getColorForFace((GroupSector) sr.parent);
+			if (sr.parent instanceof SpaceRegion) {
+				return getColorForFace((SpaceRegion) sr.parent);
 			} else {
-				return new Color(0, 0, 0);
+				return new Color(128, 128, 128);
 			}
 		}
 	}
@@ -144,7 +143,7 @@ public class SceneTesselator {
 			trig.id = sector.id + "_" + d.simpleName;
 			toReturn[1] = trig;
 
-			trig.color.set(getColorForFace(sector));
+			trig.color.set( c );
 			trig.color.r /= (d.ordinal() + 1);
 			trig.color.g /= (d.ordinal() + 1);
 			trig.color.b /= (d.ordinal() + 1);

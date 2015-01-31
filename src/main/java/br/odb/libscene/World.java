@@ -82,21 +82,21 @@ public class World extends Scene implements Serializable {
 			}
 		}
 		
-//		for (SpaceRegion sr : sectors) {
-//
-//			if (sr instanceof GroupSector) {
-//				
-//				gs = ( (GroupSector ) sr );
-//				
-//				for ( Sector edge : edgeSectors.keySet() ) {
-//					if ( edge.parent != sr && sr.intersects( edge ) ) {
-//						for ( SpaceRegion son : ((GroupSector) sr).getSons() ) {
-//							checkLinksForSectors((Sector) son, (Sector) edge );
-//						}
-//					}
-//				}
-//			}
-//		}	
+		for (SpaceRegion sr : sectors) {
+
+			if (sr instanceof GroupSector) {
+				
+				gs = ( (GroupSector ) sr );
+				
+				for ( Sector edge : edgeSectors.keySet() ) {
+					if ( edge.parent != sr && sr.intersects( edge ) ) {
+						for ( SpaceRegion son : ((GroupSector) sr).getSons() ) {
+							checkLinksForSectors((Sector) son, (Sector) edge );
+						}
+					}
+				}
+			}
+		}	
 	}
 
 	public void checkForHardLinks() {
