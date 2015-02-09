@@ -1,6 +1,7 @@
 package br.odb.libscene;
 
-import br.odb.libstrip.GeneralPolygon;
+import br.odb.libstrip.GeneralTriangle;
+import br.odb.libstrip.GeneralTriangleFactory;
 import br.odb.libstrip.IndexedSetFace;
 import br.odb.utils.Color;
 import br.odb.utils.Direction;
@@ -8,21 +9,27 @@ import br.odb.utils.math.Vec3;
 
 public class SceneTesselator {
 
-	public static World generateSubSectorQuadsForWorld(World world) {
+	GeneralTriangleFactory factory;
+
+	public SceneTesselator(GeneralTriangleFactory factory) {
+		this.factory = factory;
+	}
+
+	public World generateSubSectorQuadsForWorld(World world) {
 
 		generateSubSectorMeshForSector(world.masterSector);
 
 		return world;
 	}
 
-	public static World generateQuadsForWorld(World world) {
+	public World generateQuadsForWorld(World world) {
 
 		generateMeshForSector(world.masterSector);
 
 		return world;
 	}
 
-	public static int foreignLinksInDirection(Direction d, GroupSector gs) {
+	public int foreignLinksInDirection(Direction d, GroupSector gs) {
 		int links = 0;
 		Sector son;
 
@@ -39,7 +46,7 @@ public class SceneTesselator {
 		return links;
 	}
 
-	public static void generateSubSectorMeshForSector(GroupSector sector) {
+	public void generateSubSectorMeshForSector(GroupSector sector) {
 		sector.mesh.clear();
 		IndexedSetFace[] isfs;
 		boolean generated;
@@ -50,17 +57,17 @@ public class SceneTesselator {
 
 			generated = false;
 
-			if (foreignLinksInDirection(d, sector) == 0) {
-
-				isfs = generateQuadFor(d, (SpaceRegion) sector);
-
-				if (isfs != null) {
-					for (IndexedSetFace isf : isfs) {
-						sector.mesh.addFace(isf);
-						generated = true;
-					}
-				}
-			}
+//			if (foreignLinksInDirection(d, sector) == 0) {
+//
+//				isfs = generateQuadFor(d, (SpaceRegion) sector);
+//
+//				if (isfs != null) {
+//					for (IndexedSetFace isf : isfs) {
+//						sector.mesh.addFace(isf);
+//						generated = true;
+//					}
+//				}
+//			}
 
 			for (SpaceRegion s : sector.getSons()) {
 
@@ -83,7 +90,7 @@ public class SceneTesselator {
 		}
 	}
 
-	private static void generateMeshForSector(GroupSector sector) {
+	private void generateMeshForSector(GroupSector sector) {
 		sector.mesh.clear();
 
 		for (Direction d : Direction.values()) {
@@ -98,7 +105,7 @@ public class SceneTesselator {
 
 	}
 
-	public static Color getColorForFace(SpaceRegion sr) {
+	public Color getColorForFace(SpaceRegion sr) {
 		if (sr instanceof GroupSector
 				&& ((GroupSector) sr).mesh.material != null) {
 			return ((GroupSector) sr).mesh.material.mainColor;
@@ -111,216 +118,114 @@ public class SceneTesselator {
 		}
 	}
 
-	private static GeneralPolygon[] generateQuadFor(Direction d,
-			SpaceRegion sector) {
+	private GeneralTriangle[] generateQuadFor(Direction d, SpaceRegion sector) {
 
-		GeneralPolygon[] toReturn = new GeneralPolygon[2];
-		GeneralPolygon trig;
-
+		GeneralTriangle[] toReturn = new GeneralTriangle[2];
+		GeneralTriangle trig;
 		Vec3 position = sector.getAbsolutePosition();
-		Color c = getColorForFace(sector);
+		int c = getColorForFace(sector).getARGBColor();
 
 		switch (d) {
 		case FLOOR:
-			trig = new GeneralPolygon();
-			trig.id = sector.id + "_" + d.simpleName;
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x + sector.size.x, position.y,
+					position.z, position.x + sector.size.x, position.y,
+					position.z + sector.size.z, c, null);
+
 			toReturn[0] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x + sector.size.x, position.y,
+					position.z + sector.size.z, position.x, position.y,
+					position.z + sector.size.z, c, null);
 
-			trig.addVertex(new Vec3(position.x, position.y, position.z));
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z));
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z + sector.size.z));
-
-			trig = new GeneralPolygon();
-			trig.id = sector.id + "_" + d.simpleName;
 			toReturn[1] = trig;
-
-			trig.color.set( c );
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z));
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z + sector.size.z));
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z
-					+ sector.size.z));
 
 			break;
 		case CEILING:
-			trig = new GeneralPolygon();
-			trig.id = sector.id + "_" + d.simpleName;
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y
+					+ sector.size.y, position.z, position.x + sector.size.x,
+					position.y + sector.size.y, position.z, position.x
+							+ sector.size.x, position.y + sector.size.y,
+					position.z + sector.size.z, c, null);
+
 			toReturn[0] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z));
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z));
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z + sector.size.z));
-
-			trig = new GeneralPolygon();
-			trig.id = sector.id + "_" + d.simpleName;
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y
+					+ sector.size.y, position.z, position.x + sector.size.x,
+					position.y + sector.size.y, position.z + sector.size.z,
+					position.x, position.y + sector.size.y, position.z
+							+ sector.size.z, c, null);
 			toReturn[1] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z));
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z + sector.size.z));
-
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z + sector.size.z));
 			break;
 		case W:
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x, position.y + sector.size.y,
+					position.z + sector.size.z, position.x, position.y,
+					position.z + sector.size.z, c, null);
+
 			toReturn[0] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z));
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z + sector.size.z));
-			trig.addVertex(new Vec3(position.x, position.y, position.z
-					+ sector.size.z));
-
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x, position.y + sector.size.y,
+					position.z, position.x, position.y + sector.size.y,
+					position.z + sector.size.z, c, null);
 			toReturn[1] = trig;
-
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z));
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z));
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z + sector.size.z));
 
 			break;
 		case E:
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x
+					+ sector.size.x, position.y, position.z, position.x
+					+ sector.size.x, position.y + sector.size.y, position.z
+					+ sector.size.z, position.x + sector.size.x, position.y,
+					position.z + sector.size.z, c, null);
 			toReturn[0] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z + sector.size.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z + sector.size.z));
-
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x
+					+ sector.size.x, position.y, position.z, position.x
+					+ sector.size.x, position.y + sector.size.y, position.z,
+					position.x + sector.size.x, position.y + sector.size.y,
+					position.z + sector.size.z, c, null);
 			toReturn[1] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z + sector.size.z));
 			break;
 		case N:
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x + sector.size.x, position.y
+							+ sector.size.y, position.z, position.x
+							+ sector.size.x, position.y, position.z, c, null);
 			toReturn[0] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z));
-
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x, position.y + sector.size.y,
+					position.z, position.x + sector.size.x, position.y
+							+ sector.size.y, position.z, c, null);
 			toReturn[1] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z));
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z));
 			break;
 		case S:
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z + sector.size.z, position.x + sector.size.x,
+					position.y + sector.size.y, position.z + sector.size.z,
+					position.x + sector.size.x, position.y, position.z
+							+ sector.size.z, c, null);
 			toReturn[0] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z
-					+ sector.size.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z + sector.size.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y,
-					position.z + sector.size.z));
-
-			trig = new GeneralPolygon();
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z + sector.size.z, position.x, position.y
+							+ sector.size.y, position.z + sector.size.z,
+					position.x + sector.size.x, position.y + sector.size.y,
+					position.z + sector.size.z, c, null);
 			toReturn[1] = trig;
 
-			trig.color.set(c);
-			trig.color.r /= (d.ordinal() + 1);
-			trig.color.g /= (d.ordinal() + 1);
-			trig.color.b /= (d.ordinal() + 1);
-
-			trig.addVertex(new Vec3(position.x, position.y, position.z
-					+ sector.size.z));
-			trig.addVertex(new Vec3(position.x, position.y + sector.size.y,
-					position.z + sector.size.z));
-			trig.addVertex(new Vec3(position.x + sector.size.x, position.y
-					+ sector.size.y, position.z + sector.size.z));
 			break;
 		}
 
 		return toReturn;
 	}
 
-	private static void generateQuadFor(Direction d, GroupSector sector) {
+	private void generateQuadFor(Direction d, GroupSector sector) {
 
 		if (sector.mesh.material == null) {
 			return;
