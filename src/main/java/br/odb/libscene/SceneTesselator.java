@@ -221,6 +221,10 @@ public class SceneTesselator {
 
 			break;
 		}
+		
+		for ( GeneralTriangle gt : toReturn ) {
+			gt.hint = d;
+		}
 
 		return toReturn;
 	}
