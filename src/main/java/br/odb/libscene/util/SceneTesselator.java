@@ -1,5 +1,9 @@
-package br.odb.libscene;
+package br.odb.libscene.util;
 
+import br.odb.libscene.GroupSector;
+import br.odb.libscene.Sector;
+import br.odb.libscene.SpaceRegion;
+import br.odb.libscene.World;
 import br.odb.libstrip.GeneralTriangle;
 import br.odb.libstrip.GeneralTriangleFactory;
 import br.odb.libstrip.IndexedSetFace;
@@ -223,6 +227,7 @@ public class SceneTesselator {
 		}
 		
 		for ( GeneralTriangle gt : toReturn ) {
+			gt.flush();
 			gt.hint = d;
 		}
 

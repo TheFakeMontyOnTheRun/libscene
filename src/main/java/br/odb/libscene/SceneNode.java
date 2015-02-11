@@ -78,7 +78,7 @@ public class SceneNode implements Serializable {
 		this.id = id;
 	}
 
-	public SceneNode(SpaceRegion other, String newId) {
+	public SceneNode( SceneNode other, String newId) {
 		this( newId );
 		this.localPosition.set( other.localPosition );
 	}

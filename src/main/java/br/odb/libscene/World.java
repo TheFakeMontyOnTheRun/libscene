@@ -9,7 +9,7 @@ import java.util.Map;
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
-public class World extends Scene implements Serializable {
+public class World implements Serializable {
 
 	/**
 	 * 
