@@ -15,14 +15,16 @@ import br.odb.libscene.GroupSector;
 import br.odb.libscene.World;
 
 public class WorldLoader {
+
+	final static GroupSectorBuilder gsb = new GroupSectorBuilder();
 	
 	public static String toXML( World world ) {
 		
 		String toReturn = "";
 		
 		toReturn += "<world>\n";
-		
-		toReturn += GroupSectorBuilder.toXML( world.masterSector );
+
+		toReturn += GroupSectorBuilder.gsb.toXML( world.masterSector );
 
 		toReturn += "\n</world>";
 		

@@ -16,7 +16,7 @@ public class SectorBuilder extends SpaceRegionBuilder {
 		NodeList nodeLst;
 		nodeLst = node.getChildNodes();
 
-		SpaceRegion region = super.build(node);
+		SpaceRegion region = (SpaceRegion) super.build(node);
 
 		Sector sector = new Sector(region);
 
@@ -69,8 +69,9 @@ public class SectorBuilder extends SpaceRegionBuilder {
 	public static String toXML(Sector s) {
 
 		StringBuilder sb = new StringBuilder();
-
-		sb.append(SpaceRegionBuilder.toXML((SpaceRegion) s));
+		SpaceRegionBuilder srb = new SpaceRegionBuilder();
+		
+		sb.append( srb.toXML((SpaceRegion) s));
 
 		Direction[] values = Direction.values();
 

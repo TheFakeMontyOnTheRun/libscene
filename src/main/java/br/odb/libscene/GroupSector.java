@@ -1,8 +1,9 @@
 package br.odb.libscene;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import br.odb.libstrip.Mesh;
 import br.odb.utils.math.Vec3;
@@ -32,23 +33,28 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		}
 	}
 	
-	public void removeChild( SpaceRegion child ) {
-		child.localPosition.set( getAbsolutePosition() );
-		sons.remove( child );
+	public void removeChild( SceneNode child ) {
+		
+		Vec3 absolutePos = child.getAbsolutePosition();
+		sons.remove( child.id );
+		
+		child.localPosition.set( absolutePos );		
 		child.parent = null;
 	}
 	
 
-	public void addChild( SpaceRegion region ) {
+	public void addChild( SceneNode region ) {
 		
 		if ( region.parent instanceof GroupSector ) {
+			System.out.println( "removing " + region.id + " from " + region.parent.id );
 			( ( GroupSector) region.parent ).removeChild( region );
 		}
-		
-		sons.add( region );
-		
+
 		region.localPosition.set( region.localPosition.sub( localPosition ) );
 		region.parent = this;
+		
+		
+		sons.put( region.id, region );
 	}
 	
 	public SpaceRegion pick( Vec3 v ) {
@@ -57,9 +63,9 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		
 		if ( isInside( v ) ) {
 			
-			for ( SpaceRegion sr : sons ) {
+			for ( SceneNode sr : sons.values() ) {
 				
-				if ( sr.isInside(v) && sr instanceof GroupSector ) {
+				if ( sr instanceof GroupSector && ( ( GroupSector )sr ).isInside(v) ) {
 					
 					contained = ((GroupSector)sr).pick( v );		
 					
@@ -157,11 +163,11 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		return sector;
 	}	
 	
-	public SpaceRegion getChild( String query ) {
+	public SceneNode getChild( String query ) {
 		
-		SpaceRegion descendant;
+		SceneNode descendant;
 		
-		for ( SpaceRegion child : sons ) {
+		for ( SceneNode child : sons.values() ) {
 			
 			if ( child.id.equals( query ) ) {
 				return child;
@@ -185,11 +191,55 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	
 	
 	
-	public Set< SpaceRegion > getSons() {
-		return sons;
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((mesh == null) ? 0 : mesh.hashCode());
+		result = prime * result + ((sons == null) ? 0 : sons.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		GroupSector other = (GroupSector) obj;
+		if (mesh == null) {
+			if (other.mesh != null) {
+				return false;
+			}
+		} else if (!mesh.equals(other.mesh)) {
+			return false;
+		}
+		if (sons == null) {
+			if (other.sons != null) {
+				return false;
+			}
+		} else if (!sons.equals(other.sons)) {
+			return false;
+		}
+		return true;
+	}
+
+	public Collection<SceneNode> getSons() {
+		return sons.values();
 	}
 	
 	public final Mesh mesh = new Mesh( "_mesh" );
-	public final Set< SpaceRegion > sons = new HashSet< SpaceRegion >();
+	public final Map< String, SceneNode > sons = new HashMap<>();
 	
 }

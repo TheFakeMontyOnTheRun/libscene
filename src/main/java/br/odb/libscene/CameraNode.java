@@ -6,7 +6,7 @@ public class CameraNode extends SceneNode {
 	 * 
 	 */
 	private static final long serialVersionUID = 9054020252855916205L;
-	float angleXZ;
+	public float angleXZ;
 	
 	public CameraNode(SceneNode other) {
 		super(other);
@@ -31,4 +31,39 @@ public class CameraNode extends SceneNode {
 			setFrom( (CameraNode) other );	
 		}	
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Float.floatToIntBits(angleXZ);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		CameraNode other = (CameraNode) obj;
+		if (Float.floatToIntBits(angleXZ) != Float
+				.floatToIntBits(other.angleXZ)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 }

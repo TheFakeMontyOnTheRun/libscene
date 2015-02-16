@@ -5,7 +5,10 @@ import java.util.HashMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import br.odb.libscene.CameraNode;
 import br.odb.libscene.GroupSector;
+import br.odb.libscene.LightNode;
+import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libstrip.Material;
@@ -13,12 +16,14 @@ import br.odb.utils.Color;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
-	public static String toXML(GroupSector gs) {
+	public final static GroupSectorBuilder gsb = new GroupSectorBuilder();
+	
+	public String toXML(GroupSector gs) {
 
 		Color c;
 		StringBuilder sb = new StringBuilder();
-
-		sb.append(SpaceRegionBuilder.toXML((SpaceRegion) gs));
+		SpaceRegionBuilder srb = new SpaceRegionBuilder();
+		sb.append( srb.toXML((SpaceRegion) gs));
 
 		if ( gs.mesh.material != null ) {
 
@@ -35,7 +40,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			}
 		}
 
-		for (SpaceRegion s : gs.getSons()) {
+		for (SceneNode s : gs.getSons()) {
 
 			if (s instanceof GroupSector) {
 				sb.append("\n<group>");
@@ -47,12 +52,21 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 					sb.append("\n</mesh>");
 				}
 
-				sb.append(GroupSectorBuilder.toXML((GroupSector) s));
+				
+				sb.append( gsb.toXML((GroupSector) s));
 				sb.append("\n</group>");
 			} else if (s instanceof Sector) {
 				sb.append("\n<sector>");
 				sb.append(SectorBuilder.toXML((Sector) s));
 				sb.append("\n</sector>");
+			} else if ( s instanceof LightNode ) {
+				sb.append("\n<light>");
+				sb.append(LightNodeBuilder.lnb.toXML((LightNode) s));
+				sb.append("\n</light>");
+			} else if ( s instanceof CameraNode ) {
+				sb.append("\n<camera>");
+				sb.append(CameraNodeBuilder.cnb.toXML((CameraNode) s));
+				sb.append("\n</camera>");
 			}
 		}
 
@@ -91,11 +105,13 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 	static {
 		builders.put("group", new GroupSectorBuilder());
 		builders.put("sector", new SectorBuilder());
+		builders.put("light", new LightNodeBuilder());
+		builders.put("camera", new CameraNodeBuilder());
 	}
 
 	public SpaceRegion build(Node node) {
 
-		SpaceRegion region = super.build(node);
+		SpaceRegion region = (SpaceRegion) super.build(node);
 		GroupSector masterSector = new GroupSector(region);
 
 		SpatialDivisionBuilder builder;

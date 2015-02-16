@@ -24,13 +24,13 @@ public class World implements Serializable {
 		masterSector = new GroupSector("id");
 	}
 
-	private List<SpaceRegion> getAllRegionsAsList(GroupSector group) {
+	private List<SceneNode> getAllRegionsAsList(GroupSector group) {
 
-		ArrayList<SpaceRegion> toReturn = new ArrayList<SpaceRegion>();
+		List<SceneNode> toReturn = new ArrayList<>();
 
 		toReturn.addAll(group.getSons());
 
-		for (SpaceRegion sr : group.getSons()) {
+		for (SceneNode sr : group.getSons()) {
 			if (sr instanceof GroupSector) {
 				toReturn.addAll(getAllRegionsAsList((GroupSector) sr));
 			}
@@ -39,7 +39,7 @@ public class World implements Serializable {
 		return toReturn;
 	}
 
-	public List<SpaceRegion> getAllRegionsAsList() {
+	public List<SceneNode> getAllRegionsAsList() {
 		return getAllRegionsAsList(masterSector);
 	}
 	
@@ -49,18 +49,18 @@ public class World implements Serializable {
 		GroupSector gs;
 		Sector s;
 		
-		List<SpaceRegion> sectors = getAllRegionsAsList(masterSector);
+		List<SceneNode> sectors = getAllRegionsAsList(masterSector);
 		Map< Sector, List< Direction > > edgeSectors = new HashMap< Sector, List< Direction > >();
 		
 		Direction[] allDirections = Direction.values();
 		
-		for (SpaceRegion sr : sectors) {
+		for (SceneNode sr : sectors) {
 
 			if (sr instanceof GroupSector) {
 				
 				gs = ((GroupSector) sr );
 				
-				for ( SpaceRegion son : gs.getSons() ) {
+				for ( SceneNode son : gs.getSons() ) {
 					
 					if ( son instanceof Sector ) {
 						s = ((Sector) son );
@@ -82,15 +82,15 @@ public class World implements Serializable {
 			}
 		}
 		
-		for (SpaceRegion sr : sectors) {
+		for (SceneNode sr : sectors) {
 
 			if (sr instanceof GroupSector) {
 				
 				gs = ( (GroupSector ) sr );
 				
 				for ( Sector edge : edgeSectors.keySet() ) {
-					if ( edge.parent != sr && sr.intersects( edge ) ) {
-						for ( SpaceRegion son : ((GroupSector) sr).getSons() ) {
+					if ( sr instanceof SpaceRegion && edge.parent != sr && ((SpaceRegion)sr).intersects( edge ) ) {
+						for ( SceneNode son : ((GroupSector) sr).getSons() ) {
 							checkLinksForSectors((Sector) son, (Sector) edge );
 						}
 					}
@@ -101,12 +101,12 @@ public class World implements Serializable {
 
 	public void checkForHardLinks() {
 		
-		List<SpaceRegion> sectors = getAllRegionsAsList(masterSector);
+		List<SceneNode> sectors = getAllRegionsAsList(masterSector);
 		int shouldBeSix = Direction.values().length;
 		
-		for (SpaceRegion s1 : sectors) {
+		for (SceneNode s1 : sectors) {
 
-			if (s1 instanceof GroupSector) {
+			if ( !( s1 instanceof Sector ) ) {
 				continue;
 			}
 			
@@ -116,12 +116,12 @@ public class World implements Serializable {
 				
 			
 
-			for (SpaceRegion s2 : sectors) {
+			for (SceneNode s2 : sectors) {
 
 				if (s2 == s1)
 					continue;
 
-				if (s2 instanceof GroupSector) {
+				if ( !( s2 instanceof Sector )) {
 					continue;
 				}
 

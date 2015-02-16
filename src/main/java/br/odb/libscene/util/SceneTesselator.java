@@ -1,6 +1,8 @@
 package br.odb.libscene.util;
 
 import br.odb.libscene.GroupSector;
+import br.odb.libscene.LightNode;
+import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libscene.World;
@@ -37,7 +39,7 @@ public class SceneTesselator {
 		int links = 0;
 		Sector son;
 
-		for (SpaceRegion sr : gs.getSons()) {
+		for (SceneNode sr : gs.getSons()) {
 			if (sr instanceof Sector) {
 				son = (Sector) sr;
 
@@ -73,15 +75,15 @@ public class SceneTesselator {
 //				}
 //			}
 
-			for (SpaceRegion s : sector.getSons()) {
+			for (SceneNode s : sector.getSons()) {
 
 				if (s instanceof GroupSector) {
 					generateSubSectorMeshForSector((GroupSector) s);
-				} else if (!generated) {
+				} else if (!generated && s instanceof SpaceRegion ) {
 
 					if (((Sector) s).links[d.ordinal()] == null) {
 
-						isfs = generateQuadFor(d, s);
+						isfs = generateQuadFor(d, (SpaceRegion )s);
 
 						if (isfs != null) {
 							for (IndexedSetFace isf : isfs) {
@@ -89,9 +91,36 @@ public class SceneTesselator {
 							}
 						}
 					}
+				} else {
+					
+					isfs = generateQuadFor(d, cubeForNode( s ) );
+
+					Color colour = new Color();
+					
+					if ( s instanceof LightNode ) {
+						colour.set( ((LightNode)s).color );
+					} else {
+						colour.set( 128, 128, 128 );
+					}
+					
+					if (isfs != null) {
+						for (IndexedSetFace isf : isfs) {
+							isf.setColor( colour );
+							sector.mesh.addFace(isf);
+						}
+					}
 				}
 			}
 		}
+	}
+
+	private SpaceRegion cubeForNode(SceneNode s) {
+		
+		SpaceRegion sr = new SpaceRegion("killme");
+		sr.localPosition.set( s.getAbsolutePosition() );
+		sr.size.set( 1.0f, 1.0f, 1.0f );
+		 
+		return sr;
 	}
 
 	private void generateMeshForSector(GroupSector sector) {
@@ -101,7 +130,7 @@ public class SceneTesselator {
 			generateQuadFor(d, sector);
 		}
 
-		for (SpaceRegion sr : sector.getSons()) {
+		for (SceneNode sr : sector.getSons()) {
 			if (sr instanceof GroupSector) {
 				generateMeshForSector((GroupSector) sr);
 			}

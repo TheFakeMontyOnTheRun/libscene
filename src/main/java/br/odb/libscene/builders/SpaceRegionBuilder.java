@@ -3,35 +3,28 @@ package br.odb.libscene.builders;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import br.odb.libscene.SceneNode;
 import br.odb.libscene.SpaceRegion;
 import br.odb.utils.math.Vec3;
 
-public class SpaceRegionBuilder implements SpatialDivisionBuilder {
+public class SpaceRegionBuilder extends SceneNodeBuilder implements
+		SpatialDivisionBuilder {
 
-	public static String toXML(SpaceRegion region) {
+	public String toXML(SceneNode region) {
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append( "<id>\n" );
-		sb.append(  region.id );
-		sb.append(  "</id>\n" );
+		sb.append(SceneNodeBuilder.snb.toXML(region));
 
-		sb.append(  "<position>\n" );
-		sb.append(  Vec3Builder.toXML(region.localPosition) );
-		sb.append(  "</position>\n" );
-
-		sb.append(  "<size>\n" );
-		sb.append(  Vec3Builder.toXML(region.size) );
-		sb.append(  "</size>\n" );
+		sb.append("<size>\n");
+		sb.append(Vec3Builder.toXML(((SpaceRegion) region).size));
+		sb.append("</size>\n");
 
 		return sb.toString();
 	}
 
+	public SceneNode build(Node node) {
 
-	
-	public SpaceRegion build(Node node) {
+		SceneNode sn = super.build(node);
 
-		String id = "";
-		Vec3 p0 = new Vec3();
 		Vec3 p1 = new Vec3();
 
 		Vec3Builder builder = new Vec3Builder();
@@ -39,35 +32,28 @@ public class SpaceRegionBuilder implements SpatialDivisionBuilder {
 		NodeList nodeLst;
 		nodeLst = node.getChildNodes();
 		String nodeName;
-		
+
 		for (int s = 0; s < nodeLst.getLength(); s++) {
 
 			Node fstNode = nodeLst.item(s);
-			
+
 			if (fstNode != null) {
 
 				nodeName = fstNode.getNodeName();
-				
+
 				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					if ( nodeName.equalsIgnoreCase("size")) {
+					if (nodeName.equalsIgnoreCase("size")) {
 						p1.set(builder.build(fstNode));
-					} else if ( nodeName.equalsIgnoreCase("id")) {
-						id = fstNode.getTextContent().trim();
-					} else if ( nodeName.equalsIgnoreCase(
-							"position")) {
-						p0.set(builder.build(fstNode));
 					}
 				}
 			} else {
 				nodeName = null;
 			}
 		}
-		
-		SpaceRegion region = new SpaceRegion(id);
 
-		
-		region.localPosition.set(p0);
+		SpaceRegion region = new SpaceRegion(sn.id);
+		region.localPosition.set(sn.localPosition);
 		region.size.set(p1);
 		return region;
 	}

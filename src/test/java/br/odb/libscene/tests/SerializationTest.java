@@ -60,7 +60,7 @@ public class SerializationTest {
 			GroupSector gs2 = (GroupSector) serializeAndDesserialize( gs );
 			Assert.assertEquals( gs, gs2 );
 			
-			for ( SpaceRegion node : gs2.getSons() ) {
+			for ( SceneNode node : gs2.getSons() ) {
 				Assert.assertTrue( gs2 == node.parent );
 			}
 		} catch (Exception e) {

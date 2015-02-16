@@ -151,6 +151,9 @@ public class SpaceRegion extends SceneNode {
 				&& ((position.z <= v.z) && (v.z <= (position.z + size.z)));
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -159,20 +162,28 @@ public class SpaceRegion extends SceneNode {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		SpaceRegion other = (SpaceRegion) obj;
 		if (size == null) {
-			if (other.size != null)
+			if (other.size != null) {
 				return false;
-		} else if (!size.equals(other.size))
+			}
+		} else if (!size.equals(other.size)) {
 			return false;
+		}
 		return true;
 	}
 

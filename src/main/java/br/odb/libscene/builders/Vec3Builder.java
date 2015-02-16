@@ -6,6 +6,8 @@ import br.odb.utils.math.Vec3;
 
 public class Vec3Builder {
 	
+	public static final Vec3Builder v3b = new Vec3Builder();
+	
 	public static String toXML( Vec3 vec) {
 		StringBuilder sb = new StringBuilder();
 		

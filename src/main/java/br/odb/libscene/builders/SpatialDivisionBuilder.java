@@ -5,7 +5,7 @@ package br.odb.libscene.builders;
 
 import org.w3c.dom.Node;
 
-import br.odb.libscene.SpaceRegion;
+import br.odb.libscene.SceneNode;
 
 /**
  * @author monty
@@ -13,6 +13,6 @@ import br.odb.libscene.SpaceRegion;
  */
 public interface SpatialDivisionBuilder {
 
-	SpaceRegion build( Node node );
-
+	SceneNode build( Node node );
+	String toXML(SceneNode node);
 }
