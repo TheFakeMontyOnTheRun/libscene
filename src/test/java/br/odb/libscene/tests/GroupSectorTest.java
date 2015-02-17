@@ -1,13 +1,9 @@
 package br.odb.libscene.tests;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import br.odb.libscene.GroupSector;
-import br.odb.libscene.SceneNode;
 import br.odb.libscene.SpaceRegion;
 import br.odb.utils.math.Vec3;
 
@@ -31,29 +27,20 @@ public class GroupSectorTest {
 		Assert.assertEquals( gs1.localPosition, sr2.localPosition );
 		Assert.assertEquals( sr2.localPosition, gs1.localPosition );
 		
+		
+		///////// SR2 is owned by GS1 //////////
 		gs1.addChild( sr2 );
 		Assert.assertEquals(gs1, sr2.parent );
-
-		Collection<SceneNode> nodes = new HashSet<>();
-		nodes.add( sr2 );
-		
-		for ( SceneNode sn : gs1.getSons() ) {
-			Assert.assertEquals( sr2, sn );
-		}
-		
-		Assert.assertTrue( nodes.contains( sr2 ) );
 		Assert.assertNotNull( gs1.getChild( sr2.id ) );
-		
-		nodes = gs1.getSons();
-		
-		Assert.assertTrue( nodes.contains( sr2 ) );
-		
 		Assert.assertEquals( new Vec3( 0, 0, 0), sr2.localPosition );
 		Assert.assertEquals( sr2.localPosition, new Vec3( 0, 0, 0) );
-
+		///////// SR2 is owned by GS2 //////////
 		gs2.addChild( sr2 );
-		
 		Assert.assertEquals(gs2, sr2.parent );
+		
+		Assert.assertTrue( gs2.getSons().contains( sr2 ) );
+		Assert.assertFalse( gs1.getSons().contains( sr2 ) );
+		
 		Assert.assertNotNull( gs2.getChild( sr2.id ) );
 		Assert.assertNull( gs1.getChild( sr2.id ) );
 	}

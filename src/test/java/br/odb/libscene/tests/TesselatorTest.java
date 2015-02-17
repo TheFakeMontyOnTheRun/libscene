@@ -4,14 +4,17 @@
 //import org.junit.Test;
 //
 //import br.odb.libscene.GroupSector;
-//import br.odb.libscene.SceneTesselator;
 //import br.odb.libscene.Sector;
+//import br.odb.libscene.util.SceneTesselator;
+//import br.odb.libstrip.GeneralTriangleFactory;
 //import br.odb.utils.Direction;
 //
 //public class TesselatorTest {
 //
 //	public static final int TRIANGLES_PER_WALL = 2;
-//
+//	public static final SceneTesselator tesselator = new SceneTesselator( new GeneralTriangleFactory() );
+//	
+//	
 //	@Test
 //	public final void testExtractPolysOnlyFromParentInHierarchy() {
 //		GroupSector sr1 = new GroupSector("test1");
@@ -20,10 +23,10 @@
 //
 //		for (Direction d : Direction.values()) {
 //			Assert.assertEquals(0,
-//					SceneTesselator.foreignLinksInDirection(d, sr1));
+//					tesselator.foreignLinksInDirection(d, sr1));
 //		}
 //
-//		SceneTesselator.generateSubSectorMeshForSector(sr1);
+//		tesselator.generateSubSectorMeshForSector(sr1);
 //		Assert.assertEquals(6 * TRIANGLES_PER_WALL, sr1.mesh.faces.size());
 //	}
 //
@@ -45,10 +48,10 @@
 //		
 //		for (Direction d : Direction.values()) {
 //			Assert.assertEquals(0,
-//					SceneTesselator.foreignLinksInDirection(d, sr1));
+//					tesselator.foreignLinksInDirection(d, sr1));
 //		}
 //
-//		SceneTesselator.generateSubSectorMeshForSector(sr1);
+//		tesselator.generateSubSectorMeshForSector(sr1);
 //		Assert.assertEquals(6 * TRIANGLES_PER_WALL, sr1.mesh.faces.size());
 //	}
 //
@@ -73,14 +76,14 @@
 //
 //			if (d == Direction.FLOOR) {
 //				Assert.assertEquals(1,
-//						SceneTesselator.foreignLinksInDirection(d, sr1));
+//						tesselator.foreignLinksInDirection(d, sr1));
 //			} else {
 //				Assert.assertEquals(0,
-//						SceneTesselator.foreignLinksInDirection(d, sr1));
+//						tesselator.foreignLinksInDirection(d, sr1));
 //			}
 //		}
 //
-//		SceneTesselator.generateSubSectorMeshForSector(sr1);
+//		tesselator.generateSubSectorMeshForSector(sr1);
 //		Assert.assertEquals(6 * TRIANGLES_PER_WALL, sr1.mesh.faces.size());
 //	}
 //
@@ -114,14 +117,14 @@
 //
 //			if (d == Direction.FLOOR) {
 //				Assert.assertEquals(1,
-//						SceneTesselator.foreignLinksInDirection(d, sr1));
+//						tesselator.foreignLinksInDirection(d, sr1));
 //			} else {
 //				Assert.assertEquals(0,
-//						SceneTesselator.foreignLinksInDirection(d, sr1));
+//						tesselator.foreignLinksInDirection(d, sr1));
 //			}
 //		}
 //
-//		SceneTesselator.generateSubSectorMeshForSector(sr1);
+//		tesselator.generateSubSectorMeshForSector(sr1);
 //		Assert.assertEquals(8 * TRIANGLES_PER_WALL, sr1.mesh.faces.size());
 //	}
 //

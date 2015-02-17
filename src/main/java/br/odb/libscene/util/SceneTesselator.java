@@ -91,25 +91,26 @@ public class SceneTesselator {
 							}
 						}
 					}
-				} else {
-					
-					isfs = generateQuadFor(d, cubeForNode( s ) );
-
-					Color colour = new Color();
-					
-					if ( s instanceof LightNode ) {
-						colour.set( ((LightNode)s).color );
-					} else {
-						colour.set( 128, 128, 128 );
-					}
-					
-					if (isfs != null) {
-						for (IndexedSetFace isf : isfs) {
-							isf.setColor( colour );
-							sector.mesh.addFace(isf);
-						}
-					}
-				}
+				} 
+//				else {
+//					
+//					isfs = generateQuadFor(d, cubeForNode( s ) );
+//
+//					Color colour = new Color();
+//					
+//					if ( s instanceof LightNode ) {
+//						colour.set( ((LightNode)s).color );
+//					} else {
+//						colour.set( 128, 128, 128 );
+//					}
+//					
+//					if (isfs != null) {
+//						for (IndexedSetFace isf : isfs) {
+//							isf.setColor( colour );
+//							sector.mesh.addFace(isf);
+//						}
+//					}
+//				}
 			}
 		}
 	}
