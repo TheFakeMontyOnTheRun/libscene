@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import br.odb.libstrip.Mesh;
+import br.odb.libstrip.GeneralTriangle;
+import br.odb.libstrip.GeneralTriangleMesh;
+import br.odb.libstrip.Material;
 import br.odb.utils.math.Vec3;
 
 public class GroupSector extends SpaceRegion implements Serializable {
@@ -20,16 +22,14 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	}
 	
 	public GroupSector( String id ) {
-		super( id );		 
+		super( id );
 	}
 	
 	public GroupSector(SpaceRegion region ) {
 		super( region );
 		
-		if ( region instanceof GroupSector ) {
-			if ( ((GroupSector)region).mesh.material != null ) {
-				mesh.material = ((GroupSector)region).mesh.material;
-			}
+		if ( region instanceof GroupSector && ((GroupSector)region).material != null ) {
+			material = ((GroupSector)region).material;
 		}
 	}
 	
@@ -84,20 +84,15 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		return null;
 	}
 	
-	public static GroupSector getConvexHull(int snapLevel, Mesh mesh) {
+	public static GroupSector getConvexHull(int snapLevel, GeneralTriangleMesh mesh) {
 
-		GroupSector sector = new GroupSector(mesh.name);
-
-		if (mesh.material != null) {
-			sector.mesh.material = mesh.material;
-		} else {
-			System.out.println("Sector has no material for it's mesh");
+		if (mesh.faces.size() < 1) {
+			return new GroupSector(mesh.name);
 		}
-
-		if (mesh.points.size() < 1) {
-
-			return sector;
-		}
+		
+		GroupSector sector = new GroupSector(mesh.name );
+		
+		sector.material = mesh.faces.get( 0 ).material;
 
 		// find the center point;
 		Vec3 center = mesh.getCenter();
@@ -118,30 +113,80 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		float y1 = center.y;
 		float z1 = center.z;
 
-		for (Vec3 p : mesh.points) {
+		
+		//TOOOOO BIG! Must refactor
+		for ( GeneralTriangle f : mesh.faces) {
 
-			if (p.x < x0) {
-				x0 = p.x;
+			if (f.x0 < x0) {
+				x0 = f.x0;
 			}
 
-			if (p.y < y0) {
-				y0 = p.y;
+			if (f.y0 < y0) {
+				y0 = f.y0;
 			}
 
-			if (p.z < z0) {
-				z0 = p.z;
+			if (f.z0 < z0) {
+				z0 = f.z0;
 			}
 
-			if (p.x > x1) {
-				x1 = p.x;
+			if (f.x0 > x1) {
+				x1 = f.x0;
 			}
 
-			if (p.y > y1) {
-				y1 = p.y;
+			if (f.y0 > y1) {
+				y1 = f.y0;
 			}
 
-			if (p.z > z1) {
-				z1 = p.z;
+			if (f.z0 > z1) {
+				z1 = f.z0;
+			}
+			
+			if (f.x1 < x0) {
+				x0 = f.x1;
+			}
+			
+			if (f.y1 < y0) {
+				y0 = f.y1;
+			}
+			
+			if (f.z1 < z0) {
+				z0 = f.z1;
+			}
+			
+			if (f.x1 > x1) {
+				x1 = f.x1;
+			}
+			
+			if (f.y1 > y1) {
+				y1 = f.y1;
+			}
+			
+			if (f.z1 > z1) {
+				z1 = f.z1;
+			}
+			
+			if (f.x2 < x0) {
+				x0 = f.x2;
+			}
+			
+			if (f.y2 < y0) {
+				y0 = f.y2;
+			}
+			
+			if (f.z2 < z0) {
+				z0 = f.z2;
+			}
+			
+			if (f.x2 > x1) {
+				x1 = f.x2;
+			}
+			
+			if (f.y2 > y1) {
+				y1 = f.y2;
+			}
+			
+			if (f.z2 > z1) {
+				z1 = f.z2;
 			}
 		}
 
@@ -228,7 +273,8 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		return sons;
 	}
 	
-	public final Mesh mesh = new Mesh( "_mesh" );
+	public Material material;
+	public final GeneralTriangleMesh mesh = new GeneralTriangleMesh( "_mesh" );
 	public final List< SceneNode > sons = new ArrayList<>();
 	
 }

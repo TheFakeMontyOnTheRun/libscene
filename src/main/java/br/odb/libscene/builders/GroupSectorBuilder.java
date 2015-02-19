@@ -25,9 +25,9 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		SpaceRegionBuilder srb = new SpaceRegionBuilder();
 		sb.append( srb.toXML((SpaceRegion) gs));
 
-		if ( gs.mesh.material != null ) {
+		if ( gs.material != null ) {
 
-			c = gs.mesh.material.mainColor;
+			c = gs.material.mainColor;
 
 			if (c != null) {
 				sb.append("<material>\n");
@@ -95,8 +95,8 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		}
 
 		Color c = Color.getColorFromHTMLColor(colour);
-		Material material = new Material(c, null, null, null);
-		region.mesh.material = material;
+		Material material = new Material( null, c, null, null, null);
+		region.material = material;
 		System.out.println( "region " + region.id + " got colour " + c );
 	}
 

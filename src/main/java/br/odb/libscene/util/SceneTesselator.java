@@ -1,14 +1,13 @@
 package br.odb.libscene.util;
 
 import br.odb.libscene.GroupSector;
-import br.odb.libscene.LightNode;
 import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libscene.World;
 import br.odb.libstrip.GeneralTriangle;
-import br.odb.libstrip.GeneralTriangleFactory;
-import br.odb.libstrip.IndexedSetFace;
+import br.odb.libstrip.Material;
+import br.odb.libstrip.builders.GeneralTriangleFactory;
 import br.odb.utils.Color;
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
@@ -54,7 +53,7 @@ public class SceneTesselator {
 
 	public void generateSubSectorMeshForSector(GroupSector sector) {
 		sector.mesh.clear();
-		IndexedSetFace[] isfs;
+		GeneralTriangle[] isfs;
 		boolean generated;
 
 		System.out.println("generating mesh for " + sector.id);
@@ -86,8 +85,8 @@ public class SceneTesselator {
 						isfs = generateQuadFor(d, (SpaceRegion )s);
 
 						if (isfs != null) {
-							for (IndexedSetFace isf : isfs) {
-								sector.mesh.addFace(isf);
+							for (GeneralTriangle isf : isfs) {
+								sector.mesh.faces.add(isf);
 							}
 						}
 					}
@@ -139,15 +138,15 @@ public class SceneTesselator {
 
 	}
 
-	public Color getColorForFace(SpaceRegion sr) {
+	public Material getColorForFace(SpaceRegion sr) {
 		if (sr instanceof GroupSector
-				&& ((GroupSector) sr).mesh.material != null) {
-			return ((GroupSector) sr).mesh.material.mainColor;
+				&& ((GroupSector) sr).material != null) {
+			return ((GroupSector) sr).material;
 		} else {
 			if (sr.parent instanceof SpaceRegion) {
 				return getColorForFace((SpaceRegion) sr.parent);
 			} else {
-				return new Color(128, 128, 128);
+				return new Material( null, new Color(128, 128, 128), null , null, null );
 			}
 		}
 	}
@@ -157,7 +156,7 @@ public class SceneTesselator {
 		GeneralTriangle[] toReturn = new GeneralTriangle[2];
 		GeneralTriangle trig;
 		Vec3 position = sector.getAbsolutePosition();
-		int c = getColorForFace(sector).getARGBColor();
+		Material c = getColorForFace(sector);
 
 		switch (d) {
 		case FLOOR:
@@ -266,17 +265,17 @@ public class SceneTesselator {
 
 	private void generateQuadFor(Direction d, GroupSector sector) {
 
-		if (sector.mesh.material == null) {
+		if (sector.material == null) {
 			return;
 		}
 
-		IndexedSetFace[] isfs = generateQuadFor(d, (SpaceRegion) sector);
+		GeneralTriangle[] isfs = generateQuadFor(d, (SpaceRegion) sector);
 
 		if (isfs != null) {
 
-			for (IndexedSetFace isf : isfs) {
+			for (GeneralTriangle isf : isfs) {
 
-				sector.mesh.addFace(isf);
+				sector.mesh.faces.add(isf);
 			}
 		}
 	}
