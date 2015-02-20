@@ -1,8 +1,10 @@
 package br.odb.libscene;
 
+import java.io.Serializable;
+
 import br.odb.utils.Color;
 
-public class LightNode extends SceneNode {
+public class LightNode extends SceneNode implements Serializable {
 
 	/**
 	 * 

@@ -1,6 +1,8 @@
 package br.odb.libscene;
 
-public class CameraNode extends SceneNode {
+import java.io.Serializable;
+
+public class CameraNode extends SceneNode implements Serializable {
 
 	/**
 	 * 
