@@ -2,13 +2,83 @@ package br.odb.libscene.tests;
 
 
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import br.odb.libscene.CameraNode;
+import br.odb.libscene.SceneNode;
 import br.odb.libscene.SpaceRegion;
 import br.odb.utils.math.Vec3;
 
 public class SpaceRegionTest {
+	
+	@Test
+	public final void testIsDegenerate() {
+		SpaceRegion sr1 = new SpaceRegion( "test1" );
+		Assert.assertFalse( sr1.isDegenerate() );
+		Assert.assertEquals( sr1.size, new Vec3( 1.0f, 1.0f, 1.0f ) );
+		
+		sr1.size.set( 0.0f, 0.0f, 0.0f );
+		Assert.assertTrue( sr1.isDegenerate() );
+		
+		sr1.size.set( -1.0f, 0.0f, 0.0f );
+		Assert.assertTrue( sr1.isDegenerate() );
+
+		sr1.size.set( 1.0f, -1.0f, 0.0f );
+		Assert.assertTrue( sr1.isDegenerate() );
+
+		sr1.size.set( 1.0f, 1.0f, -1.0f );
+		Assert.assertTrue( sr1.isDegenerate() );
+
+		
+		sr1.size.set( Float.NaN, 0.0f, 0.0f );
+		Assert.assertTrue( sr1.isDegenerate() );
+
+		sr1.size.set( 1.0f, Float.NEGATIVE_INFINITY, 0.0f );
+		Assert.assertTrue( sr1.isDegenerate() );
+
+		sr1.size.set( 1.0f, 1.0f, Float.POSITIVE_INFINITY );
+		Assert.assertTrue( sr1.isDegenerate() );
+
+		sr1.size.set( Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE );
+		Assert.assertFalse( sr1.isDegenerate() );
+		
+		
+		sr1.size.set( 1.0f, 0.1f, 0.5f );
+		Assert.assertFalse( sr1.isDegenerate() );
+		
+		sr1.size.set( Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE );
+		Assert.assertFalse( sr1.isDegenerate() );
+		
+	}
+	
+	@Test
+	public final void testCoincidant() {
+		
+		SpaceRegion sr1 = new SpaceRegion( "test1" );
+		SpaceRegion sr2 = new SpaceRegion( "test1" );
+		SpaceRegion sr3 = new SpaceRegion( "parent" );
+		
+		sr3.localPosition.set( 1.0f, 1.0f, 1.0f );
+		sr1.localPosition.set( 1.0f, 2.0f, 3.0f );
+		sr2.localPosition.set( sr1.localPosition );
+		sr1.size.set( 4.0f, 5.0f, 6.0f );
+		sr2.size.set( sr1.size );
+		
+		sr1.localPosition.set( 0.0f, 1.0f, 2.0f );
+		
+		Assert.assertFalse( sr1.coincidant( sr2 ) );
+		
+		sr1.parent = sr3;
+		
+		Assert.assertTrue( sr1.coincidant( sr2 ) );
+		
+		sr2.size.set( 6.0f, 5.0f, 4.0f );
+		Assert.assertFalse( sr1.coincidant( sr2 ) );
+	}
 	
 	@Test
 	public final void testEquals() {
@@ -17,14 +87,23 @@ public class SpaceRegionTest {
 		SpaceRegion sr2 = new SpaceRegion( "test1" );
 		
 		Assert.assertEquals( sr1, sr2 );
-		
 		sr1.localPosition.set( 1.0f, 2.0f, 3.0f );
 		sr2.localPosition.set( sr1.localPosition );
 		
 		sr1.size.set( 4.0f, 5.0f, 6.0f );
 		sr2.size.set( sr1.size );
-		
+		Assert.assertTrue( sr1.hashCode() == sr2.hashCode() );
 		Assert.assertEquals( sr1, sr2 );
+		Assert.assertEquals( sr1, sr1 );
+		Assert.assertFalse( sr1.equals( null ) );
+		Assert.assertFalse( sr1.equals( new SceneNode( sr1 )  ) );
+		Assert.assertFalse( sr1.equals( new CameraNode( "test1" )  ) );
+		Assert.assertFalse( sr1.equals( "Not even a Space Region!" ) );
+		
+		
+		sr2.size.set( 6.0f, 5.0f, 4.0f );
+		Assert.assertFalse( sr1.equals( sr2 ) );
+		Assert.assertFalse( sr1.hashCode() == sr2.hashCode() );
 	}
 	
 	@Test
@@ -46,110 +125,117 @@ public class SpaceRegionTest {
 	
 	@Test
 	public final void testIntersectCorners() {
+		
 		SpaceRegion sr1 = new SpaceRegion("sr1");
+		SpaceRegion sr2 = new SpaceRegion( sr1, "sr1");
+		
+		Assert.assertTrue( sr1.intersects( sr1 ) );
+		Assert.assertTrue( sr1.intersects( sr2 ) );
+		
+		for ( float x = -1.0f; x <= 1.0f; x += 0.1f ) {
+			
+			sr2.localPosition.x = x;
+			
+			for ( float y = -1.0f; y <= 1.0f; y += 0.1f ) {
+				
+				sr2.localPosition.y = y;
+				
+				for ( float z = -1.0f; z <= 1.0f; z += 0.1f ) {
+					
+					sr2.localPosition.z = z;
+
+					for ( float dx = 1.0f; dx <= 2.0f; dx += 0.1f ) {
+						
+						sr2.size.x = dx;
+						
+						for ( float dy = 1.0f; dy <= 2.0f; dy += 0.1f ) {
+							
+							sr2.size.y = dy;
+							
+							for ( float dz = 1.0f; dz <= 2.0f; dz += 0.1f ) {
+								
+								sr2.size.z = dz;
+								
+								Assert.assertTrue( sr1.intersects( sr2 ) );		
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		sr1.localPosition.set( 0.0f, 0.0f, 0.0f );
-		sr1.size.set( 2.0f, 2.0f, 2.0f );
-		SpaceRegion sr2 = new SpaceRegion( "sr2" );
-		sr2.localPosition.set( 1.0f, 1.0f, 0.0f );
-		sr2.size.set( 2.0f, 2.0f, 2.0f );
+		sr2.localPosition.set( 0.0f, 0.0f, 0.0f );
+		
 
-		//   ___
-		//  | 1_|_
-		//  |_| 2 |
-		//    |___|
-		//
-		sr2.localPosition.set( 1.0f, 1.0f, 0.0f );		
-		Assert.assertTrue( sr1.intersects( sr2 ) );
-		Assert.assertTrue( sr2.intersects( sr1 ) );
-		//    ___
-		//   | 1 |
-		//   |___|___
-		//    	 | 2 |
-		//  	 |___|
-		//	
-		sr2.localPosition.set( 2.0f, 2.0f, 0.0f );		
+		
+		
+		sr2.localPosition.set( 0.3f, -1.0f, -1.0f );
+		sr2.size.set( 0.3f, 2.0f, 2.0f );
+		
 		Assert.assertTrue( sr1.intersects( sr2 ) );
 		Assert.assertTrue( sr2.intersects( sr1 ) );
 		
-		//  	  ___
-		//     __| 1 |
-		//    | 2 |__|
-		//    |___|
-		//
-		sr2.localPosition.set( -1.0f, 1.0f, 0.0f );		
-		Assert.assertTrue( sr1.intersects( sr2 ) );
-		Assert.assertTrue( sr2.intersects( sr1 ) );
-		//  	  ___
-		//       | 1 |
-		//     __| __|		
-		//    | 2 |
-		//    |___|
-		//
-		sr2.localPosition.set( -2.0f, 2.0f, 0.0f );		
-		Assert.assertTrue( sr1.intersects( sr2 ) );
-		Assert.assertTrue( sr2.intersects( sr1 ) );
+		sr2.localPosition.set( -1.0f, 0.3f, -1.0f );		
+		sr2.size.set( 2.0f, 0.3f, 2.0f );
 
-		//       ____________
-		//     	 |	  ___	|
-		//    	 |2  | 1 |  |
-		//   	 |   |___|  |
-		//  	 |__________|
-		//	
-		sr2.localPosition.set( -5.0f, -5.0f, -5.0f );
-		sr2.size.set( 10.0f, 10.0f, 10.0f );		
+		Assert.assertTrue( sr1.intersects( sr2 ) );
+		Assert.assertTrue( sr2.intersects( sr1 ) );
+		
+		sr2.localPosition.set( -1.0f, -1.0f, 0.3f );		
+		sr2.size.set( 2.0f, 2.0f, 0.3f );
+
+		Assert.assertTrue( sr1.intersects( sr2 ) );
 		Assert.assertTrue( sr2.intersects( sr1 ) );
 		
 
-		//            ___
-		//       ____|   |___
-		//     	 |	 |   |  |
-		//    	 |1  | 2 |  |
-		//   	 |   |   |  |
-		//  	 |___|   |__|
-		//           |___|	
-//		sr2.localPosition.set( 1.0f, -1.0f, 0.0f );
-//		sr2.size.set( 0.5f, 10.0f, 2.0f );		
-//		Assert.assertTrue( sr1.intersects( sr2 ) );
-//		Assert.assertTrue( sr2.intersects( sr1 ) );
-		
-		
-		//   ___
-		//  | 2_|_
-		//  |_| 1 |
-		//    |___|
-		//
-		sr2.localPosition.set( -1.0f, -1.0f, 0.0f );		
+		sr2.localPosition.set( 0.3f, 0.3f, 0.3f );		
+		sr2.size.set( 0.3f, 0.3f, 0.3f );
+
 		Assert.assertTrue( sr1.intersects( sr2 ) );
 		Assert.assertTrue( sr2.intersects( sr1 ) );
-		//    ___
-		//   | 2 |
-		//   |___|___
-		//    	 | 1 |
-		//  	 |___|
-		//	
-		sr2.localPosition.set( -2.0f, -2.0f, 0.0f );		
-		Assert.assertTrue( sr1.intersects( sr2 ) );
-		Assert.assertTrue( sr2.intersects( sr1 ) );
+
 		
-		//  	  ___
-		//     __| 2 |
-		//    | 1 |__|
-		//    |___|
-		//
-		sr2.localPosition.set( 1.0f, -1.0f, 0.0f );		
+		sr2.localPosition.set( 0.3f, -2.0f, 0.3f );		
+		sr2.size.set( 0.3f, 2.0f, 0.3f );
+
 		Assert.assertTrue( sr1.intersects( sr2 ) );
-		Assert.assertTrue( sr2.intersects( sr1 ) );
-		//  	  ___
-		//       | 2 |
-		//     __| __|		
-		//    | 1 |
-		//    |___|
-		//
-		sr2.localPosition.set( 2.0f, -2.0f, 0.0f );		
-		Assert.assertTrue( sr1.intersects( sr2 ) );
-		Assert.assertTrue( sr2.intersects( sr1 ) );
-		
+		Assert.assertFalse( sr1.intersects( null ) );
 	}
+	
+	//http://stackoverflow.com/questions/19699634/coverage-for-private-constructor-junit-emma
+	@Test
+    public void testConstructorIsPrivate() throws Exception {
+      Constructor<SpaceRegion> constructor = SpaceRegion.class.getDeclaredConstructor();
+      Assert.assertFalse(Modifier.isPublic(constructor.getModifiers()));
+      constructor.setAccessible(true);
+      constructor.newInstance();
+    }
+	
+	@Test
+	public final void testGetLocalCenter() {
+		SpaceRegion sr1 = new SpaceRegion("test", new Vec3( 2.0f, 2.0f, 2.0f ) );
+		SpaceRegion sr2 = new SpaceRegion( sr1  );
+		sr2.id = "parent";
+		sr1.localPosition.set( 1.0f, 1.0f, 1.0f );
+		sr2.localPosition.set( 1.0f, 1.0f, 1.0f );
+		sr1.parent = sr2;
+		
+		Assert.assertEquals( new Vec3( 2.0f, 2.0f, 2.0f ), sr1.getLocalCenter() );
+	}
+
+	@Test
+	public final void testGetGlobalCenter() {
+		SpaceRegion sr1 = new SpaceRegion("test");
+		SpaceRegion sr2 = new SpaceRegion("test2");
+		sr1.localPosition.set( 1.0f, 1.0f, 1.0f );
+		sr2.localPosition.set( 1.0f, 1.0f, 1.0f );
+		sr1.parent = sr2;
+		sr1.size.set( 2.0f, 2.0f, 2.0f );
+		
+		Assert.assertEquals( new Vec3( 3.0f, 3.0f, 3.0f ), sr1.getAbsoluteCenter() );
+	}
+	
 	
 	@Test
 	public final void testPointsInside() {
@@ -159,6 +245,25 @@ public class SpaceRegionTest {
 		sr1.size.set( 2.0f, 2.0f, 2.0f );
 		
 		Vec3 point = new Vec3();
+
+		point.set( -1.0f, 0.0f, 1.0f );		
+		Assert.assertFalse( sr1.isInside(point) );
+
+		point.set( 3.0f, 0.0f, 1.0f );		
+		Assert.assertFalse( sr1.isInside(point) );
+
+		point.set( 0.0f, -1.0f, 1.0f );		
+		Assert.assertFalse( sr1.isInside(point) );
+
+		point.set( 0.0f, 3.0f, 1.0f );		
+		Assert.assertFalse( sr1.isInside(point) );
+
+		point.set( 0.0f, 0.0f, -1.0f );		
+		Assert.assertFalse( sr1.isInside(point) );
+
+		point.set( 0.0f, 0.0f, 3.0f );		
+		Assert.assertFalse( sr1.isInside(point) );
+		
 		
 		point.set( 0.0f, 0.0f, 1.0f );		
 		Assert.assertTrue( sr1.isInside(point) );

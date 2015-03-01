@@ -49,7 +49,6 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		}		
 		
 		if ( region.parent instanceof GroupSector ) {
-			System.out.println( "removing " + region.id + " from " + region.parent.id );
 			( ( GroupSector) region.parent ).removeChild( region );
 		}
 
@@ -67,13 +66,21 @@ public class GroupSector extends SpaceRegion implements Serializable {
 			
 			for ( SceneNode sr : sons ) {
 				
-				if ( sr instanceof GroupSector && ( ( GroupSector )sr ).isInside(v) ) {
+				if ( sr instanceof SpaceRegion ) {
 					
-					contained = ((GroupSector)sr).pick( v );		
-					
-					if ( contained != null ) {
+					if ( ((SpaceRegion) sr ).isInside( v ) ) {
 						
-						return contained;
+						if ( sr instanceof GroupSector  ) {
+							
+							contained = ((GroupSector)sr).pick( v );		
+							
+							if ( contained != null ) {
+								
+								return contained;
+							}
+						}
+					
+						return (SpaceRegion)sr;
 					}
 				}
 			}	 			
@@ -84,128 +91,67 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		return null;
 	}
 	
-	public static GroupSector getConvexHull(int snapLevel, GeneralTriangleMesh mesh) {
-
-		if (mesh.faces.size() < 1) {
-			return new GroupSector(mesh.name);
+	private static void maxVec( Vec3 v, float x, float y, float z ) {
+		
+		if ( v.x < x ) {
+			v.x = x;
 		}
 		
-		GroupSector sector = new GroupSector(mesh.name );
+		if ( v.y < y ) {
+			v.y = y;
+		}
 		
-		sector.material = mesh.faces.get( 0 ).material;
+		if ( v.z < z ) {
+			v.z = z;
+		}
+	}
+	
+	private static void minVec( Vec3 v, float x, float y, float z ) {
+		
+		if ( v.x > x ) {
+			v.x = x;
+		}
+		
+		if ( v.y > y ) {
+			v.y = y;
+		}
+		
+		if ( v.z > z ) {
+			v.z = z;
+		}
+	}
+	
+	
+	public static GroupSector getConvexHull( GeneralTriangleMesh mesh ) {
+		
+		if ( mesh == null ) {
+			return new GroupSector( "null" );
+		}
+
+		GroupSector sector = new GroupSector(mesh.name );
 
 		// find the center point;
 		Vec3 center = mesh.getCenter();
 
 		// make the box stay at the center;
-
-		sector.localPosition.x = (center.x);
-		sector.localPosition.y = (center.y);
-		sector.localPosition.z = (center.z);
-		sector.size.x = (center.x);
-		sector.size.y = (center.y);
-		sector.size.z = (center.z);
-
-		float x0 = center.x;
-		float y0 = center.y;
-		float z0 = center.z;
-		float x1 = center.x;
-		float y1 = center.y;
-		float z1 = center.z;
-
+		Vec3 p0 = new Vec3( center );
+		Vec3 p1 = new Vec3( center );
 		
-		//TOOOOO BIG! Must refactor
 		for ( GeneralTriangle f : mesh.faces) {
 
-			if (f.x0 < x0) {
-				x0 = f.x0;
-			}
-
-			if (f.y0 < y0) {
-				y0 = f.y0;
-			}
-
-			if (f.z0 < z0) {
-				z0 = f.z0;
-			}
-
-			if (f.x0 > x1) {
-				x1 = f.x0;
-			}
-
-			if (f.y0 > y1) {
-				y1 = f.y0;
-			}
-
-			if (f.z0 > z1) {
-				z1 = f.z0;
-			}
+			minVec( p0, f.x0, f.y0, f.z0 );
+			minVec( p0, f.x1, f.y1, f.z1 );
+			minVec( p0, f.x2, f.y2, f.z2 );
 			
-			if (f.x1 < x0) {
-				x0 = f.x1;
-			}
+			maxVec( p1, f.x0, f.y0, f.z0 );
+			maxVec( p1, f.x1, f.y1, f.z1 );
+			maxVec( p1, f.x2, f.y2, f.z2 );
 			
-			if (f.y1 < y0) {
-				y0 = f.y1;
-			}
-			
-			if (f.z1 < z0) {
-				z0 = f.z1;
-			}
-			
-			if (f.x1 > x1) {
-				x1 = f.x1;
-			}
-			
-			if (f.y1 > y1) {
-				y1 = f.y1;
-			}
-			
-			if (f.z1 > z1) {
-				z1 = f.z1;
-			}
-			
-			if (f.x2 < x0) {
-				x0 = f.x2;
-			}
-			
-			if (f.y2 < y0) {
-				y0 = f.y2;
-			}
-			
-			if (f.z2 < z0) {
-				z0 = f.z2;
-			}
-			
-			if (f.x2 > x1) {
-				x1 = f.x2;
-			}
-			
-			if (f.y2 > y1) {
-				y1 = f.y2;
-			}
-			
-			if (f.z2 > z1) {
-				z1 = f.z2;
-			}
+			sector.material = f.material;
 		}
 
-		sector.localPosition.x = x0;
-		sector.localPosition.y = y0;
-		sector.localPosition.z = z0;
-
-		sector.size.x = x1 - x0;
-		sector.size.y = y1 - y0;
-		sector.size.z = z1 - z0;
-
-		if (snapLevel > 0) {
-			sector.localPosition.x = Math.round(sector.localPosition.x);
-			sector.localPosition.y = Math.round(sector.localPosition.y);
-			sector.localPosition.z = Math.round(sector.localPosition.z);
-			sector.size.x = Math.round(sector.size.x);
-			sector.size.y = Math.round(sector.size.y);
-			sector.size.z = Math.round(sector.size.z);
-		}
+		sector.localPosition.set( p0 );
+		sector.size.set( p1.sub( p0 ) );
 
 		return sector;
 	}	
@@ -238,34 +184,50 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((mesh == null) ? 0 : mesh.hashCode());
-		result = prime * result + ((sons == null) ? 0 : sons.hashCode());
+		result = prime * result
+				+ ((material == null) ? 0 : material.hashCode());
+		result = prime * result + ( mesh.hashCode());
+		result = prime * result + ( sons.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof GroupSector)) {
 			return false;
+		}
 		GroupSector other = (GroupSector) obj;
-		if (mesh == null) {
-			if (other.mesh != null)
+		if (material == null) {
+			if (other.material != null) {
 				return false;
-		} else if (!mesh.equals(other.mesh))
+			}
+		} else if (!material.equals(other.material)) {
 			return false;
-		if (sons == null) {
-			if (other.sons != null)
-				return false;
-		} else if (!sons.equals(other.sons))
+		}
+		
+		if (!mesh.equals(other.mesh)) {
 			return false;
+		}
+		
+		if (!sons.equals(other.sons)) {
+			return false;
+		}
 		return true;
 	}
 

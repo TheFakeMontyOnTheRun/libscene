@@ -19,6 +19,7 @@ public class CameraNode extends SceneNode implements Serializable {
 	}
 
 	public void setFrom( CameraNode other ) {
+		super.setFrom( other );
 		this.angleXZ = other.angleXZ;
 	}
 	
@@ -56,7 +57,7 @@ public class CameraNode extends SceneNode implements Serializable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof CameraNode)) {
 			return false;
 		}
 		CameraNode other = (CameraNode) obj;

@@ -39,65 +39,68 @@ public class World implements Serializable {
 		return toReturn;
 	}
 
+	/*
+	 * Returns all children of master sector 
+	 */
 	public List<SceneNode> getAllRegionsAsList() {
 		return getAllRegionsAsList(masterSector);
 	}
 	
 	
-	public void checkForHardLinks_new() {
-		
-		GroupSector gs;
-		Sector s;
-		
-		List<SceneNode> sectors = getAllRegionsAsList(masterSector);
-		Map< Sector, List< Direction > > edgeSectors = new HashMap< Sector, List< Direction > >();
-		
-		Direction[] allDirections = Direction.values();
-		
-		for (SceneNode sr : sectors) {
-
-			if (sr instanceof GroupSector) {
-				
-				gs = ((GroupSector) sr );
-				
-				for ( SceneNode son : gs.getSons() ) {
-					
-					if ( son instanceof Sector ) {
-						s = ((Sector) son );
-						
-						for ( Direction d : allDirections ) {
-							if ( !s.isParentEdgeAt( d ) ) {
-								s.links[ d.ordinal() ] = s.id;
-							} else {
-								
-								if ( !edgeSectors.containsKey( s ) ) {
-									edgeSectors.put( s, new ArrayList< Direction >() );
-								}
-								
-								edgeSectors.get( s ).add( d );
-							}
-						}
-					}
-				}				
-			}
-		}
-		
-		for (SceneNode sr : sectors) {
-
-			if (sr instanceof GroupSector) {
-				
-				gs = ( (GroupSector ) sr );
-				
-				for ( Sector edge : edgeSectors.keySet() ) {
-					if ( sr instanceof SpaceRegion && edge.parent != sr && ((SpaceRegion)sr).intersects( edge ) ) {
-						for ( SceneNode son : ((GroupSector) sr).getSons() ) {
-							checkLinksForSectors((Sector) son, (Sector) edge );
-						}
-					}
-				}
-			}
-		}	
-	}
+//	public void checkForHardLinks_new() {
+//		
+//		GroupSector gs;
+//		Sector s;
+//		
+//		List<SceneNode> sectors = getAllRegionsAsList(masterSector);
+//		Map< Sector, List< Direction > > edgeSectors = new HashMap< Sector, List< Direction > >();
+//		
+//		Direction[] allDirections = Direction.values();
+//		
+//		for (SceneNode sr : sectors) {
+//
+//			if (sr instanceof GroupSector) {
+//				
+//				gs = ((GroupSector) sr );
+//				
+//				for ( SceneNode son : gs.getSons() ) {
+//					
+//					if ( son instanceof Sector ) {
+//						s = ((Sector) son );
+//						
+//						for ( Direction d : allDirections ) {
+//							if ( !s.isParentEdgeAt( d ) ) {
+//								s.links[ d.ordinal() ] = s.id;
+//							} else {
+//								
+//								if ( !edgeSectors.containsKey( s ) ) {
+//									edgeSectors.put( s, new ArrayList< Direction >() );
+//								}
+//								
+//								edgeSectors.get( s ).add( d );
+//							}
+//						}
+//					}
+//				}				
+//			}
+//		}
+//		
+//		for (SceneNode sr : sectors) {
+//
+//			if (sr instanceof GroupSector) {
+//				
+//				gs = ( (GroupSector ) sr );
+//				
+//				for ( Sector edge : edgeSectors.keySet() ) {
+//					if ( sr instanceof SpaceRegion && edge.parent != sr && ((SpaceRegion)sr).intersects( edge ) ) {
+//						for ( SceneNode son : ((GroupSector) sr).getSons() ) {
+//							checkLinksForSectors((Sector) son, (Sector) edge );
+//						}
+//					}
+//				}
+//			}
+//		}	
+//	}
 
 	public void checkForHardLinks() {
 		

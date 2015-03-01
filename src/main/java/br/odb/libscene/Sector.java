@@ -92,6 +92,7 @@ public class Sector extends SpaceRegion implements Serializable {
 			}
 			break;
 		case S:
+		default:
 			if (Utils.eqFloat(localPosition.z, parentRegion.size.z - size.z)) {
 				return true;
 			}

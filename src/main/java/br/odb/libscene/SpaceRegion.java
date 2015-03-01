@@ -8,28 +8,26 @@ public class SpaceRegion extends SceneNode {
 	 * 
 	 */
 	private static final long serialVersionUID = -1591752162392334619L;
-	
+
 	public final Vec3 size = new Vec3(1.0f, 1.0f, 1.0f);
-	
 
 	SpaceRegion() {
 	}
 
 	public Vec3 getLocalCenter() {
-		
-		Vec3 toReturn = localPosition.add( size );
-		toReturn.scale( 0.5f );
-		
-		return toReturn;		
+
+		Vec3 halfSize = new Vec3(size);
+		halfSize.scale(0.5f);
+
+		return localPosition.add(halfSize);
 	}
-	
+
 	public Vec3 getAbsoluteCenter() {
-		
-		Vec3 halfSize = new Vec3( size );
-		halfSize.scale( 0.5f );
-		return getAbsolutePosition().add( halfSize );		
+
+		Vec3 halfSize = new Vec3(size);
+		halfSize.scale(0.5f);
+		return getAbsolutePosition().add(halfSize);
 	}
-	
 
 	public SpaceRegion(String id) {
 		super(id);
@@ -40,7 +38,6 @@ public class SpaceRegion extends SceneNode {
 		this.size.set(size);
 	}
 
-	
 	public SpaceRegion(SpaceRegion region) {
 		super(region);
 
@@ -52,18 +49,24 @@ public class SpaceRegion extends SceneNode {
 	}
 
 	public boolean isDegenerate() {
-		return (size.x <= 0.0f) || (size.y <= 0.0f) || (size.z <= 0.0f);
+		return !size.isValid() || (size.x <= 0.0f) || (size.y <= 0.0f)
+				|| (size.z <= 0.0f);
 	}
 
 	public boolean coincidant(SpaceRegion another) {
-		
+
 		Vec3 pos = getAbsolutePosition();
 		Vec3 otherPos = another.getAbsolutePosition();
-		
-		return pos.equals( otherPos ) && size.equals( another.size );
+
+		return pos.equals(otherPos) && size.equals(another.size);
 	}
-	
+
 	public boolean intersects(SpaceRegion another) {
+		return this.intersectsWith(another)
+				|| (another != null ? another.intersectsWith(this) : false);
+	}
+
+	private boolean intersectsWith(SpaceRegion another) {
 
 		if (another == null) {
 			return false;
@@ -72,74 +75,37 @@ public class SpaceRegion extends SceneNode {
 		Vec3 pos = getAbsolutePosition();
 		Vec3 otherPos = another.getAbsolutePosition();
 
-		if (this == another || this.equals(another)) {
+		if (this.equals(another)) {
 			return true;
 		}
 
 		Vec3 p0 = pos;
 		Vec3 p1 = pos.add(size);
 		Vec3 anotherP0 = otherPos;
-		Vec3 anotherP1 = otherPos.add(size);
+		Vec3 anotherP1 = otherPos.add(another.size);
 
-		if (contains(anotherP0.x, anotherP0.y, anotherP0.z)) {
-			return true;
+		if (p0.z <= anotherP0.z && anotherP1.z <= p1.z) {
+			if (p0.y <= anotherP0.y && anotherP1.y <= p1.y) {
+				if ((p0.x <= anotherP0.x && anotherP1.x <= p1.x)) {
+					return true;
+				}
+			}
 		}
 
-		if (contains(anotherP0.x, anotherP0.y, anotherP1.z)) {
-			return true;
-		}
+		if ((p0.x <= anotherP0.x && anotherP0.x <= p1.x)
+				|| (p0.x <= anotherP1.x && anotherP1.x <= p1.x)) {
 
-		if (contains(anotherP0.x, anotherP1.y, anotherP0.z)) {
-			return true;
-		}
+			if ((p0.y <= anotherP0.y && anotherP0.y <= p1.y)
+					|| (p0.y <= anotherP1.y && anotherP1.y <= p1.y)) {
 
-		if (contains(anotherP0.x, anotherP1.y, anotherP1.z)) {
-			return true;
-		}
-
-		if (contains(anotherP1.x, anotherP0.y, anotherP0.z)) {
-			return true;
-		}
-
-		if (contains(anotherP1.x, anotherP0.y, anotherP1.z)) {
-			return true;
-		}
-
-		if (contains(anotherP1.x, anotherP1.y, anotherP0.z)) {
-			return true;
-		}
-
-		if (contains(anotherP1.x, anotherP1.y, anotherP1.z)) {
-			return true;
-		}
-
-		if ( ( p0.x >= anotherP0.x && p1.x <= anotherP1.x ) && 
-			 ( p0.y <= anotherP0.y && p1.y >= anotherP1.y ) && 
-			 (
-						(anotherP0.z <= p0.z && p0.z <= anotherP1.z) || 
-						(anotherP0.z <= p1.z && p1.z <= anotherP1.z)
-					)
-				) {
-			return true;
-		}		
-		
-		if (anotherP0.x >= p0.x
-				&& anotherP1.x <= p1.x
-				&& anotherP0.y <= p0.y
-				&& anotherP1.y >= p1.y
-				&& (
-						(p0.z <= anotherP0.z && anotherP0.z <= p1.z) || 
-						(p0.z <= anotherP1.z && anotherP1.z <= p1.z)
-					)
-				) {
-			return true;
+				if ((p0.z <= anotherP0.z && anotherP0.z <= p1.z)
+						|| (p0.z <= anotherP1.z && anotherP1.z <= p1.z)) {
+					return true;
+				}
+			}
 		}
 
 		return false;
-	}
-
-	public boolean contains(float x, float y, float z) {
-		return isInside(new Vec3(x, y, z));
 	}
 
 	public boolean isInside(Vec3 v) {
@@ -155,7 +121,7 @@ public class SpaceRegion extends SceneNode {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((size == null) ? 0 : size.hashCode());
+		result = prime * result + (size.hashCode());
 		return result;
 	}
 
@@ -165,13 +131,10 @@ public class SpaceRegion extends SceneNode {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof SpaceRegion))
 			return false;
 		SpaceRegion other = (SpaceRegion) obj;
-		if (size == null) {
-			if (other.size != null)
-				return false;
-		} else if (!size.equals(other.size))
+		if (!size.equals(other.size))
 			return false;
 		return true;
 	}

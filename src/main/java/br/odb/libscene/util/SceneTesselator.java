@@ -56,8 +56,6 @@ public class SceneTesselator {
 		GeneralTriangle[] isfs;
 		boolean generated;
 
-		System.out.println("generating mesh for " + sector.id);
-
 		for (Direction d : Direction.values()) {
 
 			generated = false;
@@ -78,11 +76,11 @@ public class SceneTesselator {
 
 				if (s instanceof GroupSector) {
 					generateSubSectorMeshForSector((GroupSector) s);
-				} else if (!generated && s instanceof SpaceRegion ) {
+				} else if (!generated && s instanceof SpaceRegion) {
 
 					if (((Sector) s).links[d.ordinal()] == null) {
 
-						isfs = generateQuadFor(d, (SpaceRegion )s);
+						isfs = generateQuadFor(d, (SpaceRegion) s);
 
 						if (isfs != null) {
 							for (GeneralTriangle isf : isfs) {
@@ -90,38 +88,38 @@ public class SceneTesselator {
 							}
 						}
 					}
-				} 
-//				else {
-//					
-//					isfs = generateQuadFor(d, cubeForNode( s ) );
-//
-//					Color colour = new Color();
-//					
-//					if ( s instanceof LightNode ) {
-//						colour.set( ((LightNode)s).color );
-//					} else {
-//						colour.set( 128, 128, 128 );
-//					}
-//					
-//					if (isfs != null) {
-//						for (IndexedSetFace isf : isfs) {
-//							isf.setColor( colour );
-//							sector.mesh.addFace(isf);
-//						}
-//					}
-//				}
+				}
+				// else {
+				//
+				// isfs = generateQuadFor(d, cubeForNode( s ) );
+				//
+				// Color colour = new Color();
+				//
+				// if ( s instanceof LightNode ) {
+				// colour.set( ((LightNode)s).color );
+				// } else {
+				// colour.set( 128, 128, 128 );
+				// }
+				//
+				// if (isfs != null) {
+				// for (IndexedSetFace isf : isfs) {
+				// isf.setColor( colour );
+				// sector.mesh.addFace(isf);
+				// }
+				// }
+				// }
 			}
 		}
 	}
 
-	private SpaceRegion cubeForNode(SceneNode s) {
-		
-		SpaceRegion sr = new SpaceRegion("killme");
-		sr.localPosition.set( s.getAbsolutePosition() );
-		sr.size.set( 1.0f, 1.0f, 1.0f );
-		 
-		return sr;
-	}
+	// private SpaceRegion cubeForNode(SceneNode s) {
+	//
+	// SpaceRegion sr = new SpaceRegion("killme");
+	// sr.localPosition.set( s.getAbsolutePosition() );
+	// sr.size.set( 1.0f, 1.0f, 1.0f );
+	//
+	// return sr;
+	// }
 
 	private void generateMeshForSector(GroupSector sector) {
 		sector.mesh.clear();
@@ -135,18 +133,17 @@ public class SceneTesselator {
 				generateMeshForSector((GroupSector) sr);
 			}
 		}
-
 	}
 
 	public Material getColorForFace(SpaceRegion sr) {
-		if (sr instanceof GroupSector
-				&& ((GroupSector) sr).material != null) {
+		if (sr instanceof GroupSector && ((GroupSector) sr).material != null) {
 			return ((GroupSector) sr).material;
 		} else {
 			if (sr.parent instanceof SpaceRegion) {
 				return getColorForFace((SpaceRegion) sr.parent);
 			} else {
-				return new Material( null, new Color(128, 128, 128), null , null, null );
+				return new Material(null, new Color(128, 128, 128), null, null,
+						null);
 			}
 		}
 	}
@@ -159,22 +156,6 @@ public class SceneTesselator {
 		Material c = getColorForFace(sector);
 
 		switch (d) {
-		case FLOOR:
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x + sector.size.x, position.y,
-					position.z, position.x + sector.size.x, position.y,
-					position.z + sector.size.z, c, null);
-
-			toReturn[0] = trig;
-
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x + sector.size.x, position.y,
-					position.z + sector.size.z, position.x, position.y,
-					position.z + sector.size.z, c, null);
-
-			toReturn[1] = trig;
-
-			break;
 		case CEILING:
 			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y
 					+ sector.size.y, position.z, position.x + sector.size.x,
@@ -253,9 +234,26 @@ public class SceneTesselator {
 			toReturn[1] = trig;
 
 			break;
+		case FLOOR:
+		default:
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x + sector.size.x, position.y,
+					position.z, position.x + sector.size.x, position.y,
+					position.z + sector.size.z, c, null);
+
+			toReturn[0] = trig;
+
+			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
+					position.z, position.x + sector.size.x, position.y,
+					position.z + sector.size.z, position.x, position.y,
+					position.z + sector.size.z, c, null);
+
+			toReturn[1] = trig;
+
+			break;
 		}
-		
-		for ( GeneralTriangle gt : toReturn ) {
+
+		for (GeneralTriangle gt : toReturn) {
 			gt.flush();
 			gt.hint = d;
 		}

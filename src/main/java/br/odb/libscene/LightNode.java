@@ -22,8 +22,15 @@ public class LightNode extends SceneNode implements Serializable {
 	}
 
 	
-	public void setFrom( LightNode other ) {
-		this.intensity = ( (LightNode)other ).intensity;	
+	public void setFrom( SceneNode other ) {
+		
+		super.setFrom(other);
+		
+		if ( other instanceof LightNode ) {
+			
+			this.color.set( ((LightNode)other).color );
+			this.intensity = ( (LightNode)other ).intensity;	
+		}
 	}
 	
 	public LightNode(String id) {
@@ -40,6 +47,7 @@ public class LightNode extends SceneNode implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result + (color.hashCode());
 		result = prime * result + Float.floatToIntBits(intensity);
 		return result;
 	}
@@ -56,10 +64,14 @@ public class LightNode extends SceneNode implements Serializable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof LightNode)) {
 			return false;
 		}
 		LightNode other = (LightNode) obj;
+		
+		if (!color.equals(other.color)) {
+			return false;
+		}
 		if (Float.floatToIntBits(intensity) != Float
 				.floatToIntBits(other.intensity)) {
 			return false;
