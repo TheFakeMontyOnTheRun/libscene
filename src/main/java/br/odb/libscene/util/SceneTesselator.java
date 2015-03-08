@@ -60,17 +60,17 @@ public class SceneTesselator {
 
 			generated = false;
 
-			if (foreignLinksInDirection(d, sector) == 0) {
-
-				isfs = generateQuadFor(d, (SpaceRegion) sector);
-
-				if (isfs != null) {
-					for (GeneralTriangle isf : isfs) {
-						sector.mesh.faces.add(isf);
-						generated = true;
-					}
-				}
-			}
+//			if (foreignLinksInDirection(d, sector) == 0) {
+//
+//				isfs = generateQuadFor(d, (SpaceRegion) sector);
+//
+//				if (isfs != null) {
+//					for (GeneralTriangle isf : isfs) {
+//						sector.mesh.faces.add(isf);
+//						generated = true;
+//					}
+//				}
+//			}
 
 			for (SceneNode s : sector.getSons()) {
 

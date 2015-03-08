@@ -58,6 +58,15 @@ public class GroupSector extends SpaceRegion implements Serializable {
         sons.add( region );
 	}
 	
+	
+	public void clearMeshes() {
+		for ( SceneNode sr : sons ) {
+			if ( sr instanceof GroupSector ) {
+				(  (GroupSector) sr ).clearMeshes();
+			}
+		}		
+	}
+	
 	public SpaceRegion pick( Vec3 v ) {
 		
 		SpaceRegion contained;
