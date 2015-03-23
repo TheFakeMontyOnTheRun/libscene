@@ -52,7 +52,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 			( ( GroupSector) region.parent ).removeChild( region );
 		}
 
-		region.localPosition.set( region.localPosition.sub( localPosition ) );
+		region.localPosition.set( region.getAbsolutePosition().sub( getAbsolutePosition() ) );
 		region.parent = this;
 
         sons.add( region );

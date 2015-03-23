@@ -165,6 +165,27 @@ public class GroupSectorTest {
 	}
 	
 	@Test
+	public final void testTallHierarchy() {
+		GroupSector gs1 = new GroupSector( "s1" );
+		GroupSector gs2 = new GroupSector( "s2" );
+		GroupSector gs3 = new GroupSector( "s3" );
+		GroupSector gs4 = new GroupSector( "s4" );
+		
+		gs1.localPosition.set( 1.0f, 2.0f, 3.0f );
+		gs2.localPosition.set( 0.0f, 0.0f, 0.0f );
+		gs3.localPosition.set( 10.0f, 10.0f, 10.0f );
+		gs4.localPosition.set( 21.0f, 32.0f, 43.0f );
+		
+		gs1.addChild( gs2 );
+		gs2.addChild( gs3 );
+		gs3.addChild( gs4 );
+		
+		Assert.assertEquals( new Vec3( -1.0f, -2.0f, -3.0f ), gs2.localPosition );
+		Assert.assertEquals( new Vec3( 10, 10, 10 ), gs3.localPosition );
+		Assert.assertEquals( new Vec3( 11, 22, 33 ), gs4.localPosition );
+	}
+	
+	@Test
 	public final void testConvexHull() {
 		GeneralTriangleMesh mesh = new GeneralTriangleMesh( "test" );
 		GeneralTriangle trig = new GeneralTriangle();
