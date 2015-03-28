@@ -60,6 +60,9 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	
 	
 	public void clearMeshes() {
+		
+		mesh.clear();
+		
 		for ( SceneNode sr : sons ) {
 			if ( sr instanceof GroupSector ) {
 				(  (GroupSector) sr ).clearMeshes();

@@ -114,6 +114,21 @@ public class GroupSectorTest {
 	}
 	
 	@Test
+	public final void testClearMesh(){
+		GroupSector gs1 = new GroupSector( "test1" );
+		GroupSector gs2 = new GroupSector( "test2" );
+		gs1.mesh.faces.add( new GeneralTriangle() );
+		gs2.mesh.faces.add( new GeneralTriangle() );
+		
+		gs1.addChild( gs2 );
+		
+		gs1.clearMeshes();
+		
+		Assert.assertTrue( gs1.mesh.faces.isEmpty() );
+		Assert.assertTrue( gs2.mesh.faces.isEmpty() );
+	}
+	
+	@Test
 	public final void testGetChildAndPick() {
 		
 		SceneNode sn = new SceneNode( "node" );
