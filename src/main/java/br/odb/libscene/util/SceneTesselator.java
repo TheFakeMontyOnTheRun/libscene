@@ -89,37 +89,9 @@ public class SceneTesselator {
 						}
 					}
 				}
-				// else {
-				//
-				// isfs = generateQuadFor(d, cubeForNode( s ) );
-				//
-				// Color colour = new Color();
-				//
-				// if ( s instanceof LightNode ) {
-				// colour.set( ((LightNode)s).color );
-				// } else {
-				// colour.set( 128, 128, 128 );
-				// }
-				//
-				// if (isfs != null) {
-				// for (IndexedSetFace isf : isfs) {
-				// isf.setColor( colour );
-				// sector.mesh.addFace(isf);
-				// }
-				// }
-				// }
 			}
 		}
 	}
-
-	// private SpaceRegion cubeForNode(SceneNode s) {
-	//
-	// SpaceRegion sr = new SpaceRegion("killme");
-	// sr.localPosition.set( s.getAbsolutePosition() );
-	// sr.size.set( 1.0f, 1.0f, 1.0f );
-	//
-	// return sr;
-	// }
 
 	private void generateMeshForSector(GroupSector sector) {
 		sector.mesh.clear();

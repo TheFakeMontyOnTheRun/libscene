@@ -13,6 +13,7 @@ import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libstrip.Material;
 import br.odb.utils.Color;
+import br.odb.utils.math.Vec3;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 
@@ -131,7 +132,13 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 					builder = builders.get(fstNode.getNodeName());
 
 					if (builder != null) {
-						masterSector.addChild(builder.build(fstNode));
+						
+						SceneNode newNode = builder.build(fstNode);
+						//XML files save their relative positions
+						Vec3 posBefore = new Vec3( newNode.localPosition );
+						masterSector.addChild( newNode );
+						newNode.localPosition.set( posBefore );
+						
 					} else if ("material".equalsIgnoreCase(fstNode.getNodeName())) {
 						readMaterial(masterSector, fstNode);
 					}
