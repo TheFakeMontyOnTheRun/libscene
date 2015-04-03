@@ -120,7 +120,7 @@ public class SceneTesselator {
 		}
 	}
 
-	private GeneralTriangle[] generateQuadFor(Direction d, SpaceRegion sector) {
+	public GeneralTriangle[] generateQuadFor(Direction d, SpaceRegion sector) {
 
 		GeneralTriangle[] toReturn = new GeneralTriangle[2];
 		GeneralTriangle trig;
