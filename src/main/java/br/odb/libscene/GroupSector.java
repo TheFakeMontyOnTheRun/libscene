@@ -3,11 +3,15 @@ package br.odb.libscene;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.odb.libstrip.GeneralTriangle;
 import br.odb.libstrip.GeneralTriangleMesh;
 import br.odb.libstrip.Material;
+import br.odb.utils.Color;
+import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
 public class GroupSector extends SpaceRegion implements Serializable {
@@ -250,5 +254,5 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	public Material material;
 	public final GeneralTriangleMesh mesh = new GeneralTriangleMesh( "_mesh" );
 	public final List< SceneNode > sons = new ArrayList<>();
-	
+	public final Map< Direction, Color > shades = new HashMap<>();
 }

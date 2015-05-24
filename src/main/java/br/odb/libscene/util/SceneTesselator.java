@@ -60,17 +60,17 @@ public class SceneTesselator {
 
 			generated = false;
 
-//			if (foreignLinksInDirection(d, sector) == 0) {
-//
-//				isfs = generateQuadFor(d, (SpaceRegion) sector);
-//
-//				if (isfs != null) {
-//					for (GeneralTriangle isf : isfs) {
-//						sector.mesh.faces.add(isf);
-//						generated = true;
-//					}
-//				}
-//			}
+			// if (foreignLinksInDirection(d, sector) == 0) {
+			//
+			// isfs = generateQuadFor(d, (SpaceRegion) sector);
+			//
+			// if (isfs != null) {
+			// for (GeneralTriangle isf : isfs) {
+			// sector.mesh.faces.add(isf);
+			// generated = true;
+			// }
+			// }
+			// }
 
 			for (SceneNode s : sector.getSons()) {
 
@@ -107,12 +107,20 @@ public class SceneTesselator {
 		}
 	}
 
-	public Material getColorForFace(SpaceRegion sr) {
-		if (sr instanceof GroupSector && ((GroupSector) sr).material != null) {
-			return ((GroupSector) sr).material;
+	public Material getColorForFace(Direction d, SpaceRegion sr) {
+		if (sr instanceof GroupSector
+				&& (((GroupSector) sr).material != null || ((GroupSector) sr).shades
+						.containsKey(d))) {
+			
+			if ( ((GroupSector) sr).material != null ) {
+				return ((GroupSector) sr).material;	
+			} else {
+				return new Material( sr.id + "_" + d.simpleName,  ((GroupSector) sr).shades.get( d ), null, null, null );
+			}
+			
 		} else {
 			if (sr.parent instanceof SpaceRegion) {
-				return getColorForFace((SpaceRegion) sr.parent);
+				return getColorForFace(d, (SpaceRegion) sr.parent);
 			} else {
 				return new Material(null, new Color(128, 128, 128), null, null,
 						null);
@@ -125,7 +133,7 @@ public class SceneTesselator {
 		GeneralTriangle[] toReturn = new GeneralTriangle[2];
 		GeneralTriangle trig;
 		Vec3 position = sector.getAbsolutePosition();
-		Material c = getColorForFace(sector);
+		Material c = getColorForFace(d, sector);
 
 		switch (d) {
 		case CEILING:

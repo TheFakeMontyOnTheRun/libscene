@@ -2,6 +2,7 @@ package br.odb.libscene.builders;
 
 import java.util.HashMap;
 
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -13,6 +14,7 @@ import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libstrip.Material;
 import br.odb.utils.Color;
+import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
@@ -39,6 +41,10 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 				sb.append("</material>\n");
 			}
+		}
+		
+		for ( Direction d : gs.shades.keySet() ) {
+			sb.append( "<shade dir='" + d.simpleName + "' color = '" + gs.shades.get( d ).getHTMLColor() + "' />" );
 		}
 
 		for (SceneNode s : gs.getSons()) {
@@ -141,12 +147,43 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 						
 					} else if ("material".equalsIgnoreCase(fstNode.getNodeName())) {
 						readMaterial(masterSector, fstNode);
+					} else if ("shade".equalsIgnoreCase(fstNode.getNodeName())) {
+						readShade(masterSector, fstNode);
 					}
 				}
 			}
 		}
 
 		return masterSector;
+	}
+
+	private void readShade(GroupSector gs, Node node) {
+		Direction d = null;
+		String direction = null;
+		Color shade;
+		String color = null;
+		
+		NamedNodeMap map = node.getAttributes();
+		
+		Node attrs;
+		
+		attrs = map.getNamedItem( "dir" );
+		direction = attrs.getNodeValue().trim();
+		attrs = map.getNamedItem( "color" );
+		color = attrs.getNodeValue().trim();		
+
+		if ( direction != null ) {
+			d = Direction.getDirectionForSimpleName(direction);	
+		}		
+
+		if (d != null) {
+			if ( color == null ) {
+				shade = new Color();
+			} else {
+				shade = Color.getColorFromHTMLColor( color );  
+			}
+			gs.shades.put( d,  shade );
+		}
 	}
 
 }
