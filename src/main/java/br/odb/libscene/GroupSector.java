@@ -254,5 +254,5 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	public Material material;
 	public final GeneralTriangleMesh mesh = new GeneralTriangleMesh( "_mesh" );
 	public final List< SceneNode > sons = new ArrayList<>();
-	public final Map< Direction, Color > shades = new HashMap<>();
+	public final Map< Direction, Material > shades = new HashMap<>();
 }

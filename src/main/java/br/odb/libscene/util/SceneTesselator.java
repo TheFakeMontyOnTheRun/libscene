@@ -112,17 +112,16 @@ public class SceneTesselator {
 				&& (((GroupSector) sr).material != null || ((GroupSector) sr).shades
 						.containsKey(d))) {
 			
-			if ( ((GroupSector) sr).material != null ) {
-				return ((GroupSector) sr).material;	
+			if ( ((GroupSector) sr).shades.containsKey( d ) ) {
+				return ((GroupSector) sr).shades.get( d );
 			} else {
-				return new Material( sr.id + "_" + d.simpleName,  ((GroupSector) sr).shades.get( d ), null, null, null );
+				return ((GroupSector) sr).material;
 			}
-			
 		} else {
 			if (sr.parent instanceof SpaceRegion) {
 				return getColorForFace(d, (SpaceRegion) sr.parent);
 			} else {
-				return new Material(null, new Color(128, 128, 128), null, null,
+				return new Material(null, new Color(255, 128, 128), null, null,
 						null);
 			}
 		}

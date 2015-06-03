@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import br.odb.libscene.CameraNode;
+import br.odb.libscene.DecalNode;
 import br.odb.libscene.GroupSector;
 import br.odb.libscene.LightNode;
 import br.odb.libscene.SceneNode;
@@ -28,23 +29,62 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		SpaceRegionBuilder srb = new SpaceRegionBuilder();
 		sb.append( srb.toXML((SpaceRegion) gs));
 
+		Material m;
+		
 		if ( gs.material != null ) {
 
 			c = gs.material.mainColor;
 
 			if (c != null) {
-				sb.append("<material>\n");
+				sb.append("<defaultmaterial \n");
 
-				sb.append("<color>\n");
-				sb.append(c.getHTMLColor());
-				sb.append("\n</color>\n");
-
-				sb.append("</material>\n");
+				m = gs.material;
+				
+				if ( m.mainColor != null ) {
+					sb.append( " color = '" + m.mainColor.getHTMLColor() + "' " );	
+				}
+				
+				if ( m.texture != null ) {
+					sb.append( " texture = '" + m.texture + "' " );	
+				}
+				
+				if ( m.vertexShader != null ) {
+					sb.append( " vertshader = '" + m.vertexShader + "' " );	
+				}
+				
+				if ( m.fragmentShader != null ) {
+					sb.append( " fragshader = '" + m.fragmentShader + "' " );
+				}
+				
+				sb.append( " />" );
 			}
 		}
 		
+		
+		
 		for ( Direction d : gs.shades.keySet() ) {
-			sb.append( "<shade dir='" + d.simpleName + "' color = '" + gs.shades.get( d ).getHTMLColor() + "' />" );
+		
+			m = gs.shades.get( d );
+			
+			sb.append( "<material dir='" + d.simpleName + "' " );
+			
+			if ( m.mainColor != null ) {
+				sb.append( " color = '" + m.mainColor.getHTMLColor() + "' " );	
+			}
+			
+			if ( m.texture != null ) {
+				sb.append( " texture = '" + m.texture + "' " );	
+			}
+			
+			if ( m.vertexShader != null ) {
+				sb.append( " vertshader = '" + m.vertexShader + "' " );	
+			}
+			
+			if ( m.fragmentShader != null ) {
+				sb.append( " fragshader = '" + m.fragmentShader + "' " );
+			}
+			
+			sb.append( " />" );
 		}
 
 		for (SceneNode s : gs.getSons()) {
@@ -58,7 +98,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 					sb.append(((GroupSector) s).mesh);
 					sb.append("\n</mesh>");
 				}
-
 				
 				sb.append( gsb.toXML((GroupSector) s));
 				sb.append("\n</group>");
@@ -74,6 +113,10 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 				sb.append("\n<camera>");
 				sb.append(CameraNodeBuilder.cnb.toXML((CameraNode) s));
 				sb.append("\n</camera>");
+			} else if ( s instanceof DecalNode ) {
+				sb.append("\n<decal>");
+				sb.append(DecalNodeBuilder.cnb.toXML((DecalNode) s));
+				sb.append("\n</decal>");
 			}
 		}
 
@@ -114,6 +157,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		builders.put("sector", new SectorBuilder());
 		builders.put("light", new LightNodeBuilder());
 		builders.put("camera", new CameraNodeBuilder());
+		builders.put("decal", new CameraNodeBuilder());
 	}
 
 	public SpaceRegion build(Node node) {
@@ -145,9 +189,9 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 						masterSector.addChild( newNode );
 						newNode.localPosition.set( posBefore );
 						
+					} else if ("defaultmaterial".equalsIgnoreCase(fstNode.getNodeName())) {
+						readShade(masterSector, fstNode);
 					} else if ("material".equalsIgnoreCase(fstNode.getNodeName())) {
-						readMaterial(masterSector, fstNode);
-					} else if ("shade".equalsIgnoreCase(fstNode.getNodeName())) {
 						readShade(masterSector, fstNode);
 					}
 				}
@@ -162,27 +206,58 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		String direction = null;
 		Color shade;
 		String color = null;
+		String id = "";
+		String vertShader = null;
+		String fragShader = null;
+		String texture = null;
 		
 		NamedNodeMap map = node.getAttributes();
 		
 		Node attrs;
 		
 		attrs = map.getNamedItem( "dir" );
-		direction = attrs.getNodeValue().trim();
+		if ( attrs != null ) {
+			direction = attrs.getNodeValue().trim();	
+		}
+		
 		attrs = map.getNamedItem( "color" );
-		color = attrs.getNodeValue().trim();		
+		if ( attrs != null ) {
+			color = attrs.getNodeValue().trim();	
+		}
+				
+		attrs = map.getNamedItem( "texture" );
+		if ( attrs != null ) {
+			texture = attrs.getNodeValue().trim();
+			id += texture;
+		}
 
+		attrs = map.getNamedItem( "vertshader" );
+		if ( attrs != null ) {
+			vertShader = attrs.getNodeValue().trim();	
+		}
+
+		attrs = map.getNamedItem( "fragshader" );
+		if ( attrs != null ) {
+			fragShader = attrs.getNodeValue().trim();	
+		}
+		
 		if ( direction != null ) {
 			d = Direction.getDirectionForSimpleName(direction);	
 		}		
 
+		if ( color == null ) {
+			shade = new Color();
+		} else {
+			shade = Color.getColorFromHTMLColor( color );
+			id += shade.getHTMLColor();
+		}
+
+		Material m = new Material( id, shade, texture, vertShader, fragShader  );
+		
 		if (d != null) {
-			if ( color == null ) {
-				shade = new Color();
-			} else {
-				shade = Color.getColorFromHTMLColor( color );  
-			}
-			gs.shades.put( d,  shade );
+			gs.shades.put( d,  m );
+		} else {
+			gs.material = m;
 		}
 	}
 
