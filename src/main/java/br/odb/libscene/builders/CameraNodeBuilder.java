@@ -11,6 +11,16 @@ public class CameraNodeBuilder extends SceneNodeBuilder implements SpatialDivisi
 	public static final CameraNodeBuilder cnb = new CameraNodeBuilder();
 	
 	@Override
+	public String getTagName() {
+		return "camera";
+	}
+	
+	@Override
+	public Class getSerializedClass() {
+		return CameraNode.class;
+	}	
+	
+	@Override
 	public SceneNode build(Node node) {
 		SceneNode sceneNode = super.build(node);
 		CameraNode cam = new CameraNode( sceneNode );

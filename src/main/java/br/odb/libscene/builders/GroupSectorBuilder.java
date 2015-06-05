@@ -36,7 +36,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			c = gs.material.mainColor;
 
 			if (c != null) {
-				sb.append("<defaultmaterial \n");
+				sb.append("<material \n");
 
 				m = gs.material;
 				
@@ -103,7 +103,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 				sb.append("\n</group>");
 			} else if (s instanceof Sector) {
 				sb.append("\n<sector>");
-				sb.append(SectorBuilder.toXML((Sector) s));
+				sb.append(SectorBuilder.sb.toXML((Sector) s));
 				sb.append("\n</sector>");
 			} else if ( s instanceof LightNode ) {
 				sb.append("\n<light>");
@@ -189,8 +189,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 						masterSector.addChild( newNode );
 						newNode.localPosition.set( posBefore );
 						
-					} else if ("defaultmaterial".equalsIgnoreCase(fstNode.getNodeName())) {
-						readShade(masterSector, fstNode);
 					} else if ("material".equalsIgnoreCase(fstNode.getNodeName())) {
 						readShade(masterSector, fstNode);
 					}

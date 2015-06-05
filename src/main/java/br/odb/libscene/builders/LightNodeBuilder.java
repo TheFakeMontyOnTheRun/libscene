@@ -9,6 +9,16 @@ import br.odb.libscene.SceneNode;
 public class LightNodeBuilder extends SceneNodeBuilder implements SpatialDivisionBuilder {
 
 	public static final LightNodeBuilder lnb = new LightNodeBuilder();
+
+	@Override
+	public Class getSerializedClass() {
+		return LightNode.class;
+	}
+	
+	@Override
+	public String getTagName() {
+		return "light";
+	}
 	
 	@Override
 	public SceneNode build(Node node) {
@@ -39,7 +49,7 @@ public class LightNodeBuilder extends SceneNodeBuilder implements SpatialDivisio
 	public String toXML(SceneNode node) {
 		StringBuilder sb = new StringBuilder();
 		LightNode litNode = (LightNode) node;
-		sb.append( SceneNodeBuilder.snb.toXML( node ) );
+		sb.append( super.toXML( node ) );
 		sb.append( "<intensity>" );
 		sb.append( litNode.intensity );
 		sb.append( "</intensity>" );

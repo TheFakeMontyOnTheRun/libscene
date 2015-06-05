@@ -13,6 +13,16 @@ public class DecalNodeBuilder extends SceneNodeBuilder implements
 	public static final DecalNodeBuilder cnb = new DecalNodeBuilder();
 
 	@Override
+	public Class getSerializedClass() {
+		return DecalNode.class;
+	}
+	
+	@Override
+	public String getTagName() {
+		return "decal";
+	}
+	
+	@Override
 	public SceneNode build(Node node) {
 		SceneNode sceneNode = super.build(node);
 

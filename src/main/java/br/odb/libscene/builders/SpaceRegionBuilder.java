@@ -10,6 +10,15 @@ import br.odb.utils.math.Vec3;
 public class SpaceRegionBuilder extends SceneNodeBuilder implements
 		SpatialDivisionBuilder {
 
+	public String getTagName() {
+		return "region";
+	}
+	
+	@Override
+	public Class getSerializedClass() {
+		return SpaceRegion.class;
+	}	
+	
 	public String toXML(SceneNode region) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(SceneNodeBuilder.snb.toXML(region));

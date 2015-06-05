@@ -15,4 +15,6 @@ public interface SpatialDivisionBuilder {
 
 	SceneNode build( Node node );
 	String toXML(SceneNode node);
+	String getTagName();
+	Class getSerializedClass();
 }

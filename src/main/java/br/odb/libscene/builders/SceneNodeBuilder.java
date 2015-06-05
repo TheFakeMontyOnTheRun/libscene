@@ -11,6 +11,11 @@ public class SceneNodeBuilder implements SpatialDivisionBuilder {
 	public static final SceneNodeBuilder snb = new SceneNodeBuilder();
 
 	@Override
+	public String getTagName() {
+		return "node";
+	}
+	
+	@Override
 	public SceneNode build(Node node) {
 		
 		String id = "";
@@ -51,5 +56,10 @@ public class SceneNodeBuilder implements SpatialDivisionBuilder {
 		sb.append(  "</position>\n" );		
 		
 		return sb.toString();
+	}
+
+	@Override
+	public Class getSerializedClass() {
+		return SceneNode.class;
 	}
 }

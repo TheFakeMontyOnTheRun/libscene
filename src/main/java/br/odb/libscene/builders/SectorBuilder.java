@@ -4,12 +4,25 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.utils.Direction;
 
 public class SectorBuilder extends SpaceRegionBuilder {
 
+	public static final SectorBuilder sb = new SectorBuilder();
+	
+	@Override
+	public String getTagName() {
+		return "sector";
+	}
+	
+	@Override
+	public Class getSerializedClass() {
+		return Sector.class;
+	}
+	
 	@Override
 	public SpaceRegion build(Node node) {
 
@@ -66,7 +79,9 @@ public class SectorBuilder extends SpaceRegionBuilder {
 		}
 	}
 
-	public static String toXML(Sector s) {
+	public String toXML(SceneNode node) {
+		
+		Sector s = (Sector) node;
 
 		StringBuilder sb = new StringBuilder();
 		SpaceRegionBuilder srb = new SpaceRegionBuilder();
