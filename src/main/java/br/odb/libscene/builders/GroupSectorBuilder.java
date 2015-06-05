@@ -123,33 +123,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		return sb.toString();
 	}
 
-	private void readMaterial(GroupSector region, Node node) {
-		NodeList nodeLst;
-		nodeLst = node.getChildNodes();
-
-		String colour = "";
-
-		for (int s = 0; s < nodeLst.getLength(); s++) {
-
-			Node fstNode = nodeLst.item(s);
-
-			if (fstNode != null) {
-
-				if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
-
-					if ("color".equalsIgnoreCase(fstNode.getNodeName())) {
-						colour = fstNode.getTextContent().trim();
-					}
-				}
-			}
-		}
-
-		Color c = Color.getColorFromHTMLColor(colour);
-		Material material = new Material( null, c, null, null, null);
-		region.material = material;
-		System.out.println( "region " + region.id + " got colour " + c );
-	}
-
 	final static HashMap<String, SpatialDivisionBuilder> builders = new HashMap<String, SpatialDivisionBuilder>();
 
 	static {
