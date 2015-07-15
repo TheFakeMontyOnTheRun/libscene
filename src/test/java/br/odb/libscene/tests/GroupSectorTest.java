@@ -36,7 +36,7 @@ public class GroupSectorTest {
 	public final void testConstructors() {
 		GroupSector gs1 = new GroupSector( "test1" );
 		SpaceRegion sr = new SpaceRegion( "simple" );
-		Material m = new Material( null, new Color( 255, 0, 0 ), null, null, null );
+		Material m = new Material( null, new Color( 255, 0, 0 ), null, null );
 		gs1.material = m; 
 		
 		GroupSector gs2 = new GroupSector( gs1 );
@@ -51,8 +51,8 @@ public class GroupSectorTest {
 	public final void testEqualsAndHashcode() {
 		GroupSector gs1 = new GroupSector( "test1" );
 		SpaceRegion sr = new SpaceRegion( "simple" );
-		Material m1 = new Material( null, new Color( 255, 0, 0 ), null, null, null );
-		Material m2 = new Material( null, new Color( 255, 255, 255 ), null, null, null );
+		Material m1 = new Material( null, new Color( 255, 0, 0 ), null, null );
+		Material m2 = new Material( null, new Color( 255, 255, 255 ), null, null );
 		GroupSector gs2 = new GroupSector( "test1" );
 		
 		

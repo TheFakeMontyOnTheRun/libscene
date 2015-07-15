@@ -48,12 +48,8 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 					sb.append( " texture = '" + m.texture + "' " );	
 				}
 				
-				if ( m.vertexShader != null ) {
-					sb.append( " vertshader = '" + m.vertexShader + "' " );	
-				}
-				
-				if ( m.fragmentShader != null ) {
-					sb.append( " fragshader = '" + m.fragmentShader + "' " );
+				if ( m.shaderProgram != null ) {
+					sb.append( " shader = '" + m.shaderProgram + "' " );
 				}
 				
 				sb.append( " />" );
@@ -76,12 +72,8 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 				sb.append( " texture = '" + m.texture + "' " );	
 			}
 			
-			if ( m.vertexShader != null ) {
-				sb.append( " vertshader = '" + m.vertexShader + "' " );	
-			}
-			
-			if ( m.fragmentShader != null ) {
-				sb.append( " fragshader = '" + m.fragmentShader + "' " );
+			if ( m.shaderProgram != null ) {
+				sb.append( " shader = '" + m.shaderProgram + "' " );	
 			}
 			
 			sb.append( " />" );
@@ -178,8 +170,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		Color shade;
 		String color = null;
 		String id = "";
-		String vertShader = null;
-		String fragShader = null;
+		String shaderProgram = null;
 		String texture = null;
 		
 		NamedNodeMap map = node.getAttributes();
@@ -202,16 +193,11 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			id += texture;
 		}
 
-		attrs = map.getNamedItem( "vertshader" );
+		attrs = map.getNamedItem( "shader" );
 		if ( attrs != null ) {
-			vertShader = attrs.getNodeValue().trim();	
+			shaderProgram = attrs.getNodeValue().trim();	
 		}
 
-		attrs = map.getNamedItem( "fragshader" );
-		if ( attrs != null ) {
-			fragShader = attrs.getNodeValue().trim();	
-		}
-		
 		if ( direction != null ) {
 			d = Direction.getDirectionForSimpleName(direction);	
 		}		
@@ -223,7 +209,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			id += shade.getHTMLColor();
 		}
 
-		Material m = new Material( id, shade, texture, vertShader, fragShader  );
+		Material m = new Material( id, shade, texture, shaderProgram  );
 		
 		if (d != null) {
 			gs.shades.put( d,  m );
