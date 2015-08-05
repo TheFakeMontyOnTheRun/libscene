@@ -11,9 +11,7 @@ import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libstrip.GeneralTriangle;
-import br.odb.libstrip.GeneralTriangleMesh;
-import br.odb.libstrip.Material;
-import br.odb.utils.Color;
+import br.odb.libstrip.TriangleMesh;
 import br.odb.utils.math.Vec3;
 
 public class GroupSectorTest {
@@ -31,30 +29,11 @@ public class GroupSectorTest {
       constructor.newInstance();
     }
 	
-	
-	@Test
-	public final void testConstructors() {
-		GroupSector gs1 = new GroupSector( "test1" );
-		SpaceRegion sr = new SpaceRegion( "simple" );
-		Material m = new Material( null, new Color( 255, 0, 0 ), null, null );
-		gs1.material = m; 
-		
-		GroupSector gs2 = new GroupSector( gs1 );
-		Assert.assertEquals( m, gs2.material );
-		
-		gs2 = new GroupSector( sr );
-		
-		Assert.assertNull( gs2.material );
-	}
-	
 	@Test
 	public final void testEqualsAndHashcode() {
 		GroupSector gs1 = new GroupSector( "test1" );
 		SpaceRegion sr = new SpaceRegion( "simple" );
-		Material m1 = new Material( null, new Color( 255, 0, 0 ), null, null );
-		Material m2 = new Material( null, new Color( 255, 255, 255 ), null, null );
 		GroupSector gs2 = new GroupSector( "test1" );
-		
 		
 		Assert.assertFalse( gs1.equals( null ) );
 		Assert.assertFalse( gs1.equals( "Not a group sector" ) );
@@ -64,14 +43,6 @@ public class GroupSectorTest {
 		Assert.assertEquals( gs1, gs2 );
 		
 		gs1 = new GroupSector( "test1" );
-		gs2 = new GroupSector( "test1" );
-		gs1.material = m1;
-		
-		Assert.assertFalse( gs1.equals( gs2 ) );
-		Assert.assertFalse( gs2.equals( gs1 ) );
-		Assert.assertFalse( gs1.hashCode() == gs2.hashCode() );
-		
-		gs1 = new GroupSector( "test1" );
 		gs2 = new GroupSector( "test2" );				
 		
 		Assert.assertFalse( gs1.equals( gs2 ) );
@@ -79,53 +50,13 @@ public class GroupSectorTest {
 
 		gs1 = new GroupSector( "test1" );
 		gs2 = new GroupSector( "test1" );
-		gs1.material = m1;
-		
-		Assert.assertFalse( gs1.equals( gs2 ) );
-		Assert.assertFalse( gs2.equals( gs1 ) );
-		Assert.assertFalse( gs1.hashCode() == gs2.hashCode() );
-
-		gs1 = new GroupSector( "test1" );
-		gs2 = new GroupSector( "test1" );
-		gs1.material = m1;
-		gs2.material = m2;
-		
-		Assert.assertFalse( gs1.equals( gs2 ) );
-		Assert.assertFalse( gs2.equals( gs1 ) );
-		Assert.assertFalse( gs1.hashCode() == gs2.hashCode() );
-
-		
-		gs1 = new GroupSector( "test1" );
-		gs2 = new GroupSector( "test1" );
 		gs2.addChild( sr );
 		Assert.assertFalse( gs1.equals( gs2 ) );
 		Assert.assertFalse( gs2.equals( gs1 ) );
-		Assert.assertFalse( gs1.hashCode() == gs2.hashCode() );
-		
+		Assert.assertFalse( gs1.hashCode() == gs2.hashCode() );		
 		
 		gs1 = new GroupSector( "test1" );
-		gs2 = new GroupSector( "test1" );
-
-		gs1.mesh.faces.add( new GeneralTriangle() );
-		Assert.assertFalse( gs1.equals( gs2 ) );
-		Assert.assertFalse( gs2.equals( gs1 ) );
-		Assert.assertFalse( gs1.hashCode() == gs2.hashCode() );
-		
-	}
-	
-	@Test
-	public final void testClearMesh(){
-		GroupSector gs1 = new GroupSector( "test1" );
-		GroupSector gs2 = new GroupSector( "test2" );
-		gs1.mesh.faces.add( new GeneralTriangle() );
-		gs2.mesh.faces.add( new GeneralTriangle() );
-		
-		gs1.addChild( gs2 );
-		
-		gs1.clearMeshes();
-		
-		Assert.assertTrue( gs1.mesh.faces.isEmpty() );
-		Assert.assertTrue( gs2.mesh.faces.isEmpty() );
+		gs2 = new GroupSector( "test1" );		
 	}
 	
 	@Test
@@ -202,7 +133,7 @@ public class GroupSectorTest {
 	
 	@Test
 	public final void testConvexHull() {
-		GeneralTriangleMesh mesh = new GeneralTriangleMesh( "test" );
+		TriangleMesh mesh = new TriangleMesh( "test" );
 		GeneralTriangle trig = new GeneralTriangle();
 		
 		trig.x0 = -2.0f;

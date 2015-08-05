@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import br.odb.libstrip.GeneralTriangle;
-import br.odb.libstrip.GeneralTriangleMesh;
 import br.odb.libstrip.Material;
+import br.odb.libstrip.TriangleMesh;
 import br.odb.utils.Color;
 import br.odb.utils.Direction;
 import br.odb.utils.math.Vec3;
 
 public class GroupSector extends SpaceRegion implements Serializable {
+
+	public final List< SceneNode > sons = new ArrayList<>();
+	public final Map< Direction, Material > shades = new HashMap<>();
 	
 	/**
 	 * 
@@ -30,11 +33,7 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	}
 	
 	public GroupSector(SpaceRegion region ) {
-		super( region );
-		
-		if ( region instanceof GroupSector && ((GroupSector)region).material != null ) {
-			material = ((GroupSector)region).material;
-		}
+		super( region );		
 	}
 	
 	public void removeChild( SceneNode child ) {
@@ -60,18 +59,6 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		region.parent = this;
 
         sons.add( region );
-	}
-	
-	
-	public void clearMeshes() {
-		
-		mesh.clear();
-		
-		for ( SceneNode sr : sons ) {
-			if ( sr instanceof GroupSector ) {
-				(  (GroupSector) sr ).clearMeshes();
-			}
-		}		
 	}
 	
 	public SpaceRegion pick( Vec3 v ) {
@@ -138,14 +125,15 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	}
 	
 	
-	public static GroupSector getConvexHull( GeneralTriangleMesh mesh ) {
+	public static GroupSector getConvexHull( TriangleMesh mesh ) {
 		
 		if ( mesh == null ) {
 			return new GroupSector( "null" );
 		}
 
 		GroupSector sector = new GroupSector(mesh.name );
-
+		MeshNode hull = new MeshNode( "hull", new TriangleMesh( "_mesh" ) );
+		
 		// find the center point;
 		Vec3 center = mesh.getCenter();
 
@@ -163,9 +151,17 @@ public class GroupSector extends SpaceRegion implements Serializable {
 			maxVec( p1, f.x1, f.y1, f.z1 );
 			maxVec( p1, f.x2, f.y2, f.z2 );
 			
-			sector.material = f.material;
+			hull.materials.add( f.material );
 		}
 
+		for ( Material m : hull.materials ) {
+			sector.shades.clear();
+			
+			for ( Direction d : Direction.values() ) {
+				sector.shades.put( d, m );
+			}
+		}
+		
 		sector.localPosition.set( p0 );
 		sector.size.set( p1.sub( p0 ) );
 
@@ -198,8 +194,6 @@ public class GroupSector extends SpaceRegion implements Serializable {
 		return null;
 	}
 	
-	
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -207,10 +201,8 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result
-				+ ((material == null) ? 0 : material.hashCode());
-		result = prime * result + ( mesh.hashCode());
-		result = prime * result + ( sons.hashCode());
+		result = prime * result + ((shades == null) ? 0 : shades.hashCode());
+		result = prime * result + ((sons == null) ? 0 : sons.hashCode());
 		return result;
 	}
 
@@ -229,19 +221,18 @@ public class GroupSector extends SpaceRegion implements Serializable {
 			return false;
 		}
 		GroupSector other = (GroupSector) obj;
-		if (material == null) {
-			if (other.material != null) {
+		if (shades == null) {
+			if (other.shades != null) {
 				return false;
 			}
-		} else if (!material.equals(other.material)) {
+		} else if (!shades.equals(other.shades)) {
 			return false;
 		}
-		
-		if (!mesh.equals(other.mesh)) {
-			return false;
-		}
-		
-		if (!sons.equals(other.sons)) {
+		if (sons == null) {
+			if (other.sons != null) {
+				return false;
+			}
+		} else if (!sons.equals(other.sons)) {
 			return false;
 		}
 		return true;
@@ -250,9 +241,4 @@ public class GroupSector extends SpaceRegion implements Serializable {
 	public Collection<SceneNode> getSons() {
 		return sons;
 	}
-	
-	public Material material;
-	public final GeneralTriangleMesh mesh = new GeneralTriangleMesh( "_mesh" );
-	public final List< SceneNode > sons = new ArrayList<>();
-	public final Map< Direction, Material > shades = new HashMap<>();
 }

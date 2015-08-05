@@ -1,11 +1,16 @@
 package br.odb.libscene.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.odb.libscene.GroupSector;
+import br.odb.libscene.MeshNode;
 import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libscene.World;
 import br.odb.libstrip.GeneralTriangle;
+import br.odb.libstrip.TriangleMesh;
 import br.odb.libstrip.Material;
 import br.odb.libstrip.builders.GeneralTriangleFactory;
 import br.odb.utils.Color;
@@ -51,8 +56,27 @@ public class SceneTesselator {
 		return links;
 	}
 
+	private void clearMeshesOn(GroupSector sector ) {
+		
+		List< MeshNode > nodes = new ArrayList<MeshNode>();
+		
+		for ( SceneNode sn : sector.getSons() ) {
+			if ( sn instanceof MeshNode ) {
+				nodes.add( (MeshNode) sn );
+			}
+		}
+		
+		for ( MeshNode node : nodes ) {
+			sector.removeChild( node );
+		}
+	}
+	
 	public void generateSubSectorMeshForSector(GroupSector sector) {
-		sector.mesh.clear();
+		
+		clearMeshesOn( sector );
+		TriangleMesh mesh = new TriangleMesh( "_mesh" );
+		MeshNode meshDataNode = new MeshNode( "_mesh", mesh );
+		sector.addChild( meshDataNode );
 		GeneralTriangle[] isfs;
 		boolean generated;
 
@@ -84,7 +108,7 @@ public class SceneTesselator {
 
 						if (isfs != null) {
 							for (GeneralTriangle isf : isfs) {
-								sector.mesh.faces.add(isf);
+								mesh.faces.add(isf);
 							}
 						}
 					}
@@ -94,7 +118,6 @@ public class SceneTesselator {
 	}
 
 	private void generateMeshForSector(GroupSector sector) {
-		sector.mesh.clear();
 
 		for (Direction d : Direction.values()) {
 			generateQuadFor(d, sector);
@@ -108,15 +131,9 @@ public class SceneTesselator {
 	}
 
 	public Material getColorForFace(Direction d, SpaceRegion sr) {
-		if (sr instanceof GroupSector
-				&& (((GroupSector) sr).material != null || ((GroupSector) sr).shades
-						.containsKey(d))) {
-			
-			if ( ((GroupSector) sr).shades.containsKey( d ) ) {
+		if (sr instanceof GroupSector && ((GroupSector) sr).shades.containsKey( d ) ) {
 				return ((GroupSector) sr).shades.get( d );
-			} else {
-				return ((GroupSector) sr).material;
-			}
+			
 		} else {
 			if (sr.parent instanceof SpaceRegion) {
 				return getColorForFace(d, (SpaceRegion) sr.parent);
@@ -238,20 +255,28 @@ public class SceneTesselator {
 
 		return toReturn;
 	}
+	
+	private MeshNode findMeshNodeForSector( GroupSector sector ) {
+		for ( SceneNode sn : sector.sons ) {
+			if ( sn instanceof MeshNode ) {
+				return (MeshNode) sn;
+			}
+		}
+		
+		return new MeshNode( "_mesh", new TriangleMesh( "_mesh" ) );
+	}
 
 	private void generateQuadFor(Direction d, GroupSector sector) {
 
-		if (sector.material == null) {
-			return;
-		}
-
 		GeneralTriangle[] isfs = generateQuadFor(d, (SpaceRegion) sector);
 
+		TriangleMesh mesh = findMeshNodeForSector( sector ).mesh;
+		
 		if (isfs != null) {
 
 			for (GeneralTriangle isf : isfs) {
 
-				sector.mesh.faces.add(isf);
+				mesh.faces.add(isf);
 			}
 		}
 	}

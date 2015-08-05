@@ -1,7 +1,5 @@
 package br.odb.libscene.tests;
 
-
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 

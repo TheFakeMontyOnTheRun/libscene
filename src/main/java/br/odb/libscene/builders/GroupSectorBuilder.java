@@ -10,6 +10,7 @@ import br.odb.libscene.CameraNode;
 import br.odb.libscene.DecalNode;
 import br.odb.libscene.GroupSector;
 import br.odb.libscene.LightNode;
+import br.odb.libscene.MeshNode;
 import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
@@ -24,39 +25,11 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 	
 	public String toXML(GroupSector gs) {
 
-		Color c;
 		StringBuilder sb = new StringBuilder();
 		SpaceRegionBuilder srb = new SpaceRegionBuilder();
 		sb.append( srb.toXML((SpaceRegion) gs));
 
 		Material m;
-		
-		if ( gs.material != null ) {
-
-			c = gs.material.mainColor;
-
-			if (c != null) {
-				sb.append("<material \n");
-
-				m = gs.material;
-				
-				if ( m.mainColor != null ) {
-					sb.append( " color = '" + m.mainColor.getHTMLColor() + "' " );	
-				}
-				
-				if ( m.texture != null ) {
-					sb.append( " texture = '" + m.texture + "' " );	
-				}
-				
-				if ( m.shaderProgram != null ) {
-					sb.append( " shader = '" + m.shaderProgram + "' " );
-				}
-				
-				sb.append( " />" );
-			}
-		}
-		
-		
 		
 		for ( Direction d : gs.shades.keySet() ) {
 		
@@ -83,16 +56,12 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 			if (s instanceof GroupSector) {
 				sb.append("\n<group>");
-
-				if (((GroupSector) s).mesh.faces.size() > 0) {
-
-					sb.append("\n<mesh>");
-					sb.append(((GroupSector) s).mesh);
-					sb.append("\n</mesh>");
-				}
-				
 				sb.append( gsb.toXML((GroupSector) s));
 				sb.append("\n</group>");
+			} else if ( s instanceof MeshNode ) {
+				sb.append("\n<mesh>");
+				sb.append(MeshNodeBuilder.msb.toXML( (MeshNode)s));
+				sb.append("\n</mesh>");				
 			} else if (s instanceof Sector) {
 				sb.append("\n<sector>");
 				sb.append(SectorBuilder.sb.toXML((Sector) s));
@@ -123,6 +92,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		builders.put("light", new LightNodeBuilder());
 		builders.put("camera", new CameraNodeBuilder());
 		builders.put("decal", new CameraNodeBuilder());
+		builders.put("mesh", new MeshNodeBuilder());
 	}
 
 	public SpaceRegion build(Node node) {
@@ -213,9 +183,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		
 		if (d != null) {
 			gs.shades.put( d,  m );
-		} else {
-			gs.material = m;
 		}
 	}
-
 }
