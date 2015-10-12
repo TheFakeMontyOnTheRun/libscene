@@ -130,6 +130,11 @@ public class World implements Serializable {
 			}
 		}
 	}
+	
+	public SceneNode rayTrace( Vec3 position, Vec3 direction ) {
+		return RayTracer.trace( masterSector, position, direction );
+	}
+	
 
 	/**
 	 * @param s1
