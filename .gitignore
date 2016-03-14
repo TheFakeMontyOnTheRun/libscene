@@ -1,3 +1,36 @@
+/.idea/.name
+/.idea/codeStyleSettings.xml
+/.idea/compiler.xml
+/.idea/copyright/profiles_settings.xml
+/.idea/encodings.xml
+/.idea/libraries/Maven__br_odb_gameutils_1_0_SNAPSHOT.xml
+/.idea/libraries/Maven__br_odb_liboldfart_1_0_SNAPSHOT.xml
+/.idea/libraries/Maven__br_odb_libstrip_1_0_SNAPSHOT.xml
+/.idea/libraries/Maven__junit_junit_4_10.xml
+/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_1.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/libscene.iml
+/target/surefire-reports/TEST-br.odb.libscene.tests.CameraNodeTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.GroupSectorTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.LightNodeTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.RayTracerTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.SceneNodeTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.SectorTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.SerializationTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.SpaceRegionTest.xml
+/target/surefire-reports/TEST-br.odb.libscene.tests.WorldTest.xml
+/target/surefire-reports/br.odb.libscene.tests.CameraNodeTest.txt
+/target/surefire-reports/br.odb.libscene.tests.GroupSectorTest.txt
+/target/surefire-reports/br.odb.libscene.tests.LightNodeTest.txt
+/target/surefire-reports/br.odb.libscene.tests.RayTracerTest.txt
+/target/surefire-reports/br.odb.libscene.tests.SceneNodeTest.txt
+/target/surefire-reports/br.odb.libscene.tests.SectorTest.txt
+/target/surefire-reports/br.odb.libscene.tests.SerializationTest.txt
+/target/surefire-reports/br.odb.libscene.tests.SpaceRegionTest.txt
+/target/surefire-reports/br.odb.libscene.tests.WorldTest.txt
 *.class
 
 # Mobile Tools for Java (J2ME)
