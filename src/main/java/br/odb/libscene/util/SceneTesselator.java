@@ -138,7 +138,7 @@ public class SceneTesselator {
 			if (sr.parent instanceof SpaceRegion) {
 				return getColorForFace(d, (SpaceRegion) sr.parent);
 			} else {
-				return new Material(null, new Color(255, 128, 128), null, null);
+				return Material.makeWithColor(new Color(255, 128, 128));
 			}
 		}
 	}

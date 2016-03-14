@@ -44,11 +44,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			if ( m.texture != null ) {
 				sb.append( " texture = '" + m.texture + "' " );	
 			}
-			
-			if ( m.shaderProgram != null ) {
-				sb.append( " shader = '" + m.shaderProgram + "' " );	
-			}
-			
+
 			sb.append( " />" );
 		}
 
@@ -139,8 +135,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		String direction = null;
 		Color shade;
 		String color = null;
-		String id = "";
-		String shaderProgram = null;
 		String texture = null;
 		
 		NamedNodeMap map = node.getAttributes();
@@ -160,12 +154,6 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 		attrs = map.getNamedItem( "texture" );
 		if ( attrs != null ) {
 			texture = attrs.getNodeValue().trim();
-			id += texture;
-		}
-
-		attrs = map.getNamedItem( "shader" );
-		if ( attrs != null ) {
-			shaderProgram = attrs.getNodeValue().trim();	
 		}
 
 		if ( direction != null ) {
@@ -176,10 +164,9 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 			shade = new Color();
 		} else {
 			shade = Color.getColorFromHTMLColor( color );
-			id += shade.getHTMLColor();
 		}
 
-		Material m = new Material( id, shade, texture, shaderProgram  );
+		Material m = Material.makeWithColorAndTexture( shade, texture );
 		
 		if (d != null) {
 			gs.shades.put( d,  m );
