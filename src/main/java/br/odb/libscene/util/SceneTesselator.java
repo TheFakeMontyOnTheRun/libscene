@@ -150,102 +150,196 @@ public class SceneTesselator {
 		Vec3 position = sector.getAbsolutePosition();
 		Material c = getColorForFace(d, sector);
 
+		Vec3 normalizationFactor;
+
+		if (sector.parent instanceof SpaceRegion) {
+			normalizationFactor = ((SpaceRegion) sector.parent).size;
+		} else {
+			normalizationFactor = sector.size;
+		}
+
 		switch (d) {
-		case CEILING:
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y
-					+ sector.size.y, position.z, position.x + sector.size.x,
-					position.y + sector.size.y, position.z, position.x
-							+ sector.size.x, position.y + sector.size.y,
-					position.z + sector.size.z, c, null);
+			case CEILING:
+				trig = factory.makeTrig(
+						position.x, position.y + sector.size.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z + sector.size.z,
+						c);
 
-			toReturn[0] = trig;
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, (sector.localPosition.z) / normalizationFactor.z,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, (sector.localPosition.z) / normalizationFactor.z,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, (sector.localPosition.z + sector.size.z) / normalizationFactor.z,
+				});
 
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y
-					+ sector.size.y, position.z, position.x + sector.size.x,
-					position.y + sector.size.y, position.z + sector.size.z,
-					position.x, position.y + sector.size.y, position.z
-							+ sector.size.z, c, null);
-			toReturn[1] = trig;
+				toReturn[0] = trig;
 
-			break;
-		case W:
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x, position.y + sector.size.y,
-					position.z + sector.size.z, position.x, position.y,
-					position.z + sector.size.z, c, null);
+				trig = factory.makeTrig(
+						position.x, position.y + sector.size.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z + sector.size.z,
+						position.x, position.y + sector.size.y, position.z + sector.size.z,
+						c);
 
-			toReturn[0] = trig;
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, (sector.localPosition.z) / normalizationFactor.z,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, (sector.localPosition.z + sector.size.z) / normalizationFactor.z,
+						(sector.localPosition.x) / normalizationFactor.x, (sector.localPosition.z + sector.size.z) / normalizationFactor.z,
+				});
+				toReturn[1] = trig;
 
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x, position.y + sector.size.y,
-					position.z, position.x, position.y + sector.size.y,
-					position.z + sector.size.z, c, null);
-			toReturn[1] = trig;
+				break;
+			case W:
+				trig = factory.makeTrig(
+						position.x, position.y, position.z,
+						position.x, position.y + sector.size.y, position.z + sector.size.z,
+						position.x, position.y, position.z + sector.size.z,
+						c);
 
-			break;
-		case E:
-			trig = (GeneralTriangle) factory.makeTrig(position.x
-					+ sector.size.x, position.y, position.z, position.x
-					+ sector.size.x, position.y + sector.size.y, position.z
-					+ sector.size.z, position.x + sector.size.x, position.y,
-					position.z + sector.size.z, c, null);
-			toReturn[0] = trig;
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.z + sector.size.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.z + sector.size.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+				});
 
-			trig = (GeneralTriangle) factory.makeTrig(position.x
-					+ sector.size.x, position.y, position.z, position.x
-					+ sector.size.x, position.y + sector.size.y, position.z,
-					position.x + sector.size.x, position.y + sector.size.y,
-					position.z + sector.size.z, c, null);
-			toReturn[1] = trig;
+				toReturn[0] = trig;
 
-			break;
-		case N:
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x + sector.size.x, position.y
-							+ sector.size.y, position.z, position.x
-							+ sector.size.x, position.y, position.z, c, null);
-			toReturn[0] = trig;
+				trig = factory.makeTrig(
+						position.x, position.y, position.z,
+						position.x, position.y + sector.size.y, position.z,
+						position.x, position.y + sector.size.y, position.z + sector.size.z,
+						c);
 
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x, position.y + sector.size.y,
-					position.z, position.x + sector.size.x, position.y
-							+ sector.size.y, position.z, c, null);
-			toReturn[1] = trig;
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.z + sector.size.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+				});
 
-			break;
-		case S:
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z + sector.size.z, position.x + sector.size.x,
-					position.y + sector.size.y, position.z + sector.size.z,
-					position.x + sector.size.x, position.y, position.z
-							+ sector.size.z, c, null);
-			toReturn[0] = trig;
+				toReturn[1] = trig;
 
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z + sector.size.z, position.x, position.y
-							+ sector.size.y, position.z + sector.size.z,
-					position.x + sector.size.x, position.y + sector.size.y,
-					position.z + sector.size.z, c, null);
-			toReturn[1] = trig;
+				break;
+			case E:
+				trig = factory.makeTrig(
+						position.x + sector.size.x, position.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z + sector.size.z,
+						position.x + sector.size.x, position.y, position.z + sector.size.z,
+						c);
 
-			break;
-		case FLOOR:
-		default:
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x + sector.size.x, position.y,
-					position.z, position.x + sector.size.x, position.y,
-					position.z + sector.size.z, c, null);
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.z + sector.size.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.z + sector.size.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+				});
 
-			toReturn[0] = trig;
+				toReturn[0] = trig;
 
-			trig = (GeneralTriangle) factory.makeTrig(position.x, position.y,
-					position.z, position.x + sector.size.x, position.y,
-					position.z + sector.size.z, position.x, position.y,
-					position.z + sector.size.z, c, null);
+				trig = factory.makeTrig(
+						position.x + sector.size.x, position.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z + sector.size.z,
+						c);
 
-			toReturn[1] = trig;
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.z + sector.size.z) / normalizationFactor.z, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+				});
 
-			break;
+				toReturn[1] = trig;
+
+				break;
+			case N:
+				trig = factory.makeTrig(
+						position.x, position.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z,
+						position.x + sector.size.x, position.y, position.z,
+						c);
+
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+				});
+
+				toReturn[0] = trig;
+
+				trig = factory.makeTrig(
+						position.x, position.y, position.z,
+						position.x, position.y + sector.size.y, position.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z,
+						c);
+
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+				});
+
+				toReturn[1] = trig;
+
+				break;
+			case S:
+				trig = factory.makeTrig(
+						position.x, position.y, position.z + sector.size.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z + sector.size.z,
+						position.x + sector.size.x, position.y, position.z + sector.size.z,
+						c);
+
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+				});
+
+				toReturn[0] = trig;
+
+				trig = factory.makeTrig(
+						position.x, position.y, position.z + sector.size.z,
+						position.x, position.y + sector.size.y, position.z + sector.size.z,
+						position.x + sector.size.x, position.y + sector.size.y, position.z + sector.size.z,
+						c);
+
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y) / normalizationFactor.y,
+						(sector.localPosition.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, 1.0f - (sector.localPosition.y + sector.size.y) / normalizationFactor.y,
+				});
+
+				toReturn[1] = trig;
+
+				break;
+			case FLOOR:
+			default:
+				trig = factory.makeTrig(
+						position.x, position.y, position.z,
+						position.x + sector.size.x, position.y, position.z,
+						position.x + sector.size.x, position.y, position.z + sector.size.z,
+						c);
+
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, (sector.localPosition.z) / normalizationFactor.z,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, (sector.localPosition.z) / normalizationFactor.z,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, (sector.localPosition.z + sector.size.z) / normalizationFactor.z,
+				});
+
+
+				toReturn[0] = trig;
+
+				trig = factory.makeTrig(
+						position.x, position.y, position.z,
+						position.x + sector.size.x, position.y, position.z + sector.size.z,
+						position.x, position.y, position.z + sector.size.z,
+						c);
+
+				trig.setTextureCoordinates(new float[]{
+						(sector.localPosition.x) / normalizationFactor.x, (sector.localPosition.z) / normalizationFactor.z,
+						(sector.localPosition.x + sector.size.x) / normalizationFactor.x, (sector.localPosition.z + sector.size.z) / normalizationFactor.z,
+						(sector.localPosition.x) / normalizationFactor.x, (sector.localPosition.z + sector.size.z) / normalizationFactor.z,
+				});
+
+				toReturn[1] = trig;
+
+				break;
 		}
 
 		for (GeneralTriangle gt : toReturn) {
