@@ -56,27 +56,27 @@ public class SceneTesselator {
 		return links;
 	}
 
-	private void clearMeshesOn(GroupSector sector ) {
-		
-		List< MeshNode > nodes = new ArrayList<MeshNode>();
-		
-		for ( SceneNode sn : sector.getSons() ) {
-			if ( sn instanceof MeshNode ) {
-				nodes.add( (MeshNode) sn );
+	private void clearMeshesOn(GroupSector sector) {
+
+		List<MeshNode> nodes = new ArrayList<MeshNode>();
+
+		for (SceneNode sn : sector.getSons()) {
+			if (sn instanceof MeshNode) {
+				nodes.add((MeshNode) sn);
 			}
 		}
-		
-		for ( MeshNode node : nodes ) {
-			sector.removeChild( node );
+
+		for (MeshNode node : nodes) {
+			sector.removeChild(node);
 		}
 	}
-	
+
 	public void generateSubSectorMeshForSector(GroupSector sector) {
-		
-		clearMeshesOn( sector );
-		TriangleMesh mesh = new TriangleMesh( "_mesh" );
-		MeshNode meshDataNode = new MeshNode( "_mesh", mesh );
-		sector.addChild( meshDataNode );
+
+		clearMeshesOn(sector);
+		TriangleMesh mesh = new TriangleMesh("_mesh");
+		MeshNode meshDataNode = new MeshNode("_mesh", mesh);
+		sector.addChild(meshDataNode);
 		GeneralTriangle[] isfs;
 		boolean generated;
 
@@ -131,9 +131,9 @@ public class SceneTesselator {
 	}
 
 	public Material getColorForFace(Direction d, SpaceRegion sr) {
-		if (sr instanceof GroupSector && ((GroupSector) sr).shades.containsKey( d ) ) {
-				return ((GroupSector) sr).shades.get( d );
-			
+		if (sr instanceof GroupSector && ((GroupSector) sr).shades.containsKey(d)) {
+			return ((GroupSector) sr).shades.get(d);
+
 		} else {
 			if (sr.parent instanceof SpaceRegion) {
 				return getColorForFace(d, (SpaceRegion) sr.parent);
@@ -255,23 +255,23 @@ public class SceneTesselator {
 
 		return toReturn;
 	}
-	
-	private MeshNode findMeshNodeForSector( GroupSector sector ) {
-		for ( SceneNode sn : sector.sons ) {
-			if ( sn instanceof MeshNode ) {
+
+	private MeshNode findMeshNodeForSector(GroupSector sector) {
+		for (SceneNode sn : sector.sons) {
+			if (sn instanceof MeshNode) {
 				return (MeshNode) sn;
 			}
 		}
-		
-		return new MeshNode( "_mesh", new TriangleMesh( "_mesh" ) );
+
+		return new MeshNode("_mesh", new TriangleMesh("_mesh"));
 	}
 
 	private void generateQuadFor(Direction d, GroupSector sector) {
 
 		GeneralTriangle[] isfs = generateQuadFor(d, (SpaceRegion) sector);
 
-		TriangleMesh mesh = findMeshNodeForSector( sector ).mesh;
-		
+		TriangleMesh mesh = findMeshNodeForSector(sector).mesh;
+
 		if (isfs != null) {
 
 			for (GeneralTriangle isf : isfs) {

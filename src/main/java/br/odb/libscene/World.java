@@ -161,36 +161,36 @@ public class World implements Serializable {
 		float s2_z0 = (pos2.z);
 		float s2_z1 = (pos2.z + s2.size.z);
 
-		if (	   br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
-				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
-				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
-				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
+		if (	   eqFloat(s1_z0, s2_z0)
+				&& eqFloat(s1_z1, s2_z1)
+				&& eqFloat(s1_y0, s2_y0)
+				&& eqFloat(s1_y1, s2_y1)) {
 				
-			if (br.odb.utils.Utils.eqFloat(s1_x1, s2_x0)) {
+			if (eqFloat(s1_x1, s2_x0)) {
 				
 				s1.links[ Direction.E.ordinal() ] = s2.id;
 				s2.links[ Direction.W.ordinal() ] = s1.id;
 			}
 
-			if (br.odb.utils.Utils.eqFloat(s1_x0, s2_x1)) {
+			if (eqFloat(s1_x0, s2_x1)) {
 				
 				s1.links[ Direction.W.ordinal() ] = s2.id;
 				s2.links[ Direction.E.ordinal() ] = s1.id;
 			}
 		}
 
-		if (       br.odb.utils.Utils.eqFloat(s1_z0, s2_z0)
-				&& br.odb.utils.Utils.eqFloat(s1_z1, s2_z1)
-				&& br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
-				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)) {
+		if (       eqFloat(s1_z0, s2_z0)
+				&& eqFloat(s1_z1, s2_z1)
+				&& eqFloat(s1_x0, s2_x0)
+				&& eqFloat(s1_x1, s2_x1)) {
 
-			if (br.odb.utils.Utils.eqFloat(s1_y1, s2_y0)) {
+			if (eqFloat(s1_y1, s2_y0)) {
 				
 				s2.links[ Direction.FLOOR.ordinal() ] = s1.id;
 				s1.links[ Direction.CEILING.ordinal() ] = s2.id;
 			}
 
-			if (br.odb.utils.Utils.eqFloat(s1_y0, s2_y1)) {
+			if (eqFloat(s1_y0, s2_y1)) {
 				
 				
 				s2.links[ Direction.CEILING.ordinal() ] = s1.id;
@@ -198,17 +198,17 @@ public class World implements Serializable {
 			}
 		}
 
-		if (	   br.odb.utils.Utils.eqFloat(s1_x0, s2_x0)
-				&& br.odb.utils.Utils.eqFloat(s1_x1, s2_x1)
-				&& br.odb.utils.Utils.eqFloat(s1_y0, s2_y0)
-				&& br.odb.utils.Utils.eqFloat(s1_y1, s2_y1)) {
+		if (	   eqFloat(s1_x0, s2_x0)
+				&& eqFloat(s1_x1, s2_x1)
+				&& eqFloat(s1_y0, s2_y0)
+				&& eqFloat(s1_y1, s2_y1)) {
 
-			if (br.odb.utils.Utils.eqFloat(s1_z0, s2_z1)) {
+			if (eqFloat(s1_z0, s2_z1)) {
 				s2.links[ Direction.S.ordinal() ] = s1.id;
 				s1.links[ Direction.N.ordinal() ] = s2.id;
 			}
 
-			if (br.odb.utils.Utils.eqFloat(s1_z1, s2_z0)) {
+			if (eqFloat(s1_z1, s2_z0)) {
 				
 				s1.links[ Direction.S.ordinal() ] = s2.id;
 				s2.links[ Direction.N.ordinal() ] = s1.id;

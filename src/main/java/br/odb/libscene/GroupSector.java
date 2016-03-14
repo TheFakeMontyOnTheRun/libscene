@@ -1,17 +1,13 @@
 package br.odb.libscene;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import br.odb.libstrip.GeneralTriangle;
 import br.odb.libstrip.Material;
 import br.odb.libstrip.TriangleMesh;
 import br.odb.gameutils.Direction;
 import br.odb.gameutils.math.Vec3;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class GroupSector extends SpaceRegion implements Serializable {
 

@@ -18,23 +18,22 @@ import br.odb.libstrip.builders.GeneralTriangleFactory;
 
 public class MeshNodeBuilder extends SceneNodeBuilder implements SpatialDivisionBuilder {
 	public static final MeshNodeBuilder msb = new MeshNodeBuilder();
-	
+
 	@Override
 	public String getTagName() {
 		return "mesh";
 	}
-	
+
 	@Override
 	public Class getSerializedClass() {
 		return CameraNode.class;
-	}	
-	
+	}
+
 	@Override
 	public SceneNode build(Node node) {
 		SceneNode sceneNode = super.build(node);
-		TriangleMesh mesh = new TriangleMesh( "_mesh" );
-		MeshNode meshNode = new MeshNode( sceneNode, mesh );
-
+		TriangleMesh mesh = new TriangleMesh("_mesh");
+		MeshNode meshNode = new MeshNode(sceneNode, mesh);
 		NodeList nodeLst = node.getChildNodes();
 
 		for (int s = 0; s < nodeLst.getLength(); s++) {
@@ -76,7 +75,7 @@ public class MeshNodeBuilder extends SceneNodeBuilder implements SpatialDivision
 	public String toXML(SceneNode node) {
 		StringBuilder sb = new StringBuilder();
 		MeshNode meshNode = (MeshNode) node;
-		sb.append( SceneNodeBuilder.snb.toXML( node ) );
+		sb.append(SceneNodeBuilder.snb.toXML(node));
 //		sb.append( "<angle>" );
 //		sb.append( camNode.angleXZ );
 //		sb.append( "</angle>" );

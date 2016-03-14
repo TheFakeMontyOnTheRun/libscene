@@ -27,7 +27,7 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 
 		StringBuilder sb = new StringBuilder();
 		SpaceRegionBuilder srb = new SpaceRegionBuilder();
-		sb.append( srb.toXML((SpaceRegion) gs));
+		sb.append( srb.toXML(gs));
 
 		Material m;
 		
@@ -60,23 +60,23 @@ public class GroupSectorBuilder extends SpaceRegionBuilder {
 				sb.append("\n</group>");
 			} else if ( s instanceof MeshNode ) {
 				sb.append("\n<mesh>");
-				sb.append(MeshNodeBuilder.msb.toXML( (MeshNode)s));
-				sb.append("\n</mesh>");				
+				sb.append(MeshNodeBuilder.msb.toXML(s));
+				sb.append("\n</mesh>");
 			} else if (s instanceof Sector) {
 				sb.append("\n<sector>");
-				sb.append(SectorBuilder.sb.toXML((Sector) s));
+				sb.append(SectorBuilder.sb.toXML(s));
 				sb.append("\n</sector>");
 			} else if ( s instanceof LightNode ) {
 				sb.append("\n<light>");
-				sb.append(LightNodeBuilder.lnb.toXML((LightNode) s));
+				sb.append(LightNodeBuilder.lnb.toXML(s));
 				sb.append("\n</light>");
 			} else if ( s instanceof CameraNode ) {
 				sb.append("\n<camera>");
-				sb.append(CameraNodeBuilder.cnb.toXML((CameraNode) s));
+				sb.append(CameraNodeBuilder.cnb.toXML(s));
 				sb.append("\n</camera>");
 			} else if ( s instanceof DecalNode ) {
 				sb.append("\n<decal>");
-				sb.append(DecalNodeBuilder.cnb.toXML((DecalNode) s));
+				sb.append(DecalNodeBuilder.cnb.toXML(s));
 				sb.append("\n</decal>");
 			}
 		}
