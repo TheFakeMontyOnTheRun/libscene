@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import br.odb.libscene.SceneNode;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.math.Vec3;
 
 public class SceneNodeTest {
 

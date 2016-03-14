@@ -1,6 +1,6 @@
 package br.odb.libscene;
 
-import br.odb.utils.Direction;
+import br.odb.gameutils.Direction;
 
 public class DecalNode extends SceneNode {
 

@@ -5,7 +5,7 @@ import org.w3c.dom.NodeList;
 
 import br.odb.libscene.DecalNode;
 import br.odb.libscene.SceneNode;
-import br.odb.utils.Direction;
+import br.odb.gameutils.Direction;
 
 public class DecalNodeBuilder extends SceneNodeBuilder implements
 		SpatialDivisionBuilder {

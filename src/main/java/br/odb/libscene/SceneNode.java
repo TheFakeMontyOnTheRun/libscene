@@ -2,7 +2,7 @@ package br.odb.libscene;
 
 import java.io.Serializable;
 
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.math.Vec3;
 
 public class SceneNode implements Serializable {
 

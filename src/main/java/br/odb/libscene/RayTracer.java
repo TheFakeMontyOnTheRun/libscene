@@ -1,7 +1,7 @@
 package br.odb.libscene;
 
-import br.odb.utils.Direction;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.Direction;
+import br.odb.gameutils.math.Vec3;
 
 public class RayTracer {
 

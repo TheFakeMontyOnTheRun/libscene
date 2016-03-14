@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
-import br.odb.utils.Direction;
+import br.odb.gameutils.Direction;
 
 /**
  * @author monty

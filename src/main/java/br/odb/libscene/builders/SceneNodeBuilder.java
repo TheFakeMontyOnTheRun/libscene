@@ -4,7 +4,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import br.odb.libscene.SceneNode;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.math.Vec3;
 
 public class SceneNodeBuilder implements SpatialDivisionBuilder {
 

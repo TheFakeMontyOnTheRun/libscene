@@ -2,7 +2,7 @@ package br.odb.libscene;
 
 import java.io.Serializable;
 
-import br.odb.utils.Color;
+import br.odb.gameutils.Color;
 
 public class LightNode extends SceneNode implements Serializable {
 

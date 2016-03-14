@@ -15,9 +15,9 @@ import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libstrip.Material;
-import br.odb.utils.Color;
-import br.odb.utils.Direction;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.Color;
+import br.odb.gameutils.Direction;
+import br.odb.gameutils.math.Vec3;
 
 public class GroupSectorBuilder extends SpaceRegionBuilder {
 

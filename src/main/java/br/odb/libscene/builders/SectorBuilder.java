@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
-import br.odb.utils.Direction;
+import br.odb.gameutils.Direction;
 
 public class SectorBuilder extends SpaceRegionBuilder {
 

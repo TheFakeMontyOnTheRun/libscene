@@ -13,7 +13,7 @@ import br.odb.libscene.GroupSector;
 import br.odb.libscene.SceneNode;
 import br.odb.libscene.Sector;
 import br.odb.libscene.World;
-import br.odb.utils.Direction;
+import br.odb.gameutils.Direction;
 
 /**
  * @author monty

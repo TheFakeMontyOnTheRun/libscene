@@ -12,7 +12,7 @@ import br.odb.libscene.Sector;
 import br.odb.libscene.SpaceRegion;
 import br.odb.libstrip.GeneralTriangle;
 import br.odb.libstrip.TriangleMesh;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.math.Vec3;
 
 public class GroupSectorTest {
 	

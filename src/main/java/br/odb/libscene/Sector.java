@@ -2,8 +2,8 @@ package br.odb.libscene;
 
 import java.io.Serializable;
 
-import br.odb.utils.Direction;
-import br.odb.utils.Utils;
+import br.odb.gameutils.Direction;
+import br.odb.gameutils.Utils;
 
 public class Sector extends SpaceRegion implements Serializable {
 

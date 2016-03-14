@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.odb.utils.Direction;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.Direction;
+import br.odb.gameutils.math.Vec3;
+
+import static br.odb.gameutils.Utils.*;
 
 public class World implements Serializable {
 

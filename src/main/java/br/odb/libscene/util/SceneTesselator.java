@@ -13,9 +13,9 @@ import br.odb.libstrip.GeneralTriangle;
 import br.odb.libstrip.TriangleMesh;
 import br.odb.libstrip.Material;
 import br.odb.libstrip.builders.GeneralTriangleFactory;
-import br.odb.utils.Color;
-import br.odb.utils.Direction;
-import br.odb.utils.math.Vec3;
+import br.odb.gameutils.Color;
+import br.odb.gameutils.Direction;
+import br.odb.gameutils.math.Vec3;
 
 public class SceneTesselator {
 
